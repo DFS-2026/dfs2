@@ -8,14 +8,12 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background-color: #0b0f19; color: #f3f4f6; padding: 15px; min-height: 100vh; }
     
-    /* ENCABEZADO Y BRANDING */
+    /* ENCABEZADO Y BRANDING LIMPIO (SIN BOTÓN RESET) */
     header { background: #151d30; border: 1px solid #2a364f; padding: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
     .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-    .logo-circle { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #f59e0b; background: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .logo-circle { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #f59e0b; background: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
     .title { color: #f59e0b; font-weight: bold; font-size: 18px; letter-spacing: 1px; }
     .subtitle { color: #94a3b8; font-size: 11px; display: block; }
-    
-    .btn-reset { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
     
     /* FORMULARIO DE CARPETAS */
     .box { background: #151d30; border: 1px solid #2a364f; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
@@ -48,7 +46,7 @@
     .btn-edit { flex: 1; background: #334155; color: #fff; border: none; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     .btn-del { background: rgba(239, 68, 68, 0.2); color: #f87171; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     
-    /* VENTANA MODAL PARA AMPLIAR FOTO */
+    /* VENTANA ZOOM FOTO GRANDE */
     #modalZoom { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
     #modalZoom img { max-width: 100%; max-height: 85vh; border-radius: 12px; border: 2px solid #f59e0b; object-fit: contain; }
     #modalZoom .cerrar-modal { position: absolute; top: 20px; right: 20px; background: #f59e0b; color: #000; font-weight: bold; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; }
@@ -58,12 +56,12 @@
 </head>
 <body>
 
-  <!-- CABECERA DE LA APP CON LOGO OFICIAL DFS -->
+  <!-- CABECERA DE LA APP CON LOGO OFICIAL DFS RESTAURADO Y SIN BOTÓN RESET -->
   <header>
     <div class="brand" onclick="irInicio()">
       <div class="logo-circle">
-        <svg style="width: 24px; height: 24px; color: #f59e0b;" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#f59e0b">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
         </svg>
       </div>
       <div>
@@ -71,7 +69,6 @@
         <span class="subtitle">Galería Oficial & Colecciones</span>
       </div>
     </div>
-    <button class="btn-reset" onclick="resetearGuardado()">🔄 Reset Limpieza</button>
   </header>
 
   <!-- FORMULARIO CREAR CARPETAS -->
@@ -141,13 +138,6 @@
         localStorage.setItem('dfs_catalog_db_v6', JSON.stringify(db));
       } catch (e) {
         alert("Atención: El almacenamiento local está lleno.");
-      }
-    }
-
-    function resetearGuardado() {
-      if (confirm("¿Quieres reiniciar el almacenamiento local?")) {
-        localStorage.removeItem('dfs_catalog_db_v6');
-        location.reload();
       }
     }
 
