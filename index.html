@@ -1,1062 +1,199 @@
-```html
 <!DOCTYPE html>
 <html lang="es" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DFS Gallery | District Football Street</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            900: '#14532d',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .img-zoom-container { overflow: hidden; position: relative; }
-        .img-zoom-container img { transition: transform 0.3s ease; }
-        .img-zoom-container:hover img { transform: scale(1.15); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DFS Gallery</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{50:'#f0fdf4',100:'#dcfce7',500:'#22c55e',600:'#16a34a',700:'#15803d',900:'#14532d'}}}}};
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{font-family:Inter,sans-serif}.hide-scrollbar::-webkit-scrollbar{display:none}.hide-scrollbar{scrollbar-width:none}.img-zoom-container{overflow:hidden}.img-zoom-container img{transition:transform .3s}.img-zoom-container:hover img{transform:scale(1.12)}
+</style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 min-h-full flex flex-col transition-colors duration-200">
-
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
-
-    <!-- Header / Navbar -->
-    <header class="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 gap-4">
-                
-                <!-- Toggle Sidebar Mobile & Logo -->
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleSidebarMobile()" class="lg:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        <i class="fa-solid fa-bars text-lg"></i>
-                    </button>
-
-                    <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateToHome()">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-lg shadow-md">
-                            Y
-                        </div>
-                        <div>
-                            <h1 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-1.5">
-                                DFS<span class="text-brand-600 dark:text-brand-400 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-900/40 border border-brand-200 dark:border-brand-700">Gallery</span>
-                            </h1>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Search Bar (Desktop) -->
-                <div class="hidden md:flex flex-1 max-w-md">
-                    <div class="relative w-full">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Buscar por producto, marca, precio o tags..." class="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-800/80 border border-transparent focus:border-brand-500 rounded-full text-xs sm:text-sm focus:outline-none focus:bg-white dark:focus:bg-gray-800 transition">
-                    </div>
-                </div>
-
-                <!-- Actions Right -->
-                <div class="flex items-center gap-1.5 sm:gap-2">
-                    <button onclick="toggleDarkMode()" title="Cambiar tema" class="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                        <i id="theme-icon" class="fa-solid fa-moon text-base"></i>
-                    </button>
-
-                    <button onclick="shareCurrentView()" class="p-2 rounded-full text-gray-500 hover:text-brand-600 dark:text-gray-400 dark:hover:text-brand-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition" title="Copiar Enlace de Vista Actual">
-                        <i class="fa-solid fa-share-nodes text-base"></i>
-                    </button>
-
-                    <button onclick="openModal('create-album-modal')" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-xs font-semibold transition">
-                        <i class="fa-solid fa-folder-plus text-brand-600 dark:text-brand-400"></i> Nuevo Álbum
-                    </button>
-
-                    <button onclick="openUploadPhotoModal()" class="inline-flex items-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm transition transform active:scale-95">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> <span>Subir Foto</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Search Bar -->
-            <div class="pb-3 md:hidden">
-                <div class="relative w-full">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                    <input type="text" oninput="handleSearch(this.value)" placeholder="Buscar en el catálogo..." class="w-full pl-9 pr-4 py-1.5 bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 rounded-full text-xs focus:outline-none focus:bg-white dark:focus:bg-gray-800 transition">
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- App Layout Container -->
-    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex gap-6">
-
-        <!-- Mobile Overlay Sidebar -->
-        <div id="sidebar-overlay" onclick="toggleSidebarMobile()" class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden backdrop-blur-sm"></div>
-
-        <!-- Sidebar Navigation (Albums & Categories) -->
-        <aside id="app-sidebar" class="fixed lg:static top-0 left-0 bottom-0 z-40 w-64 bg-white dark:bg-gray-900 lg:bg-transparent lg:dark:bg-transparent border-r lg:border-r-0 border-gray-200 dark:border-gray-800 p-4 lg:p-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col justify-between overflow-y-auto">
-            <div class="space-y-6">
-                
-                <div class="flex items-center justify-between lg:hidden pb-3 border-b border-gray-200 dark:border-gray-800">
-                    <span class="font-bold text-sm">Menú de Navegación</span>
-                    <button onclick="toggleSidebarMobile()" class="text-gray-400"><i class="fa-solid fa-xmark text-lg"></i></button>
-                </div>
-
-                <!-- Navigation Quick Links -->
-                <div>
-                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Vista Principal</h3>
-                    <div class="space-y-1">
-                        <button onclick="navigateToHome(); closeSidebarMobile();" id="nav-all-btn" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
-                            <span class="flex items-center gap-2"><i class="fa-solid fa-grid-2"></i> Todo el Catálogo</span>
-                            <span id="badge-total-photos" class="text-[10px] bg-brand-200 dark:bg-brand-800 px-1.5 py-0.5 rounded-full font-bold">0</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Category Filters -->
-                <div>
-                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Categorías</h3>
-                    <div id="sidebar-categories" class="space-y-1">
-                        <!-- Dynamic Categories Render -->
-                    </div>
-                </div>
-
-                <!-- Albums / Collections List -->
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Colecciones / Álbumes</h3>
-                        <button onclick="openModal('create-album-modal')" class="text-xs text-brand-600 dark:text-brand-400 hover:underline font-semibold">+ Nuevo</button>
-                    </div>
-                    <div id="sidebar-albums" class="space-y-1 max-h-60 overflow-y-auto hide-scrollbar">
-                        <!-- Dynamic Albums Render -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer options inside sidebar -->
-            <div class="pt-6 border-t border-gray-200 dark:border-gray-800 space-y-2">
-                <button onclick="resetToDemoData()" class="w-full text-left px-3 py-2 text-xs text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition flex items-center gap-2">
-                    <i class="fa-solid fa-rotate-left"></i> Restablecer datos demo
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="flex-1 min-w-0">
-
-            <!-- Breadcrumb Navigation -->
-            <nav class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-800">
-                <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                    <button onclick="navigateToHome()" class="hover:text-brand-600 dark:hover:text-brand-400 font-semibold flex items-center gap-1">
-                        <i class="fa-solid fa-house"></i> Inicio
-                    </button>
-                    <span id="bc-sep-1" class="hidden"><i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                    <span id="bc-category" class="hidden font-medium"></span>
-                    <span id="bc-sep-2" class="hidden"><i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                    <span id="bc-album" class="hidden font-bold text-gray-800 dark:text-gray-200"></span>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-gray-400" id="stats-counter">0 ítems</span>
-                </div>
-            </nav>
-
-            <!-- ALBUMS CAROUSEL / GRID (Visible on home or when filtered) -->
-            <section id="albums-section" class="mb-8">
-                <div class="flex items-center justify-between mb-3">
-                    <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                        <i class="fa-regular fa-folder-open text-brand-600 dark:text-brand-400"></i> Álbumes Destacados
-                    </h2>
-                </div>
-                
-                <div id="albums-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
-                    <!-- Album Cards Render -->
-                </div>
-                <div id="empty-albums-msg" class="hidden text-center py-8 bg-white dark:bg-gray-900 rounded-xl border border-dashed border-gray-300 dark:border-gray-800">
-                    <p class="text-xs text-gray-500">No hay álbumes creados en esta vista.</p>
-                </div>
-            </section>
-
-            <!-- PHOTOS GRID SECTION -->
-            <section id="photos-section">
-                <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
-                    <h2 id="photos-title" class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                        <i class="fa-solid fa-grid-2 text-brand-600 dark:text-brand-400"></i> Catálogo de Productos
-                    </h2>
-
-                    <!-- Sorting & Controls -->
-                    <div class="flex items-center gap-2">
-                        <select id="sort-select" onchange="renderPhotos()" class="text-xs bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-brand-500">
-                            <option value="newest">Más recientes</option>
-                            <option value="oldest">Más antiguos</option>
-                            <option value="price-asc">Precio: Menor a Mayor</option>
-                            <option value="price-desc">Precio: Mayor a Menor</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Grid Yupoo Responsive -->
-                <div id="photos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5">
-                    <!-- Photo Cards Render -->
-                </div>
-
-                <div id="empty-photos-msg" class="hidden text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-dashed border-gray-300 dark:border-gray-800">
-                    <i class="fa-regular fa-image text-4xl text-gray-400 mb-2"></i>
-                    <p class="text-sm text-gray-500 font-medium">No se encontraron imágenes o productos.</p>
-                    <p class="text-xs text-gray-400 mt-1">Intenta cambiar los filtros o sube nuevas fotos.</p>
-                    <button onclick="openUploadPhotoModal()" class="mt-4 inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-full text-xs font-semibold shadow">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Subir primera foto
-                    </button>
-                </div>
-            </section>
-
-        </main>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 min-h-full flex flex-col transition-colors">
+<div id="toast-container" class="fixed bottom-5 right-5 z-[70] flex flex-col gap-2 max-w-sm"></div>
+<header class="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm">
+ <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between h-16 gap-3">
+   <div class="flex items-center gap-3">
+    <button onclick="toggleSidebarMobile()" class="lg:hidden p-2 rounded-lg"><i class="fa-solid fa-bars"></i></button>
+    <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateToHome()">
+     <img src="https://res.cloudinary.com/pkegocbt/image/upload/v1792279672/Screenshot_2026-07-24-18-49-51-631_com.android.chrome.png" alt="DFS" class="w-10 h-10 rounded-full object-contain">
+     <span class="text-brand-600 dark:text-brand-400 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-900/40 border border-brand-200 dark:border-brand-700">Gallery</span>
     </div>
-
-    <!-- MODAL: Crear / Editar Álbum -->
-    <div id="create-album-modal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-800">
-            <div class="flex justify-between items-center pb-3 border-b border-gray-100 dark:border-gray-800">
-                <h3 id="album-modal-title" class="text-base font-bold">Crear Nuevo Álbum</h3>
-                <button onclick="closeModal('create-album-modal')" class="text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="handleSaveAlbum(event)" class="mt-4 space-y-3.5">
-                <input type="hidden" id="edit-album-id" value="">
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Nombre del Álbum</label>
-                    <input type="text" id="album-title-input" required placeholder="Ej: Zapatillas Nike Dunk 2026" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Categoría</label>
-                    <input type="text" id="album-cat-input" required placeholder="Ej: Calzado, Ropa, Relojes..." class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Descripción (Opcional)</label>
-                    <textarea id="album-desc-input" rows="2" placeholder="Detalles de la colección o proveedor..." class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm"></textarea>
-                </div>
-                <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('create-album-modal')" class="px-4 py-2 text-xs font-semibold rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow">Guardar Álbum</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: Subir / Editar Foto -->
-    <div id="upload-photo-modal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-800 overflow-y-auto max-h-[90vh]">
-            <div class="flex justify-between items-center pb-3 border-b border-gray-100 dark:border-gray-800">
-                <h3 id="photo-modal-title" class="text-base font-bold">Subir Foto al Catálogo</h3>
-                <button onclick="closeModal('upload-photo-modal')" class="text-gray-400 hover:text-gray-600 dark:hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="handleSavePhoto(event)" class="mt-4 space-y-3.5">
-                <input type="hidden" id="edit-photo-id" value="">
-                
-                <!-- Album Selector -->
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Asignar a Álbum</label>
-                    <select id="photo-album-select" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm">
-                        <option value="">(Sin Álbum - General)</option>
-                    </select>
-                </div>
-
-                <!-- Input Type Switcher -->
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">Origen de la Imagen</label>
-                    <div class="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 gap-1">
-                        <button type="button" id="tab-file-btn" onclick="switchImageTab('file')" class="flex-1 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-gray-700 shadow-sm text-center">Archivo Local</button>
-                        <button type="button" id="tab-url-btn" onclick="switchImageTab('url')" class="flex-1 py-1 text-xs font-semibold rounded-lg text-gray-500 dark:text-gray-400 text-center">URL Web</button>
-                    </div>
-                </div>
-
-                <!-- File Input Field -->
-                <div id="file-input-container">
-                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-5 text-center hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer relative" onclick="document.getElementById('photo-file-input').click()">
-                        <i class="fa-solid fa-cloud-arrow-up text-2xl text-brand-600 mb-1"></i>
-                        <p class="text-xs text-gray-600 dark:text-gray-300 font-medium">Haz clic para seleccionar o arrastra una imagen</p>
-                        <p class="text-[10px] text-gray-400 mt-0.5">JPG, PNG, WEBP</p>
-                        <input type="file" id="photo-file-input" accept="image/*" class="hidden" onchange="previewFileImage(this)">
-                    </div>
-                </div>
-
-                <!-- URL Input Field -->
-                <div id="url-input-container" class="hidden">
-                    <input type="url" id="photo-url-input" placeholder="https://ejemplo.com/imagen.jpg" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm" onchange="previewUrlImage(this.value)">
-                </div>
-
-                <!-- Preview Area -->
-                <div id="image-preview-wrapper" class="hidden relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 max-h-44 bg-black/5 flex items-center justify-center">
-                    <img id="image-preview" src="" class="max-h-44 object-contain">
-                </div>
-
-                <!-- Product Details -->
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Título del Producto / Foto</label>
-                    <input type="text" id="photo-title-input" required placeholder="Ej: Nike Travis Scott Olive" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Precio (€)</label>
-                        <input type="number" step="0.01" id="photo-price-input" placeholder="Ej: 75.00" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Tags (Separar por coma)</label>
-                        <input type="text" id="photo-tags-input" placeholder="nike, jordan, verde" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Descripción / Detalles de Tallas</label>
-                    <textarea id="photo-desc-input" rows="2" placeholder="Tallas disponibles: 40-45. Incluye cordones extra..." class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-xs sm:text-sm"></textarea>
-                </div>
-
-                <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('upload-photo-modal')" class="px-4 py-2 text-xs font-semibold rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow">Guardar Producto</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: Detail / Viewer Modal (Yupoo Style) -->
-    <div id="detail-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4">
-        <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden shadow-2xl flex flex-col md:flex-row relative border border-gray-200 dark:border-gray-800">
-            <!-- Close Button -->
-            <button onclick="closeModal('detail-modal')" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
-
-            <!-- Image View Column with Zoom -->
-            <div class="md:w-3/5 bg-black flex items-center justify-center p-4 relative min-h-[300px] md:min-h-[480px] img-zoom-container">
-                <img id="detail-img" src="" alt="" class="max-h-[75vh] w-auto max-w-full object-contain">
-            </div>
-
-            <!-- Meta & Info Column -->
-            <div class="md:w-2/5 p-5 flex flex-col justify-between overflow-y-auto bg-white dark:bg-gray-900">
-                <div class="space-y-3.5">
-                    <div class="flex items-center justify-between">
-                        <span id="detail-album-badge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300"></span>
-                        <span id="detail-date" class="text-[11px] text-gray-400"></span>
-                    </div>
-
-                    <h2 id="detail-title" class="text-lg font-bold text-gray-900 dark:text-white leading-snug"></h2>
-                    
-                    <div id="detail-price-wrapper" class="text-2xl font-black text-brand-600 dark:text-brand-400">
-                        <span id="detail-price"></span>
-                    </div>
-
-                    <div class="border-t border-b border-gray-100 dark:border-gray-800 py-3">
-                        <h4 class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Descripción</h4>
-                        <p id="detail-desc" class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line"></p>
-                    </div>
-
-                    <div>
-                        <h4 class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Etiquetas</h4>
-                        <div id="detail-tags" class="flex flex-wrap gap-1"></div>
-                    </div>
-                </div>
-
-                <!-- Sharing & Direct Link Actions -->
-                <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800 space-y-2">
-                    <button id="copy-direct-link-btn" onclick="copyDirectPhotoLink()" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white py-2 px-4 rounded-xl text-xs font-semibold transition shadow">
-                        <i class="fa-solid fa-link"></i> Copiar Enlace Directo
-                    </button>
-                    
-                    <div class="flex gap-2">
-                        <button onclick="editCurrentPhoto()" class="flex-1 flex items-center justify-center gap-1.5 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 py-1.5 rounded-xl text-xs font-medium transition">
-                            <i class="fa-solid fa-pen-to-square"></i> Editar
-                        </button>
-                        <button onclick="deleteCurrentPhoto()" class="flex-1 flex items-center justify-center gap-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 border border-red-200 dark:border-red-900 py-1.5 rounded-xl text-xs font-medium transition">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- JS APP CODE -->
-    <script>
-        // --- DATA STRUCTURE & DEMO DATA ---
-        const DEMO_DATA = {
-            albums: [
-                { id: 'alb-1', title: 'Zapatillas Urbanas OG', description: 'Colección retro y deportiva alta calidad', category: 'Calzado', createdAt: Date.now() - 86400000 * 5 },
-                { id: 'alb-2', title: 'Hoodies & Sweatshirts', description: 'Prendas oversize y streetwear', category: 'Ropa', createdAt: Date.now() - 86400000 * 3 },
-                { id: 'alb-3', title: 'Accesorios & Gafas', description: 'Complementos y relojes', category: 'Accesorios', createdAt: Date.now() - 86400000 * 1 }
-            ],
-            photos: [
-                { id: 'pic-1', albumId: 'alb-1', title: 'Retro Runner Red OG', price: '89.99', description: 'Gamuza premium y malla. Tallas 40-45 disponibles.', tags: ['zapatillas', 'runner', 'red'], url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80', createdAt: Date.now() - 86400000 * 4 },
-                { id: 'pic-2', albumId: 'alb-1', title: 'Air High Sport Black & White', price: '95.00', description: 'Diseño clásico de caña alta con suela reforzada.', tags: ['high', 'urban', 'classic'], url: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800&q=80', createdAt: Date.now() - 86400000 * 3 },
-                { id: 'pic-3', albumId: 'alb-2', title: 'Sudadera Heavyweight Oversize', price: '49.50', description: 'Algodón 100% 400 GSM. Tallas S a XL.', tags: ['hoodie', 'oversize', 'streetwear'], url: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&q=80', createdAt: Date.now() - 86400000 * 2 },
-                { id: 'pic-4', albumId: 'alb-2', title: 'Chaqueta Denim Wash Vintage', price: '68.00', description: 'Mezclilla lavado piedra vintage.', tags: ['denim', 'vintage', 'chaqueta'], url: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=800&q=80', createdAt: Date.now() - 86400000 * 1 },
-                { id: 'pic-5', albumId: 'alb-3', title: 'Gafas de Sol Unisex Black', price: '25.00', description: 'Protección UV400 cristal polarizado.', tags: ['gafas', 'sol', 'accesorios'], url: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&q=80', createdAt: Date.now() }
-            ]
-        };
-
-        let state = {
-            albums: [],
-            photos: [],
-            activeAlbumId: null,
-            activeCategory: 'ALL',
-            searchQuery: '',
-            currentDetailPhotoId: null,
-            activeTabInput: 'file',
-            currentUploadedDataUrl: ''
-        };
-
-        // --- INIT & PERSISTENCE ---
-        window.onload = function() {
-            loadFromStorage();
-            setupTheme();
-            handleUrlHash();
-            renderAll();
-
-            window.addEventListener('hashchange', () => {
-                handleUrlHash();
-                renderAll();
-            });
-        };
-
-        function loadFromStorage() {
-            const savedAlbums = localStorage.getItem('yupoo_pro_albums');
-            const savedPhotos = localStorage.getItem('yupoo_pro_photos');
-
-            if (savedAlbums && savedPhotos) {
-                state.albums = JSON.parse(savedAlbums);
-                state.photos = JSON.parse(savedPhotos);
-            } else {
-                state.albums = [...DEMO_DATA.albums];
-                state.photos = [...DEMO_DATA.photos];
-                saveToStorage();
-            }
-        }
-
-        function saveToStorage() {
-            localStorage.setItem('yupoo_pro_albums', JSON.stringify(state.albums));
-            localStorage.setItem('yupoo_pro_photos', JSON.stringify(state.photos));
-        }
-
-        function resetToDemoData() {
-            if (confirm('¿Restablecer el catálogo a los datos de prueba predeterminados?')) {
-                state.albums = [...DEMO_DATA.albums];
-                state.photos = [...DEMO_DATA.photos];
-                saveToStorage();
-                navigateToHome();
-                showToast('Catálogo restablecido con éxito', 'success');
-            }
-        }
-
-        // --- DARK MODE ---
-        function setupTheme() {
-            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon').className = 'fa-solid fa-sun text-yellow-400 text-base';
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-icon').className = 'fa-solid fa-moon text-base';
-            }
-        }
-
-        function toggleDarkMode() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                document.getElementById('theme-icon').className = 'fa-solid fa-moon text-base';
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                document.getElementById('theme-icon').className = 'fa-solid fa-sun text-yellow-400 text-base';
-            }
-        }
-
-        // --- DEEP LINKING HASH ---
-        function handleUrlHash() {
-            const hash = window.location.hash.substring(1);
-            if (!hash) return;
-
-            const params = new URLSearchParams(hash);
-            const albumId = params.get('album');
-            const photoId = params.get('photo');
-
-            if (albumId && state.albums.some(a => a.id === albumId)) {
-                state.activeAlbumId = albumId;
-            }
-
-            if (photoId && state.photos.some(p => p.id === photoId)) {
-                setTimeout(() => openPhotoDetail(photoId), 150);
-            }
-        }
-
-        function updateUrlHash() {
-            let hashParams = new URLSearchParams();
-            if (state.activeAlbumId) hashParams.set('album', state.activeAlbumId);
-            if (state.currentDetailPhotoId) hashParams.set('photo', state.currentDetailPhotoId);
-            
-            const str = hashParams.toString();
-            history.replaceState(null, '', str ? `#${str}` : window.location.pathname);
-        }
-
-        // --- NAVIGATION & RENDERING ---
-        function navigateToHome() {
-            state.activeAlbumId = null;
-            state.activeCategory = 'ALL';
-            state.searchQuery = '';
-            document.getElementById('global-search').value = '';
-            updateUrlHash();
-            renderAll();
-        }
-
-        function selectAlbum(albumId) {
-            state.activeAlbumId = albumId;
-            const alb = state.albums.find(a => a.id === albumId);
-            if (alb) state.activeCategory = alb.category;
-            updateUrlHash();
-            renderAll();
-        }
-
-        function selectCategory(cat) {
-            state.activeCategory = cat;
-            state.activeAlbumId = null;
-            updateUrlHash();
-            renderAll();
-        }
-
-        function handleSearch(query) {
-            state.searchQuery = query.toLowerCase().trim();
-            renderPhotos();
-        }
-
-        function renderAll() {
-            renderSidebar();
-            renderBreadcrumb();
-            renderAlbums();
-            renderPhotos();
-            updateStatsCounter();
-        }
-
-        function renderSidebar() {
-            // Render Total Photos Badge
-            document.getElementById('badge-total-photos').textContent = state.photos.length;
-
-            // Render Categories Sidebar
-            const catContainer = document.getElementById('sidebar-categories');
-            const categories = ['ALL', ...new Set(state.albums.map(a => a.category).filter(Boolean))];
-
-            catContainer.innerHTML = categories.map(cat => {
-                const isActive = state.activeCategory === cat && !state.activeAlbumId;
-                const label = cat === 'ALL' ? 'Todas las Categorías' : cat;
-                const count = cat === 'ALL' ? state.photos.length : state.photos.filter(p => {
-                    const alb = state.albums.find(a => a.id === p.albumId);
-                    return alb && alb.category === cat;
-                }).length;
-
-                return `
-                    <button onclick="selectCategory('${cat}'); closeSidebarMobile();" class="w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs font-medium transition ${
-                        isActive 
-                            ? 'bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300 font-semibold' 
-                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-                    }">
-                        <span>${label}</span>
-                        <span class="text-[10px] opacity-70">${count}</span>
-                    </button>
-                `;
-            }).join('');
-
-            // Render Albums Sidebar
-            const albContainer = document.getElementById('sidebar-albums');
-            albContainer.innerHTML = state.albums.map(alb => {
-                const isActive = state.activeAlbumId === alb.id;
-                const count = state.photos.filter(p => p.albumId === alb.id).length;
-
-                return `
-                    <button onclick="selectAlbum('${alb.id}'); closeSidebarMobile();" class="w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs transition ${
-                        isActive 
-                            ? 'bg-brand-600 text-white font-semibold shadow-sm' 
-                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
-                    }">
-                        <span class="truncate max-w-[130px] text-left">${alb.title}</span>
-                        <span class="text-[10px] ${isActive ? 'text-white' : 'text-gray-400'}">${count}</span>
-                    </button>
-                `;
-            }).join('');
-        }
-
-        function renderBreadcrumb() {
-            const sep1 = document.getElementById('bc-sep-1');
-            const sep2 = document.getElementById('bc-sep-2');
-            const catEl = document.getElementById('bc-category');
-            const albEl = document.getElementById('bc-album');
-
-            if (state.activeCategory !== 'ALL') {
-                sep1.classList.remove('hidden');
-                catEl.classList.remove('hidden');
-                catEl.textContent = state.activeCategory;
-            } else {
-                sep1.classList.add('hidden');
-                catEl.classList.add('hidden');
-            }
-
-            if (state.activeAlbumId) {
-                const alb = state.albums.find(a => a.id === state.activeAlbumId);
-                sep2.classList.remove('hidden');
-                albEl.classList.remove('hidden');
-                albEl.textContent = alb ? alb.title : '';
-            } else {
-                sep2.classList.add('hidden');
-                albEl.classList.add('hidden');
-            }
-        }
-
-        function renderAlbums() {
-            const container = document.getElementById('albums-grid');
-            const section = document.getElementById('albums-section');
-            const emptyMsg = document.getElementById('empty-albums-msg');
-
-            // Hide albums grid if looking at a specific album
-            if (state.activeAlbumId) {
-                section.classList.add('hidden');
-                return;
-            } else {
-                section.classList.remove('hidden');
-            }
-
-            let list = state.albums;
-            if (state.activeCategory !== 'ALL') {
-                list = list.filter(a => a.category === state.activeCategory);
-            }
-
-            if (list.length === 0) {
-                container.innerHTML = '';
-                emptyMsg.classList.remove('hidden');
-                return;
-            } else {
-                emptyMsg.classList.add('hidden');
-            }
-
-            container.innerHTML = list.map(album => {
-                const photosInAlb = state.photos.filter(p => p.albumId === album.id);
-                const cover = photosInAlb.length > 0 ? photosInAlb[0].url : 'https://placehold.co/400x300/e2e8f0/94a3b8?text=Sin+Fotos';
-
-                return `
-                    <div onclick="selectAlbum('${album.id}')" class="group bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col">
-                        <div class="relative aspect-[4/3] bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                            <img src="${cover}" alt="${album.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/400x300/e2e8f0/94a3b8?text=Error'">
-                            <span class="absolute top-2 right-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
-                                ${photosInAlb.length} fotos
-                            </span>
-                        </div>
-                        <div class="p-3 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-xs sm:text-sm text-gray-800 dark:text-gray-100 line-clamp-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">${album.title}</h3>
-                                <p class="text-[11px] text-gray-400 line-clamp-1 mt-0.5">${album.description || 'Sin descripción'}</p>
-                            </div>
-                            <div class="mt-2.5 pt-2 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-[10px] text-gray-400">
-                                <span>${album.category}</span>
-                                <div class="flex gap-2">
-                                    <button onclick="event.stopPropagation(); openEditAlbumModal('${album.id}')" class="hover:text-brand-600" title="Editar Album"><i class="fa-solid fa-pen"></i></button>
-                                    <button onclick="event.stopPropagation(); deleteAlbum('${album.id}')" class="hover:text-red-500" title="Eliminar Album"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderPhotos() {
-            const container = document.getElementById('photos-grid');
-            const emptyMsg = document.getElementById('empty-photos-msg');
-            const sortVal = document.getElementById('sort-select').value;
-            let list = [...state.photos];
-
-            // Filter by Album
-            if (state.activeAlbumId) {
-                list = list.filter(p => p.albumId === state.activeAlbumId);
-            } else if (state.activeCategory !== 'ALL') {
-                const validAlbIds = state.albums.filter(a => a.category === state.activeCategory).map(a => a.id);
-                list = list.filter(p => validAlbIds.includes(p.albumId));
-            }
-
-            // Filter by Search Query
-            if (state.searchQuery) {
-                list = list.filter(p => 
-                    p.title.toLowerCase().includes(state.searchQuery) ||
-                    (p.description && p.description.toLowerCase().includes(state.searchQuery)) ||
-                    (p.tags && p.tags.some(t => t.toLowerCase().includes(state.searchQuery)))
-                );
-            }
-
-            // Sorting
-            if (sortVal === 'newest') list.sort((a,b) => b.createdAt - a.createdAt);
-            if (sortVal === 'oldest') list.sort((a,b) => a.createdAt - b.createdAt);
-            if (sortVal === 'price-asc') list.sort((a,b) => (parseFloat(a.price)||0) - (parseFloat(b.price)||0));
-            if (sortVal === 'price-desc') list.sort((a,b) => (parseFloat(b.price)||0) - (parseFloat(a.price)||0));
-
-            if (list.length === 0) {
-                container.innerHTML = '';
-                emptyMsg.classList.remove('hidden');
-                return;
-            } else {
-                emptyMsg.classList.add('hidden');
-            }
-
-            container.innerHTML = list.map(photo => {
-                const alb = state.albums.find(a => a.id === photo.albumId);
-                return `
-                    <div onclick="openPhotoDetail('${photo.id}')" class="group bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col">
-                        <div class="relative aspect-square bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                            <img src="${photo.url}" alt="${photo.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/400x400/e2e8f0/94a3b8?text=Error'">
-                            ${photo.price ? `<span class="absolute bottom-2 left-2 bg-black/75 backdrop-blur-md text-white font-bold text-[11px] px-2 py-0.5 rounded-lg">€${parseFloat(photo.price).toFixed(2)}</span>` : ''}
-                        </div>
-                        <div class="p-3 flex-1 flex flex-col justify-between">
-                            <div>
-                                <span class="text-[9px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">${alb ? alb.title : 'General'}</span>
-                                <h4 class="font-semibold text-xs text-gray-800 dark:text-gray-100 line-clamp-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">${photo.title}</h4>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function updateStatsCounter() {
-            const count = state.photos.length;
-            document.getElementById('stats-counter').textContent = `${count} producto${count !== 1 ? 's' : ''}`;
-        }
-
-        // --- ALBUMS MANIPULATION ---
-        function handleSaveAlbum(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-album-id').value;
-            const title = document.getElementById('album-title-input').value.trim();
-            const category = document.getElementById('album-cat-input').value.trim() || 'General';
-            const description = document.getElementById('album-desc-input').value.trim();
-
-            if (id) {
-                // Update
-                const album = state.albums.find(a => a.id === id);
-                if (album) {
-                    album.title = title;
-                    album.category = category;
-                    album.description = description;
-                }
-                showToast('Álbum actualizado', 'success');
-            } else {
-                // Create
-                const newAlbum = {
-                    id: 'alb-' + Date.now(),
-                    title,
-                    category,
-                    description,
-                    createdAt: Date.now()
-                };
-                state.albums.unshift(newAlbum);
-                showToast('Álbum creado exitosamente', 'success');
-            }
-
-            saveToStorage();
-            closeModal('create-album-modal');
-            renderAll();
-        }
-
-        function openEditAlbumModal(albumId) {
-            const alb = state.albums.find(a => a.id === albumId);
-            if (!alb) return;
-
-            document.getElementById('edit-album-id').value = alb.id;
-            document.getElementById('album-title-input').value = alb.title;
-            document.getElementById('album-cat-input').value = alb.category;
-            document.getElementById('album-desc-input').value = alb.description || '';
-            document.getElementById('album-modal-title').textContent = 'Editar Álbum';
-
-            openModal('create-album-modal');
-        }
-
-        function deleteAlbum(albumId) {
-            if (!confirm('¿Eliminar este álbum? Las fotos pasarán a categoría general.')) return;
-            state.albums = state.albums.filter(a => a.id !== albumId);
-            state.photos.forEach(p => { if (p.albumId === albumId) p.albumId = null; });
-            
-            saveToStorage();
-            if (state.activeAlbumId === albumId) state.activeAlbumId = null;
-            renderAll();
-            showToast('Álbum eliminado', 'info');
-        }
-
-        // --- PHOTOS MANIPULATION ---
-        function openUploadPhotoModal() {
-            document.getElementById('edit-photo-id').value = '';
-            document.getElementById('photo-modal-title').textContent = 'Subir Foto al Catálogo';
-            document.getElementById('photo-title-input').value = '';
-            document.getElementById('photo-price-input').value = '';
-            document.getElementById('photo-tags-input').value = '';
-            document.getElementById('photo-desc-input').value = '';
-            document.getElementById('photo-url-input').value = '';
-            document.getElementById('image-preview-wrapper').classList.add('hidden');
-            state.currentUploadedDataUrl = '';
-
-            populateAlbumSelectModal();
-            openModal('upload-photo-modal');
-        }
-
-        function populateAlbumSelectModal(selectedId = null) {
-            const select = document.getElementById('photo-album-select');
-            select.innerHTML = `<option value="">(Sin Álbum - General)</option>` + 
-                state.albums.map(a => `<option value="${a.id}">${a.title}</option>`).join('');
-            
-            select.value = selectedId || state.activeAlbumId || '';
-        }
-
-        function switchImageTab(tab) {
-            state.activeTabInput = tab;
-            const fileBtn = document.getElementById('tab-file-btn');
-            const urlBtn = document.getElementById('tab-url-btn');
-            const fileCont = document.getElementById('file-input-container');
-            const urlCont = document.getElementById('url-input-container');
-
-            if (tab === 'file') {
-                fileBtn.className = "flex-1 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-gray-700 shadow-sm text-center";
-                urlBtn.className = "flex-1 py-1 text-xs font-semibold rounded-lg text-gray-500 dark:text-gray-400 text-center";
-                fileCont.classList.remove('hidden');
-                urlCont.classList.add('hidden');
-            } else {
-                urlBtn.className = "flex-1 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-gray-700 shadow-sm text-center";
-                fileBtn.className = "flex-1 py-1 text-xs font-semibold rounded-lg text-gray-500 dark:text-gray-400 text-center";
-                urlCont.classList.remove('hidden');
-                fileCont.classList.add('hidden');
-            }
-        }
-
-        function previewFileImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    state.currentUploadedDataUrl = e.target.result;
-                    showPreview(e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function previewUrlImage(url) {
-            if (url) {
-                state.currentUploadedDataUrl = url;
-                showPreview(url);
-            }
-        }
-
-        function showPreview(src) {
-            const wrapper = document.getElementById('image-preview-wrapper');
-            const img = document.getElementById('image-preview');
-            img.src = src;
-            wrapper.classList.remove('hidden');
-        }
-
-        function handleSavePhoto(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-photo-id').value;
-            const title = document.getElementById('photo-title-input').value.trim();
-            const price = document.getElementById('photo-price-input').value.trim();
-            const desc = document.getElementById('photo-desc-input').value.trim();
-            const albumId = document.getElementById('photo-album-select').value || null;
-            const rawTags = document.getElementById('photo-tags-input').value.trim();
-            const tags = rawTags ? rawTags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean) : [];
-            const imageUrl = state.currentUploadedDataUrl || document.getElementById('photo-url-input').value.trim();
-
-            if (!id && !imageUrl) {
-                showToast('Selecciona o indica una URL de imagen', 'error');
-                return;
-            }
-
-            if (id) {
-                // Edit
-                const photo = state.photos.find(p => p.id === id);
-                if (photo) {
-                    photo.title = title;
-                    photo.price = price;
-                    photo.description = desc;
-                    photo.albumId = albumId;
-                    photo.tags = tags;
-                    if (imageUrl) photo.url = imageUrl;
-                }
-                showToast('Producto actualizado', 'success');
-            } else {
-                // New
-                const newPhoto = {
-                    id: 'pic-' + Date.now(),
-                    albumId,
-                    title,
-                    price,
-                    description: desc,
-                    tags,
-                    url: imageUrl,
-                    createdAt: Date.now()
-                };
-                state.photos.unshift(newPhoto);
-                showToast('Producto publicado en el catálogo', 'success');
-            }
-
-            saveToStorage();
-            closeModal('upload-photo-modal');
-            renderAll();
-        }
-
-        function editCurrentPhoto() {
-            if (!state.currentDetailPhotoId) return;
-            const photo = state.photos.find(p => p.id === state.currentDetailPhotoId);
-            if (!photo) return;
-
-            closeModal('detail-modal');
-
-            document.getElementById('edit-photo-id').value = photo.id;
-            document.getElementById('photo-modal-title').textContent = 'Editar Producto';
-            document.getElementById('photo-title-input').value = photo.title;
-            document.getElementById('photo-price-input').value = photo.price || '';
-            document.getElementById('photo-tags-input').value = (photo.tags || []).join(', ');
-            document.getElementById('photo-desc-input').value = photo.description || '';
-            document.getElementById('photo-url-input').value = photo.url;
-            showPreview(photo.url);
-
-            populateAlbumSelectModal(photo.albumId);
-            openModal('upload-photo-modal');
-        }
-
-        function deleteCurrentPhoto() {
-            if (!state.currentDetailPhotoId) return;
-            if (!confirm('¿Seguro que deseas eliminar esta foto?')) return;
-
-            state.photos = state.photos.filter(p => p.id !== state.currentDetailPhotoId);
-            saveToStorage();
-            closeModal('detail-modal');
-            renderAll();
-            showToast('Foto eliminada', 'info');
-        }
-
-        // --- DETAIL MODAL & ZOOM ---
-        function openPhotoDetail(photoId) {
-            const photo = state.photos.find(p => p.id === photoId);
-            if (!photo) return;
-
-            state.currentDetailPhotoId = photoId;
-            updateUrlHash();
-
-            const alb = state.albums.find(a => a.id === photo.albumId);
-
-            document.getElementById('detail-img').src = photo.url;
-            document.getElementById('detail-title').textContent = photo.title;
-            document.getElementById('detail-album-badge').textContent = alb ? alb.title : 'General';
-            document.getElementById('detail-date').textContent = new Date(photo.createdAt).toLocaleDateString();
-            document.getElementById('detail-desc').textContent = photo.description || 'Sin descripción disponible.';
-
-            const priceEl = document.getElementById('detail-price');
-            const priceWrap = document.getElementById('detail-price-wrapper');
-            if (photo.price) {
-                priceEl.textContent = `€${parseFloat(photo.price).toFixed(2)}`;
-                priceWrap.classList.remove('hidden');
-            } else {
-                priceWrap.classList.add('hidden');
-            }
-
-            const tagsCont = document.getElementById('detail-tags');
-            if (photo.tags && photo.tags.length > 0) {
-                tagsCont.innerHTML = photo.tags.map(t => `<span class="bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 text-[10px] px-2 py-0.5 rounded-full">#${t}</span>`).join('');
-            } else {
-                tagsCont.innerHTML = `<span class="text-xs text-gray-400">Sin tags</span>`;
-            }
-
-            openModal('detail-modal');
-        }
-
-        // --- UTILS & HELPERS ---
-        function copyDirectPhotoLink() {
-            const url = window.location.href;
-            copyToClipboard(url);
-            showToast('¡Enlace del producto copiado!', 'success');
-        }
-
-        function shareCurrentView() {
-            const url = window.location.href;
-            copyToClipboard(url);
-            showToast('¡Enlace de la vista copiado al portapapeles!', 'success');
-        }
-
-        function copyToClipboard(text) {
-            const input = document.createElement('textarea');
-            input.value = text;
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand('copy');
-            document.body.removeChild(input);
-        }
-
-        function toggleSidebarMobile() {
-            const sidebar = document.getElementById('app-sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        }
-
-        function closeSidebarMobile() {
-            const sidebar = document.getElementById('app-sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        }
-
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-            if (id === 'detail-modal') {
-                state.currentDetailPhotoId = null;
-                updateUrlHash();
-            }
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            let bgClass = 'bg-gray-900 text-white dark:bg-white dark:text-gray-900';
-            if (type === 'success') bgClass = 'bg-brand-600 text-white';
-            if (type === 'error') bgClass = 'bg-red-600 text-white';
-
-            toast.className = `px-4 py-2.5 rounded-xl shadow-xl text-xs font-semibold flex items-center justify-between gap-3 transform transition duration-300 translate-y-2 ${bgClass}`;
-            toast.innerHTML = `
-                <span>${message}</span>
-                <button onclick="this.parentElement.remove()" class="opacity-70 hover:opacity-100"><i class="fa-solid fa-xmark"></i></button>
-            `;
-
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('opacity-0', '-translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-    </script>
+   </div>
+   <div class="hidden md:flex flex-1 max-w-md">
+    <div class="relative w-full"><i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="global-search" oninput="handleSearch(this.value)" placeholder="Buscar álbum o foto por nombre o descripción..." class="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 rounded-full text-sm focus:outline-none"></div>
+   </div>
+   <div class="flex items-center gap-2">
+    <button onclick="toggleDarkMode()" title="Cambiar tema" class="p-2 rounded-full"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
+    <button onclick="shareCurrentView()" title="Compartir vista" class="p-2 rounded-full"><i class="fa-solid fa-share-nodes"></i></button>
+    <button onclick="openModal('create-album-modal')" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border text-xs font-semibold"><i class="fa-solid fa-folder-plus text-brand-600"></i> Nuevo Álbum</button>
+    <button onclick="openUploadPhotoModal()" class="inline-flex items-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white px-3.5 py-2 rounded-full text-xs font-semibold"><i class="fa-solid fa-cloud-arrow-up"></i> Subir Foto</button>
+   </div>
+  </div>
+  <div class="pb-3 md:hidden"><input id="mobile-search" type="search" oninput="handleSearch(this.value)" placeholder="Buscar álbum o foto..." class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-xs outline-none"></div>
+ </div>
+</header>
+<div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex gap-6">
+ <div id="sidebar-overlay" onclick="closeSidebarMobile()" class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden"></div>
+ <aside id="app-sidebar" class="fixed lg:static top-0 left-0 bottom-0 z-50 w-64 bg-white dark:bg-gray-900 lg:bg-transparent lg:dark:bg-transparent border-r lg:border-0 border-gray-200 dark:border-gray-800 p-4 lg:p-0 -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col overflow-y-auto">
+  <div class="space-y-6">
+   <div class="flex items-center justify-between lg:hidden pb-3 border-b"><span class="font-bold text-sm">Menú</span><button onclick="closeSidebarMobile()"><i class="fa-solid fa-xmark"></i></button></div>
+   <div><h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Vista principal</h3><button onclick="navigateToHome();closeSidebarMobile()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300"><span><i class="fa-solid fa-grid-2 mr-2"></i>Todos los álbumes</span><span id="badge-total-photos" class="text-[10px]">0</span></button></div>
+   <div><h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Categorías</h3><div id="sidebar-categories" class="space-y-1"></div></div>
+   <div><div class="flex items-center justify-between mb-2"><h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Álbumes</h3><button onclick="openModal('create-album-modal')" class="text-xs text-brand-600">+ Nuevo</button></div><div id="sidebar-albums" class="space-y-1 max-h-60 overflow-y-auto hide-scrollbar"></div></div>
+  </div>
+ </aside>
+ <main class="flex-1 min-w-0">
+  <nav class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-800"><div class="flex items-center gap-2 text-xs text-gray-500"><button onclick="navigateToHome()" class="font-semibold"><i class="fa-solid fa-house"></i> Inicio</button><span id="bc-sep-1" class="hidden">›</span><span id="bc-category" class="hidden"></span><span id="bc-sep-2" class="hidden">›</span><b id="bc-album" class="hidden text-gray-800 dark:text-gray-200"></b></div><span id="stats-counter" class="text-xs text-gray-400">0 álbumes</span></nav>
+  <section id="albums-section" class="mb-8">
+   <div class="flex items-center justify-between mb-3"><h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300"><i class="fa-regular fa-folder-open text-brand-600 mr-2"></i>Álbumes</h2></div>
+   <div id="albums-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5"></div>
+   <div id="empty-albums-msg" class="hidden text-center py-10 bg-white dark:bg-gray-900 rounded-xl border border-dashed border-gray-300 dark:border-gray-800"><p class="text-xs text-gray-500">No hay álbumes en esta vista.</p><button onclick="openModal('create-album-modal')" class="mt-3 text-xs text-brand-600 font-semibold">Crear primer álbum</button></div>
+  </section>
+  <section id="photos-section" class="hidden">
+   <div class="flex items-center justify-between mb-3 gap-2"><h2 id="photos-title" class="text-sm font-bold uppercase tracking-wider"><i class="fa-solid fa-images text-brand-600 mr-2"></i>Fotos del álbum</h2><select id="sort-select" onchange="renderPhotos()" class="text-xs bg-white dark:bg-gray-900 border rounded-lg px-2.5 py-1.5"><option value="newest">Más recientes</option><option value="oldest">Más antiguas</option></select></div>
+   <div id="photos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5"></div>
+   <div id="empty-photos-msg" class="hidden text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-dashed border-gray-300 dark:border-gray-800"><i class="fa-regular fa-image text-4xl text-gray-400 mb-2"></i><p class="text-sm text-gray-500">Este álbum todavía no tiene fotos.</p><button onclick="openUploadPhotoModal()" class="mt-4 bg-brand-600 text-white px-4 py-2 rounded-full text-xs font-semibold">Subir primera foto</button></div>
+  </section>
+ </main>
+</div>
+
+<div id="create-album-modal" class="fixed inset-0 z-[60] hidden bg-black/60 flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+  <div class="flex justify-between items-center pb-3 border-b"><h3 id="album-modal-title" class="font-bold">Crear nuevo álbum</h3><button onclick="closeModal('create-album-modal')"><i class="fa-solid fa-xmark"></i></button></div>
+  <form onsubmit="handleSaveAlbum(event)" class="mt-4 space-y-3">
+   <input type="hidden" id="edit-album-id">
+   <div><label class="block text-xs mb-1">Nombre del álbum</label><input id="album-title-input" required class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></div>
+   <div><label class="block text-xs mb-1">Categoría</label><input id="album-cat-input" required placeholder="Ej.: Calzado, Ropa..." class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></div>
+   <div><label class="block text-xs mb-1">Descripción (opcional)</label><textarea id="album-desc-input" rows="2" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></textarea></div>
+   <div class="pt-2 flex justify-end gap-2"><button type="button" onclick="closeModal('create-album-modal')" class="px-4 py-2 text-xs border rounded-xl">Cancelar</button><button class="px-4 py-2 text-xs bg-brand-600 text-white rounded-xl">Guardar álbum</button></div>
+  </form>
+ </div>
+</div>
+
+<div id="upload-photo-modal" class="fixed inset-0 z-[60] hidden bg-black/60 flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+  <div class="flex justify-between items-center pb-3 border-b"><h3 id="photo-modal-title" class="font-bold">Subir foto</h3><button onclick="closeModal('upload-photo-modal')"><i class="fa-solid fa-xmark"></i></button></div>
+  <form onsubmit="handleSavePhoto(event)" class="mt-4 space-y-3">
+   <input type="hidden" id="edit-photo-id">
+   <div><label class="block text-xs mb-1">Asignar a álbum</label><select id="photo-album-select" required class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"><option value="">Selecciona un álbum</option></select></div>
+   <div><label class="block text-xs mb-1">Origen de la imagen</label><div class="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 gap-1"><button type="button" id="tab-file-btn" onclick="switchImageTab('file')" class="flex-1 py-2 text-xs rounded-lg bg-white dark:bg-gray-700">Archivo del móvil</button><button type="button" id="tab-url-btn" onclick="switchImageTab('url')" class="flex-1 py-2 text-xs rounded-lg">URL web</button></div></div>
+   <div id="file-input-container"><label class="block border-2 border-dashed rounded-xl p-5 text-center cursor-pointer"><i class="fa-solid fa-cloud-arrow-up text-2xl text-brand-600"></i><p class="text-xs mt-1">Pulsa para seleccionar una imagen</p><p class="text-[10px] text-gray-400">JPG, PNG o WEBP</p><input type="file" id="photo-file-input" accept="image/*" class="hidden" onchange="previewFileImage(this)"></label></div>
+   <div id="url-input-container" class="hidden"><input type="url" id="photo-url-input" placeholder="https://ejemplo.com/imagen.jpg" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm" oninput="previewUrlImage(this.value)"></div>
+   <div id="image-preview-wrapper" class="hidden rounded-xl overflow-hidden border max-h-48 flex justify-center bg-black/5"><img id="image-preview" src="" class="max-h-48 object-contain"></div>
+   <div><label class="block text-xs mb-1">Título de la foto</label><input id="photo-title-input" required class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></div>
+   <div><label class="block text-xs mb-1">Descripción / detalles (opcional)</label><textarea id="photo-desc-input" rows="3" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></textarea></div>
+   <div class="pt-2 flex justify-end gap-2"><button type="button" onclick="closeModal('upload-photo-modal')" class="px-4 py-2 text-xs border rounded-xl">Cancelar</button><button class="px-4 py-2 text-xs bg-brand-600 text-white rounded-xl">Guardar foto</button></div>
+  </form>
+ </div>
+</div>
+
+<div id="detail-modal" class="fixed inset-0 z-[60] hidden bg-black/80 flex items-center justify-center p-2 sm:p-4">
+ <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row relative">
+  <button onclick="closeModal('detail-modal')" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/60 text-white"><i class="fa-solid fa-xmark"></i></button>
+  <div class="md:w-3/5 bg-black flex items-center justify-center p-4 min-h-[300px] img-zoom-container"><img id="detail-img" src="" class="max-h-[75vh] max-w-full object-contain"></div>
+  <div class="md:w-2/5 p-5 flex flex-col justify-between overflow-y-auto">
+   <div class="space-y-3"><div class="flex justify-between gap-2"><span id="detail-album-badge" class="text-[10px] uppercase font-bold text-brand-600"></span><span id="detail-date" class="text-[11px] text-gray-400"></span></div><h2 id="detail-title" class="text-lg font-bold"></h2><div class="border-t border-b py-3"><h4 class="text-[10px] font-bold uppercase text-gray-400 mb-1">Descripción</h4><p id="detail-desc" class="text-xs leading-relaxed whitespace-pre-line"></p></div></div>
+   <div class="mt-6 pt-4 border-t space-y-2"><button onclick="copyDirectPhotoLink()" class="w-full bg-brand-600 text-white py-2 rounded-xl text-xs"><i class="fa-solid fa-link mr-1"></i>Copiar enlace directo</button><div class="flex gap-2"><button onclick="editCurrentPhoto()" class="flex-1 border py-2 rounded-xl text-xs">Editar</button><button onclick="deleteCurrentPhoto()" class="flex-1 border border-red-300 text-red-500 py-2 rounded-xl text-xs">Eliminar</button></div></div>
+  </div>
+ </div>
+</div>
+
+<script>
+const ALBUMS_KEY='yupoo_pro_albums', PHOTOS_KEY='yupoo_pro_photos';
+let state={albums:[],photos:[],activeAlbumId:null,activeCategory:'ALL',searchQuery:'',currentDetailPhotoId:null,activeTabInput:'file',currentUploadedDataUrl:''};
+
+window.onload=()=>{
+ loadFromStorage();setupTheme();handleUrlHash();renderAll();
+ window.addEventListener('hashchange',()=>{handleUrlHash();renderAll()});
+};
+function loadFromStorage(){
+ try{
+  const a=localStorage.getItem(ALBUMS_KEY),p=localStorage.getItem(PHOTOS_KEY);
+  state.albums=a?JSON.parse(a):[];
+  state.photos=p?JSON.parse(p):[];
+  if(!Array.isArray(state.albums))state.albums=[];
+  if(!Array.isArray(state.photos))state.photos=[];
+  // Mantiene los datos existentes; no carga contenido de demostración.
+  if(!a)localStorage.setItem(ALBUMS_KEY,'[]');
+  if(!p)localStorage.setItem(PHOTOS_KEY,'[]');
+ }catch(e){state.albums=[];state.photos=[];showToast('No se pudieron leer los datos guardados. No borres los datos del navegador.','error')}
+}
+function saveToStorage(){localStorage.setItem(ALBUMS_KEY,JSON.stringify(state.albums));localStorage.setItem(PHOTOS_KEY,JSON.stringify(state.photos))}
+function persistOrRestore(oldAlbums,oldPhotos){
+ try{saveToStorage();return true}catch(e){state.albums=oldAlbums;state.photos=oldPhotos;const quota=e&&(['QuotaExceededError','NS_ERROR_DOM_QUOTA_REACHED'].includes(e.name)||e.code===22);showToast(quota?'No se ha podido guardar: el almacenamiento del navegador puede estar lleno. La foto no se ha guardado.':'No se han podido guardar los cambios.','error');return false}
+}
+function setupTheme(){const dark=localStorage.getItem('theme')==='dark'||(!('theme'in localStorage)&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',dark);document.getElementById('theme-icon').className=dark?'fa-solid fa-sun text-yellow-400':'fa-solid fa-moon'}
+function toggleDarkMode(){const dark=!document.documentElement.classList.contains('dark');document.documentElement.classList.toggle('dark',dark);localStorage.setItem('theme',dark?'dark':'light');document.getElementById('theme-icon').className=dark?'fa-solid fa-sun text-yellow-400':'fa-solid fa-moon'}
+function handleUrlHash(){const params=new URLSearchParams(location.hash.slice(1));const aid=params.get('album'),pid=params.get('photo');if(aid&&state.albums.some(a=>a.id===aid))state.activeAlbumId=aid;if(pid&&state.photos.some(p=>p.id===pid))setTimeout(()=>openPhotoDetail(pid),150)}
+function updateUrlHash(){const p=new URLSearchParams();if(state.activeAlbumId)p.set('album',state.activeAlbumId);if(state.currentDetailPhotoId)p.set('photo',state.currentDetailPhotoId);history.replaceState(null,'',p.toString()?'#'+p.toString():location.pathname)}
+function navigateToHome(){state.activeAlbumId=null;state.activeCategory='ALL';state.searchQuery='';document.getElementById('global-search').value='';document.getElementById('mobile-search').value='';updateUrlHash();renderAll()}
+function selectAlbum(id){state.activeAlbumId=id;const a=state.albums.find(x=>x.id===id);if(a)state.activeCategory=a.category;updateUrlHash();renderAll()}
+function selectCategory(cat){state.activeCategory=cat;state.activeAlbumId=null;updateUrlHash();renderAll()}
+function handleSearch(q){state.searchQuery=q.toLowerCase().trim();document.getElementById('global-search').value=q;document.getElementById('mobile-search').value=q;renderAlbums();renderPhotos()}
+function renderAll(){renderSidebar();renderBreadcrumb();renderAlbums();renderPhotos();updateStatsCounter()}
+function renderSidebar(){
+ document.getElementById('badge-total-photos').textContent=state.photos.length;
+ const cats=['ALL',...new Set(state.albums.map(a=>a.category).filter(Boolean))];
+ document.getElementById('sidebar-categories').innerHTML=cats.map(c=>`<button onclick="selectCategory(${JSON.stringify(c)});closeSidebarMobile()" class="w-full text-left px-3 py-2 rounded-xl text-xs ${state.activeCategory===c&&!state.activeAlbumId?'bg-brand-50 text-brand-700 dark:bg-brand-900/40':'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}">${c==='ALL'?'Todas las categorías':escapeHtml(c)}</button>`).join('');
+ document.getElementById('sidebar-albums').innerHTML=state.albums.map(a=>`<button onclick="selectAlbum(${JSON.stringify(a.id)});closeSidebarMobile()" class="w-full flex justify-between px-3 py-2 rounded-xl text-xs ${state.activeAlbumId===a.id?'bg-brand-600 text-white':'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}"><span class="truncate">${escapeHtml(a.title)}</span><span>${state.photos.filter(p=>p.albumId===a.id).length}</span></button>`).join('');
+}
+function renderBreadcrumb(){const a=state.albums.find(x=>x.id===state.activeAlbumId);const c=document.getElementById('bc-category'),b=document.getElementById('bc-album');document.getElementById('bc-sep-1').classList.toggle('hidden',!state.activeCategory||state.activeCategory==='ALL');c.classList.toggle('hidden',!state.activeCategory||state.activeCategory==='ALL');c.textContent=state.activeCategory==='ALL'?'':state.activeCategory;document.getElementById('bc-sep-2').classList.toggle('hidden',!a);b.classList.toggle('hidden',!a);b.textContent=a?a.title:''}
+function renderAlbums(){
+ const section=document.getElementById('albums-section'),grid=document.getElementById('albums-grid'),empty=document.getElementById('empty-albums-msg');
+ document.getElementById('photos-section').classList.toggle('hidden',!state.activeAlbumId);
+ section.classList.toggle('hidden',!!state.activeAlbumId);
+ if(state.activeAlbumId)return;
+ let list=state.albums.filter(a=>(state.activeCategory==='ALL'||a.category===state.activeCategory)&&(!state.searchQuery||a.title.toLowerCase().includes(state.searchQuery)||(a.description||'').toLowerCase().includes(state.searchQuery)));
+ empty.classList.toggle('hidden',list.length>0);grid.innerHTML=list.map(a=>{
+  const photos=state.photos.filter(p=>p.albumId===a.id),cover=photos.length?photos[0].url:'https://placehold.co/400x300/e2e8f0/94a3b8?text=Sin+Fotos';
+  return `<div onclick="selectAlbum(${JSON.stringify(a.id)})" class="group bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer flex flex-col"><div class="relative aspect-[4/3] bg-gray-100 dark:bg-gray-800 overflow-hidden"><img src="${escapeAttr(cover)}" alt="${escapeAttr(a.title)}" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://placehold.co/400x300?text=Sin+Fotos'"><span class="absolute top-2 right-2 bg-black/60 text-white text-[10px] px-2 py-1 rounded">${photos.length} fotos</span></div><div class="p-3"><h3 class="font-bold text-xs sm:text-sm">${escapeHtml(a.title)}</h3><p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${escapeHtml(a.description||'Sin descripción')}</p><div class="mt-3 pt-2 border-t flex justify-between text-[10px] text-gray-400"><span>${escapeHtml(a.category)}</span><span class="flex gap-3"><button onclick="event.stopPropagation();openEditAlbumModal(${JSON.stringify(a.id)})" title="Editar"><i class="fa-solid fa-pen"></i></button><button onclick="event.stopPropagation();deleteAlbum(${JSON.stringify(a.id)})" title="Eliminar" class="text-red-500"><i class="fa-solid fa-trash"></i></button></span></div></div></div>`
+ }).join('');
+}
+function renderPhotos(){
+ const section=document.getElementById('photos-section'),grid=document.getElementById('photos-grid'),empty=document.getElementById('empty-photos-msg');
+ if(!state.activeAlbumId){section.classList.add('hidden');grid.innerHTML='';empty.classList.add('hidden');return}
+ section.classList.remove('hidden');const album=state.albums.find(a=>a.id===state.activeAlbumId);
+ document.getElementById('photos-title').innerHTML=`<i class="fa-solid fa-images text-brand-600 mr-2"></i>${escapeHtml(album?album.title:'Fotos del álbum')}`;
+ let list=state.photos.filter(p=>p.albumId===state.activeAlbumId);
+ if(state.searchQuery)list=list.filter(p=>(p.title||'').toLowerCase().includes(state.searchQuery)||(p.description||'').toLowerCase().includes(state.searchQuery));
+ list.sort((a,b)=>document.getElementById('sort-select').value==='oldest'?(a.createdAt||0)-(b.createdAt||0):(b.createdAt||0)-(a.createdAt||0));
+ empty.classList.toggle('hidden',list.length>0);
+ grid.innerHTML=list.map(p=>`<div onclick="openPhotoDetail(${JSON.stringify(p.id)})" class="group bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer"><div class="aspect-square bg-gray-100 dark:bg-gray-800 overflow-hidden"><img src="${escapeAttr(p.url)}" alt="${escapeAttr(p.title)}" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://placehold.co/400x400?text=Error'"></div><div class="p-3"><h4 class="font-semibold text-xs">${escapeHtml(p.title)}</h4><p class="text-[10px] text-gray-400 mt-1 line-clamp-2">${escapeHtml(p.description||'')}</p></div></div>`).join('');
+}
+function updateStatsCounter(){const n=state.activeAlbumId?state.photos.filter(p=>p.albumId===state.activeAlbumId).length:state.albums.length;document.getElementById('stats-counter').textContent=state.activeAlbumId?`${n} fotos`:`${n} álbumes`}
+function handleSaveAlbum(e){e.preventDefault();const id=document.getElementById('edit-album-id').value,title=document.getElementById('album-title-input').value.trim(),category=document.getElementById('album-cat-input').value.trim(),description=document.getElementById('album-desc-input').value.trim();if(!title||!category)return;const oldA=JSON.parse(JSON.stringify(state.albums)),oldP=JSON.parse(JSON.stringify(state.photos));if(id){const a=state.albums.find(x=>x.id===id);if(a)Object.assign(a,{title,category,description})}else state.albums.unshift({id:'alb-'+Date.now(),title,category,description,createdAt:Date.now()});if(!persistOrRestore(oldA,oldP))return;closeModal('create-album-modal');renderAll();showToast(id?'Álbum actualizado':'Álbum creado','success')}
+function openEditAlbumModal(id){const a=state.albums.find(x=>x.id===id);if(!a)return;document.getElementById('edit-album-id').value=a.id;document.getElementById('album-title-input').value=a.title;document.getElementById('album-cat-input').value=a.category;document.getElementById('album-desc-input').value=a.description||'';document.getElementById('album-modal-title').textContent='Editar álbum';openModal('create-album-modal')}
+function deleteAlbum(id){if(!confirm('¿Eliminar este álbum? Las fotos se conservarán, pero quedarán sin álbum.'))return;const oldA=JSON.parse(JSON.stringify(state.albums)),oldP=JSON.parse(JSON.stringify(state.photos));state.albums=state.albums.filter(a=>a.id!==id);state.photos.forEach(p=>{if(p.albumId===id)p.albumId=null});if(!persistOrRestore(oldA,oldP))return;if(state.activeAlbumId===id)state.activeAlbumId=null;renderAll();showToast('Álbum eliminado','info')}
+function populateAlbumSelect(selected=null){const s=document.getElementById('photo-album-select');s.innerHTML='<option value="">Selecciona un álbum</option>'+state.albums.map(a=>`<option value="${escapeAttr(a.id)}">${escapeHtml(a.title)}</option>`).join('');s.value=selected||state.activeAlbumId||''}
+function openUploadPhotoModal(){if(!state.albums.length){showToast('Primero crea un álbum para guardar la foto.','error');openModal('create-album-modal');return}document.getElementById('edit-photo-id').value='';document.getElementById('photo-modal-title').textContent='Subir foto';document.getElementById('photo-title-input').value='';document.getElementById('photo-desc-input').value='';document.getElementById('photo-url-input').value='';document.getElementById('photo-file-input').value='';document.getElementById('image-preview-wrapper').classList.add('hidden');document.getElementById('image-preview').src='';state.currentUploadedDataUrl='';populateAlbumSelect();switchImageTab('file');openModal('upload-photo-modal')}
+function switchImageTab(tab){state.activeTabInput=tab;document.getElementById('file-input-container').classList.toggle('hidden',tab!=='file');document.getElementById('url-input-container').classList.toggle('hidden',tab!=='url');document.getElementById('tab-file-btn').className='flex-1 py-2 text-xs rounded-lg '+(tab==='file'?'bg-white dark:bg-gray-700':'');document.getElementById('tab-url-btn').className='flex-1 py-2 text-xs rounded-lg '+(tab==='url'?'bg-white dark:bg-gray-700':'')}
+function previewFileImage(input){if(!input.files||!input.files[0])return;const file=input.files[0];if(!file.type.startsWith('image/')){showToast('Selecciona un archivo de imagen.','error');return}const reader=new FileReader();reader.onload=e=>{state.currentUploadedDataUrl=e.target.result;showPreview(e.target.result)};reader.onerror=()=>showToast('No se pudo leer la imagen.','error');reader.readAsDataURL(file)}
+function previewUrlImage(url){if(!url)return;state.currentUploadedDataUrl=url;showPreview(url)}
+function showPreview(src){document.getElementById('image-preview').src=src;document.getElementById('image-preview-wrapper').classList.remove('hidden')}
+function handleSavePhoto(e){e.preventDefault();const id=document.getElementById('edit-photo-id').value,title=document.getElementById('photo-title-input').value.trim(),desc=document.getElementById('photo-desc-input').value.trim(),albumId=document.getElementById('photo-album-select').value,image=state.currentUploadedDataUrl||document.getElementById('photo-url-input').value.trim();if(!albumId){showToast('Selecciona un álbum.','error');return}if(!id&&!image){showToast('Selecciona una imagen o introduce una URL.','error');return}const oldA=JSON.parse(JSON.stringify(state.albums)),oldP=JSON.parse(JSON.stringify(state.photos));if(id){const p=state.photos.find(x=>x.id===id);if(!p)return;Object.assign(p,{title,description:desc,albumId});if(image)p.url=image}else state.photos.unshift({id:'pic-'+Date.now(),albumId,title,description:desc,url:image,createdAt:Date.now()});if(!persistOrRestore(oldA,oldP))return;closeModal('upload-photo-modal');renderAll();showToast(id?'Foto actualizada':'Foto guardada','success')}
+function editCurrentPhoto(){const p=state.photos.find(x=>x.id===state.currentDetailPhotoId);if(!p)return;closeModal('detail-modal');document.getElementById('edit-photo-id').value=p.id;document.getElementById('photo-modal-title').textContent='Editar foto';document.getElementById('photo-title-input').value=p.title;document.getElementById('photo-desc-input').value=p.description||'';document.getElementById('photo-url-input').value=p.url;document.getElementById('photo-file-input').value='';state.currentUploadedDataUrl=p.url;populateAlbumSelect(p.albumId);switchImageTab('url');showPreview(p.url);openModal('upload-photo-modal')}
+function deleteCurrentPhoto(){const id=state.currentDetailPhotoId;if(!id||!confirm('¿Eliminar esta foto?'))return;const oldA=JSON.parse(JSON.stringify(state.albums)),oldP=JSON.parse(JSON.stringify(state.photos));state.photos=state.photos.filter(p=>p.id!==id);if(!persistOrRestore(oldA,oldP))return;closeModal('detail-modal');renderAll();showToast('Foto eliminada','info')}
+function openPhotoDetail(id){const p=state.photos.find(x=>x.id===id);if(!p)return;state.currentDetailPhotoId=id;updateUrlHash();const a=state.albums.find(x=>x.id===p.albumId);document.getElementById('detail-img').src=p.url;document.getElementById('detail-title').textContent=p.title;document.getElementById('detail-album-badge').textContent=a?a.title:'Sin álbum';document.getElementById('detail-date').textContent=p.createdAt?new Date(p.createdAt).toLocaleDateString('es-ES'):'';document.getElementById('detail-desc').textContent=p.description||'Sin descripción';openModal('detail-modal')}
+function copyDirectPhotoLink(){copyToClipboard(location.href);showToast('Enlace copiado','success')}
+function shareCurrentView(){copyToClipboard(location.href);showToast('Enlace copiado','success')}
+function copyToClipboard(t){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(()=>fallbackCopy(t));else fallbackCopy(t)}
+function fallbackCopy(t){const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();document.execCommand('copy');x.remove()}
+function toggleSidebarMobile(){document.getElementById('app-sidebar').classList.toggle('-translate-x-full');document.getElementById('sidebar-overlay').classList.toggle('hidden')}
+function closeSidebarMobile(){document.getElementById('app-sidebar').classList.add('-translate-x-full');document.getElementById('sidebar-overlay').classList.add('hidden')}
+function openModal(id){document.getElementById(id).classList.remove('hidden')}
+function closeModal(id){document.getElementById(id).classList.add('hidden');if(id==='detail-modal'){state.currentDetailPhotoId=null;updateUrlHash()}}
+function showToast(message,type='info'){const c=document.getElementById('toast-container'),t=document.createElement('div');const color=type==='success'?'bg-brand-600':type==='error'?'bg-red-600':'bg-gray-900';t.className=`${color} text-white px-4 py-3 rounded-xl shadow-xl text-xs font-semibold`;t.textContent=message;c.appendChild(t);setTimeout(()=>t.remove(),3500)}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function escapeAttr(s){return escapeHtml(s)}
+</script>
 </body>
 </html>
-```
