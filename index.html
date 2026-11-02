@@ -1,631 +1,186 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DFS Catalog / Gallery</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            700: '#a16207'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(234, 179, 8, 0.4);
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(234, 179, 8, 0.7);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DFS Catalog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0b0f19; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
+    .gold-accent { color: #f59e0b; }
+    .bg-gold { background-color: #f59e0b; }
+    .border-gold { border-color: #f59e0b; }
+  </style>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col transition-colors duration-300 dark:bg-gray-950 dark:text-gray-100 selection:bg-gold-500 selection:text-black">
+<body class="min-h-screen flex flex-col">
 
-    <!-- BARRA NAVEGACIÓN SUPERIOR -->
-    <header class="sticky top-0 z-40 bg-gray-900/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-gold-500/20 px-4 py-3 shadow-lg">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
-            
-            <!-- Logo DFS Oficial Generado en SVG -->
-            <div class="flex items-center gap-3 cursor-pointer" onclick="navigateToHome()">
-                <div class="w-12 h-12 rounded-full overflow-hidden bg-black flex-shrink-0 border-2 border-gold-500/50 shadow-md shadow-gold-500/10 flex items-center justify-center p-0.5">
-                    <!-- SVG Ilustrado Fiel al Logo DFS Oficial de la imagen -->
-                    <svg viewBox="0 0 300 300" class="w-full h-full text-white">
-                        <defs>
-                            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#fef08a" />
-                                <stop offset="50%" stop-color="#eab308" />
-                                <stop offset="100%" stop-color="#854d0e" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Fondo negro -->
-                        <rect width="300" height="300" fill="#000" />
-                        <!-- Anillos con salpicaduras urbanas -->
-                        <circle cx="150" cy="150" r="125" fill="none" stroke="#ffffff" stroke-width="6" stroke-dasharray="200 10 80 5" opacity="0.9" />
-                        <circle cx="150" cy="150" r="118" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="100 15 50 10" opacity="0.7" />
-                        
-                        <!-- Corona Dorada Superior -->
-                        <path d="M110 65 L125 35 L150 55 L175 35 L190 65 Z" fill="url(#goldGrad)" />
-                        <circle cx="125" cy="32" r="5" fill="url(#goldGrad)" />
-                        <circle cx="150" cy="50" r="5" fill="url(#goldGrad)" />
-                        <circle cx="175" cy="32" r="5" fill="url(#goldGrad)" />
-                        
-                        <!-- Texto 'DFS' Estilo Graffiti Brush -->
-                        <!-- D blanca -->
-                        <path d="M60 110 C 60 100, 110 95, 120 130 C 130 160, 100 210, 60 210 C 50 210, 65 150, 60 110 Z" fill="#ffffff" />
-                        <!-- F dorada -->
-                        <path d="M130 100 L200 90 L185 115 L150 120 L145 140 L175 135 L165 155 L140 160 L125 210 L105 210 Z" fill="url(#goldGrad)" />
-                        <!-- S blanca -->
-                        <path d="M240 120 C 210 95, 175 130, 200 155 C 230 180, 210 220, 160 205 C 190 200, 215 180, 195 160 C 175 140, 205 110, 240 120 Z" fill="#ffffff" />
-                        
-                        <!-- Balón de Fútbol Inferior con chorreras -->
-                        <g transform="translate(150, 235)">
-                            <circle cx="0" cy="0" r="32" fill="#ffffff" stroke="#000" stroke-width="2" />
-                            <polygon points="0,-18 15,-6 9,14 -9,14 -15,-6" fill="#000" />
-                            <line x1="0" y1="-18" x2="0" y2="-32" stroke="#000" stroke-width="3" />
-                            <line x1="15" y1="-6" x2="28" y2="-12" stroke="#000" stroke-width="3" />
-                            <line x1="9" y1="14" x2="22" y2="24" stroke="#000" stroke-width="3" />
-                            <line x1="-9" y1="14" x2="-22" y2="24" stroke="#000" stroke-width="3" />
-                            <line x1="-15" y1="-6" x2="-28" y2="-12" stroke="#000" stroke-width="3" />
-                        </g>
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-white via-gold-400 to-gold-600 bg-clip-text text-transparent">
-                        DFS CATALOG
-                    </h1>
-                    <p class="text-xs text-gray-400 font-medium">Galería Oficial & Colecciones</p>
-                </div>
-            </div>
-
-            <!-- Botones de Acción Superiores -->
-            <div class="flex items-center gap-2">
-                <!-- Restablecer Demo -->
-                <button onclick="resetDemoData()" title="Restablecer Datos de Ejemplo" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition border border-gray-700 text-xs flex items-center gap-1.5 active:scale-95">
-                    <i class="fa-solid fa-rotate-right text-gold-500"></i>
-                    <span class="hidden sm:inline font-medium">Reset Demo</span>
-                </button>
-
-                <!-- Alternar Tema (Claro/Oscuro) -->
-                <button onclick="toggleTheme()" title="Cambiar Tema" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gold-400 transition border border-gray-700 text-xs flex items-center justify-center w-9 h-9 active:scale-95">
-                    <i id="themeIcon" class="fa-solid fa-sun"></i>
-                </button>
-            </div>
+  <!-- ENCABEZADO Y LOGO -->
+  <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div onclick="irInicio()" class="flex items-center space-x-3 cursor-pointer">
+        <div class="w-12 h-12 rounded-full border-2 border-gold flex items-center justify-center bg-black overflow-hidden shadow-md">
+          <!-- Logo DFS con Corona y Balón -->
+          <svg class="w-8 h-8 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+          </svg>
         </div>
-    </header>
-
-    <!-- NAVEGACIÓN Y BREADCRUMB -->
-    <div class="bg-gray-900/50 border-b border-gray-800 px-4 py-2.5">
-        <div class="max-w-7xl mx-auto flex items-center justify-between text-xs sm:text-sm">
-            <div id="breadcrumb" class="flex items-center gap-2 text-gray-400 overflow-x-auto whitespace-nowrap py-1 custom-scrollbar">
-                <!-- Se inyecta dinámicamente con JavaScript -->
-            </div>
-            
-            <button id="addBtn" onclick="openAddModal()" class="ml-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-black font-bold px-3 py-1.5 rounded-lg shadow-md shadow-gold-500/20 flex items-center gap-1.5 transition active:scale-95 flex-shrink-0">
-                <i class="fa-solid fa-plus text-xs"></i>
-                <span id="addBtnText">Nueva Foto</span>
-            </button>
+        <div>
+          <h1 class="text-xl font-bold tracking-wider gold-accent leading-none">DFS CATALOG</h1>
+          <span class="text-xs text-slate-400">Galería Oficial & Colecciones</span>
         </div>
+      </div>
+      <button onclick="irInicio()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+        🏠 Inicio
+      </button>
     </div>
+  </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6">
+  <main class="max-w-6xl mx-auto w-full p-4 flex-grow space-y-6">
 
-        <!-- BUSCADOR & FILTROS DE CATEGORÍA -->
-        <div class="mb-6 space-y-4">
-            <div class="relative">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"></i>
-                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Buscar prendas, equipos o fotos..." class="w-full pl-10 pr-4 py-2.5 bg-gray-900 border border-gray-800 rounded-xl text-sm focus:outline-none focus:border-gold-500 text-gray-200 placeholder-gray-500 transition shadow-inner">
-            </div>
+    <!-- PANEL PERMANENTE: CREAR CARPETA / EQUIPO -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md">
+      <h2 class="text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider">📁 Crear Nueva Carpeta / Equipo</h2>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input id="inputNombreCarpeta" type="text" placeholder="Ej: Real Madrid, Barcelona, Sevilla..." 
+               class="bg-slate-950 border border-slate-700 text-white text-sm rounded-xl px-4 py-2.5 flex-grow focus:outline-none focus:border-amber-500">
+        
+        <select id="selectCategoriaCarpeta" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-amber-500">
+          <option value="La Liga">La Liga</option>
+          <option value="Niños">Niños</option>
+          <option value="Retro">Retro</option>
+          <option value="Selecciones">Selecciones</option>
+          <option value="Ligas Europeas">Ligas Europeas</option>
+          <option value="Otras Ligas">Otras Ligas</option>
+        </select>
 
-            <!-- Chips de Categorías Rápidas -->
-            <div id="categoryChips" class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar text-xs">
-                <!-- Generado por JS -->
-            </div>
+        <button onclick="crearCarpeta()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm transition flex items-center justify-center space-x-1 shadow-md">
+          <span>+ Crear Carpeta</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- BARRA DE PESTAÑAS (CATEGORÍAS) -->
+    <nav class="flex space-x-2 overflow-x-auto pb-2 border-b border-slate-800 text-sm scrollbar-none" id="barrapestanas">
+      <button onclick="filtrarCategoria('Todas')" class="pestana-btn active font-medium px-4 py-2 rounded-xl bg-amber-500 text-slate-950 transition whitespace-nowrap" data-cat="Todas">📷 Todas</button>
+      <button onclick="filtrarCategoria('La Liga')" class="pestana-btn font-medium px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition whitespace-nowrap" data-cat="La Liga">⚽ La Liga</button>
+      <button onclick="filtrarCategoria('Niños')" class="pestana-btn font-medium px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition whitespace-nowrap" data-cat="Niños">🧒 Niños</button>
+      <button onclick="filtrarCategoria('Retro')" class="pestana-btn font-medium px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition whitespace-nowrap" data-cat="Retro">⏳ Retro</button>
+      <button onclick="filtrarCategoria('Selecciones')" class="pestana-btn font-medium px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition whitespace-nowrap" data-cat="Selecciones">🌍 Selecciones</button>
+      <button onclick="filtrarCategoria('Ligas Europeas')" class="pestana-btn font-medium px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition whitespace-nowrap" data-cat="Ligas Europeas">🏆 Ligas Europeas</button>
+      <button onclick="filtrarCategoria('Otras Ligas')" class="pestana-btn font-medium px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition whitespace-nowrap" data-cat="Otras Ligas">🌐 Otras Ligas</button>
+    </nav>
+
+    <!-- VISTA 1: GRID DE CARPETAS / EQUIPOS -->
+    <section id="vistaCarpetas" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 id="tituloCategoria" class="text-lg font-bold text-slate-200">Carpetas (Todas)</h3>
+        <span id="contadorCarpetas" class="text-xs text-slate-400">0 carpetas</span>
+      </div>
+      <div id="gridCarpetas" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <!-- Se genera dinámicamente -->
+      </div>
+    </section>
+
+    <!-- VISTA 2: DENTRO DE UNA CARPETA (FOTOS) -->
+    <section id="vistaFotos" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 p-4 rounded-2xl border border-slate-800">
+        <div class="flex items-center space-x-3">
+          <button onclick="volverACarpetas()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 p-2 rounded-xl transition">
+            ← Volver
+          </button>
+          <div>
+            <h2 id="tituloCarpetaAbierta" class="text-xl font-bold text-amber-500">Nombre Carpeta</h2>
+            <p id="subtituloCarpetaAbierta" class="text-xs text-slate-400">Categoría</p>
+          </div>
         </div>
 
-        <!-- CONTENEDOR DE CARPETAS Y FOTOS -->
-        <div id="galleryContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-            <!-- Renderizado dinámico -->
+        <div class="flex items-center gap-2">
+          <label class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition cursor-pointer flex items-center space-x-1">
+            <span>+ Subir Foto</span>
+            <input type="file" id="inputFoto" accept="image/*" class="hidden" onchange="subirFoto(event)">
+          </label>
+          <button onclick="borrarCarpetaActual()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-3 py-2 rounded-xl text-xs transition">
+            🗑️ Eliminar Carpeta
+          </button>
         </div>
+      </div>
 
-        <!-- MENSAJE SIN RESULTADOS / VACÍO -->
-        <div id="emptyState" class="hidden text-center py-16 px-4">
-            <div class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-3 border border-gray-800 text-gold-500 text-2xl">
-                <i class="fa-solid fa-folder-open"></i>
-            </div>
-            <h3 class="text-base font-semibold text-gray-300">No hay contenido en esta carpeta</h3>
-            <p class="text-xs text-gray-500 mt-1 max-w-xs mx-auto">Sube una nueva foto o cambia de categoría para ver más productos.</p>
-        </div>
-    </main>
+      <!-- GRID DE FOTOS SUBIDAS -->
+      <div id="gridFotos" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <!-- Las imágenes se renderizan dinámicamente -->
+      </div>
+    </section>
 
-    <!-- FOOTER -->
-    <footer class="bg-gray-950 border-t border-gray-900 py-6 px-4 text-center text-xs text-gray-500 mt-auto">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center gap-2">
-                <div class="w-5 h-5 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-500 text-[10px]">
-                    <i class="fa-solid fa-crown"></i>
-                </div>
-                <span class="font-semibold text-gray-400">DFS Catalog &copy; 2026</span>
-            </div>
-            <p class="text-gray-600">Almacenamiento Local Optimizado | Persistencia Auto-Compresiva</p>
-        </div>
-    </footer>
+  </main>
 
-    <!-- MODAL AÑADIR CONTENIDO (FOTO O CARPETA) -->
-    <div id="addModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-md w-full p-5 shadow-2xl relative transform transition-all">
-            <!-- Cerrar -->
-            <button onclick="closeAddModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white p-1">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
+  <script>
+    // ESTADO LOCAL DE LA APLICACIÓN
+    let db = JSON.parse(localStorage.getItem('dfs_catalog_db')) || {
+      carpetas: [
+        { id: 'c1', nombre: 'Real Madrid', categoria: 'La Liga', fotos: [] },
+        { id: 'c2', nombre: 'FC Barcelona', categoria: 'La Liga', fotos: [] }
+      ]
+    };
 
-            <h3 class="text-lg font-bold text-gray-100 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-cloud-arrow-up text-gold-500"></i>
-                Añadir al Catálogo
-            </h3>
-            <p class="text-xs text-gray-400 mb-4">Sube fotos ligeras o pega enlaces directos para guardarlas para siempre.</p>
+    let categoriaActual = 'Todas';
+    let carpetaAbiertaId = null;
 
-            <!-- TABS MÓDULO (Subir Archivo Local / URL Externa) -->
-            <div class="flex border-b border-gray-800 mb-4">
-                <button type="button" id="tabFileUploadBtn" onclick="switchAddTab('file')" class="flex-1 py-2 text-xs font-semibold border-b-2 border-gold-500 text-gold-400">
-                    <i class="fa-solid fa-file-image mr-1"></i> Archivo Galería
-                </button>
-                <button type="button" id="tabUrlUploadBtn" onclick="switchAddTab('url')" class="flex-1 py-2 text-xs font-semibold text-gray-400 border-b-2 border-transparent">
-                    <i class="fa-solid fa-link mr-1"></i> URL Directa
-                </button>
-            </div>
+    // GUARDAR EN LOCALSTORAGE CON COMPRESIÓN DE FOTOS
+    function guardarDB() {
+      try {
+        localStorage.setItem('dfs_catalog_db', JSON.stringify(db));
+      } catch (e) {
+        alert("Atención: El almacenamiento local está lleno. Intenta subir fotos de menor tamaño.");
+      }
+    }
 
-            <form id="addForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                <!-- Título del elemento -->
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Título o Descripción *</label>
-                    <input type="text" id="itemTitle" required placeholder="Ej: Camiseta Real Madrid 2025/26" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-gold-500">
-                </div>
+    // CREAR CARPETA NUEVA
+    function crearCarpeta() {
+      const input = document.getElementById('inputNombreCarpeta');
+      const select = document.getElementById('selectCategoriaCarpeta');
+      const nombre = input.value.trim();
+      const categoria = select.value;
 
-                <!-- Selección de Categoría / Carpeta destino -->
-                <div>
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Categoría / Carpeta</label>
-                    <select id="itemCategory" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-gold-500">
-                        <option value="La Liga">La Liga</option>
-                        <option value="Niños">Niños</option>
-                        <option value="Retro">Retro</option>
-                        <option value="Selecciones">Selecciones</option>
-                        <option value="Ligas Europeas">Ligas Europeas</option>
-                        <option value="Otras Ligas">Otras Ligas</option>
-                    </select>
-                </div>
+      if (!nombre) {
+        alert("Por favor, escribe un nombre para la carpeta.");
+        return;
+      }
 
-                <!-- OPCIÓN A: Archivo Local con Compresión Automática -->
-                <div id="fileUploadContainer" class="block">
-                    <label class="block text-xs font-medium text-gray-300 mb-1">Seleccionar Foto desde el Móvil</label>
-                    <div class="border-2 border-dashed border-gray-800 hover:border-gold-500/50 rounded-xl p-4 text-center cursor-pointer bg-gray-950/50 relative">
-                        <input type="file" id="itemFileInput" accept="image/*" onchange="previewSelectedFile(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                        <div id="filePreviewPlaceholder" class="space-y-1">
-                            <i class="fa-solid fa-camera text-2xl text-gold-500/70"></i>
-                            <p class="text-xs text-gray-300 font-medium">Toca para abrir la Galería o Cámara</p>
-                            <p class="text-[10px] text-gray-500">Se comprimirá automáticamente para no borrarse al actualizar</p>
-                        </div>
-                        <img id="filePreviewImage" class="hidden max-h-36 mx-auto rounded-lg object-contain shadow-md">
-                    </div>
-                </div>
+      const nuevaCarpeta = {
+        id: 'c_' + Date.now(),
+        nombre: nombre,
+        categoria: categoria,
+        fotos: []
+      };
 
-                <!-- OPCIÓN B: URL Directa de Imagen -->
-                <div id="urlUploadContainer" class="hidden">
-                    <label class="block text-xs font-medium text-gray-300 mb-1">URL Directa de Imagen (.jpg, .png)</label>
-                    <input type="url" id="itemUrlInput" placeholder="https://i.imgur.com/ejemplo.jpg" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-gold-500">
-                    <p class="text-[10px] text-gray-500 mt-1">Usa enlaces directos de Postimages, Imgur o servidores de imágenes.</p>
-                </div>
+      db.carpetas.push(nuevaCarpeta);
+      guardarDB();
+      input.value = '';
+      renderizarCarpetas();
+    }
 
-                <!-- Botones del Modal -->
-                <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeAddModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium py-2 rounded-lg text-xs transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" id="saveSubmitBtn" class="flex-1 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-black font-bold py-2 rounded-lg text-xs shadow-md shadow-gold-500/20 transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>Guardar Foto</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL VISOR DE IMAGEN A TAMAÑO COMPLETO -->
-    <div id="imageViewerModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4" onclick="closeImageViewer()">
-        <div class="relative max-w-4xl w-full max-h-full flex flex-col items-center justify-center" onclick="event.stopPropagation()">
-            <!-- Cerrar -->
-            <button onclick="closeImageViewer()" class="absolute -top-10 right-0 sm:top-2 sm:right-2 text-gray-300 hover:text-white bg-black/60 p-2 rounded-full z-10 w-10 h-10 flex items-center justify-center">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            <img id="viewerImage" src="" class="max-h-[80vh] w-auto max-w-full object-contain rounded-xl shadow-2xl border border-gray-800">
-            <div class="mt-3 text-center">
-                <h4 id="viewerTitle" class="text-sm sm:text-base font-bold text-gray-200"></h4>
-                <p id="viewerCategory" class="text-xs text-gold-500 font-medium mt-0.5"></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- LOGICA JAVASCRIPT INTEGRADA Y COMPLETA -->
-    <script>
-        // CONFIGURACIÓN DE CATEGORÍAS FIJAS PEDIDAS POR EL USUARIO
-        const CATEGORIES = [
-            { id: 'La Liga', name: 'La Liga', icon: 'fa-futbol', color: 'from-blue-600 to-indigo-800' },
-            { id: 'Niños', name: 'Niños', icon: 'fa-child', color: 'from-emerald-600 to-teal-800' },
-            { id: 'Retro', name: 'Retro', icon: 'fa-clock-rotate-left', color: 'from-amber-600 to-orange-800' },
-            { id: 'Selecciones', name: 'Selecciones', icon: 'fa-flag', color: 'from-red-600 to-rose-800' },
-            { id: 'Ligas Europeas', name: 'Ligas Europeas', icon: 'fa-trophy', color: 'from-purple-600 to-indigo-900' },
-            { id: 'Otras Ligas', name: 'Otras Ligas', icon: 'fa-globe', color: 'from-cyan-600 to-blue-800' }
-        ];
-
-        // DATOS INICIALES DE DEMO (Se usan si localStorage está vacío)
-        const INITIAL_DEMO_DATA = [
-            { id: '1', title: 'Real Madrid Local 24/25', category: 'La Liga', url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&auto=format&fit=crop&q=60', date: Date.now() },
-            { id: '2', title: 'FC Barcelona Retro 1998', category: 'Retro', url: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=500&auto=format&fit=crop&q=60', date: Date.now() - 10000 },
-            { id: '3', title: 'España Equipación Mundial', category: 'Selecciones', url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=500&auto=format&fit=crop&q=60', date: Date.now() - 20000 },
-            { id: '4', title: 'Conjunto Niño PSG', category: 'Niños', url: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=500&auto=format&fit=crop&q=60', date: Date.now() - 30000 }
-        ];
-
-        // ESTADO GLOBAL DE LA APLICACIÓN
-        let appState = {
-            currentCategory: 'ALL', // 'ALL' o id de categoría especifica
-            searchTerm: '',
-            items: [],
-            addTab: 'file', // 'file' o 'url'
-            compressedImageData: null
-        };
-
-        // INICIALIZACIÓN
-        window.onload = function() {
-            loadStateFromStorage();
-            renderCategoryChips();
-            renderGallery();
-            updateBreadcrumb();
-        };
-
-        // CARGAR DATOS DESDE LOCALSTORAGE
-        function loadStateFromStorage() {
-            const stored = localStorage.getItem('dfs_catalog_items');
-            if (stored) {
-                try {
-                    appState.items = JSON.parse(stored);
-                } catch(e) {
-                    appState.items = [...INITIAL_DEMO_DATA];
-                }
-            } else {
-                appState.items = [...INITIAL_DEMO_DATA];
-                saveStateToStorage();
-            }
+    // FILTRAR CATEGORÍAS
+    function filtrarCategoria(cat) {
+      categoriaActual = cat;
+      document.querySelectorAll('.pestana-btn').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.className = "pestana-btn active font-medium px-4 py-2 rounded-xl bg-amber-500 text-slate-950 transition whitespace-nowrap";
+        } else {
+          btn.className = "pestana-btn font-medium px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition whitespace-nowrap";
         }
+      });
 
-        // GUARDAR DATOS EN LOCALSTORAGE
-        function saveStateToStorage() {
-            try {
-                localStorage.setItem('dfs_catalog_items', JSON.stringify(appState.items));
-            } catch(e) {
-                console.error("Error al guardar en localStorage:", e);
-                alert("El almacenamiento local está lleno. Intenta borrar fotos antiguas.");
-            }
-        }
+      // Si estamos en la vista de fotos, volvemos a la vista de carpetas
+      volverACarpetas();
+    }
 
-        // CAMBIAR TEMA CLARO / OSCURO
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('themeIcon');
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.className = 'fa-solid fa-moon';
-            } else {
-                html.classList.add('dark');
-                icon.className = 'fa-solid fa-sun';
-            }
-        }
+    // RENDERIZAR VISTA DE CARPETAS
+    function renderizarCarpetas() {
+      const grid = document.getElementById('gridCarpetas');
+      const titulo = document.getElementById('tituloCategoria');
+      const contador = document.getElementById('contadorCarpetas');
+      grid.innerHTML = '';
 
-        // RESTABLECER DEMO
-        function resetDemoData() {
-            if (confirm("¿Quieres restablecer el catálogo con las fotos de muestra por defecto?")) {
-                appState.items = [...INITIAL_DEMO_DATA];
-                saveStateToStorage();
-                appState.currentCategory = 'ALL';
-                renderGallery();
-                updateBreadcrumb();
-                renderCategoryChips();
-            }
-        }
-
-        // RENDERIZAR CHIPS DE CATEGORÍAS
-        function renderCategoryChips() {
-            const container = document.getElementById('categoryChips');
-            let html = `
-                <button onclick="selectCategory('ALL')" class="px-3 py-1.5 rounded-xl font-medium transition flex items-center gap-1.5 flex-shrink-0 ${appState.currentCategory === 'ALL' ? 'bg-gold-500 text-black font-bold shadow-md shadow-gold-500/20' : 'bg-gray-900 border border-gray-800 text-gray-400 hover:text-white'}">
-                    <i class="fa-solid fa-border-all"></i>
-                    <span>Todas</span>
-                </button>
-            `;
-
-            CATEGORIES.forEach(cat => {
-                const isActive = appState.currentCategory === cat.id;
-                html += `
-                    <button onclick="selectCategory('${cat.id}')" class="px-3 py-1.5 rounded-xl font-medium transition flex items-center gap-1.5 flex-shrink-0 ${isActive ? 'bg-gold-500 text-black font-bold shadow-md shadow-gold-500/20' : 'bg-gray-900 border border-gray-800 text-gray-400 hover:text-white'}">
-                        <i class="fa-solid ${cat.icon}"></i>
-                        <span>${cat.name}</span>
-                    </button>
-                `;
-            });
-
-            container.innerHTML = html;
-        }
-
-        // SELECCIONAR CATEGORÍA
-        function selectCategory(catId) {
-            appState.currentCategory = catId;
-            renderCategoryChips();
-            renderGallery();
-            updateBreadcrumb();
-        }
-
-        // ACTUALIZAR BREADCRUMB DE NAVEGACIÓN
-        function updateBreadcrumb() {
-            const container = document.getElementById('breadcrumb');
-            let html = `
-                <button onclick="navigateToHome()" class="hover:text-gold-400 flex items-center gap-1 transition">
-                    <i class="fa-solid fa-house text-xs"></i>
-                    <span>Inicio</span>
-                </button>
-            `;
-
-            if (appState.currentCategory !== 'ALL') {
-                const cat = CATEGORIES.find(c => c.id === appState.currentCategory);
-                html += `
-                    <i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
-                    <span class="text-gold-400 font-semibold">${cat ? cat.name : appState.currentCategory}</span>
-                `;
-            }
-
-            container.innerHTML = html;
-        }
-
-        function navigateToHome() {
-            appState.currentCategory = 'ALL';
-            appState.searchTerm = '';
-            document.getElementById('searchInput').value = '';
-            renderCategoryChips();
-            renderGallery();
-            updateBreadcrumb();
-        }
-
-        // MANEJAR BÚSQUEDA
-        function handleSearch() {
-            appState.searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            renderGallery();
-        }
-
-        // RENDERIZAR GALERÍA DE FOTOS Y CARPETAS
-        function renderGallery() {
-            const container = document.getElementById('galleryContainer');
-            const emptyState = document.getElementById('emptyState');
-
-            // Filtrar elementos
-            let filtered = appState.items.filter(item => {
-                const matchesCategory = appState.currentCategory === 'ALL' || item.category === appState.currentCategory;
-                const matchesSearch = !appState.searchTerm || item.title.toLowerCase().includes(appState.searchTerm);
-                return matchesCategory && matchesSearch;
-            });
-
-            if (filtered.length === 0) {
-                container.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-
-            let html = '';
-            filtered.forEach(item => {
-                html += `
-                    <div class="group bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-md hover:border-gold-500/40 transition-all duration-300 flex flex-col relative">
-                        <!-- Botón Eliminar -->
-                        <button onclick="deleteItem('${item.id}')" title="Eliminar foto" class="absolute top-2 right-2 z-10 w-7 h-7 bg-black/70 hover:bg-red-600 text-gray-300 hover:text-white rounded-full flex items-center justify-center transition opacity-0 group-hover:opacity-100">
-                            <i class="fa-solid fa-trash-can text-xs"></i>
-                        </button>
-
-                        <!-- Imagen -->
-                        <div class="aspect-square w-full bg-gray-950 overflow-hidden relative cursor-pointer" onclick="openImageViewer('${item.url}', '${escapeHtml(item.title)}', '${item.category}')">
-                            <img src="${item.url}" alt="${escapeHtml(item.title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/400x400/111827/eab308?text=DFS+Gallery';">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
-                                <span class="text-[10px] text-gold-400 font-semibold bg-black/60 px-2 py-0.5 rounded-full border border-gold-500/30">
-                                    ${item.category}
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Info -->
-                        <div class="p-3 flex flex-col flex-grow justify-between">
-                            <h4 class="text-xs sm:text-sm font-semibold text-gray-200 line-clamp-2 group-hover:text-gold-400 transition-colors">
-                                ${escapeHtml(item.title)}
-                            </h4>
-                            <div class="mt-2 flex items-center justify-between text-[10px] text-gray-500 pt-2 border-t border-gray-800/60">
-                                <span class="text-gold-500/80 font-medium">${item.category}</span>
-                                <i class="fa-solid fa-expand text-gray-600 group-hover:text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-        }
-
-        // ELIMINAR ELEMENTO
-        function deleteItem(id) {
-            if (confirm("¿Estás seguro de que quieres borrar esta foto del catálogo?")) {
-                appState.items = appState.items.filter(i => i.id !== id);
-                saveStateToStorage();
-                renderGallery();
-            }
-        }
-
-        // MODAL Y PESTAÑAS PARA AÑADIR
-        function openAddModal() {
-            document.getElementById('addModal').classList.remove('hidden');
-            if (appState.currentCategory !== 'ALL') {
-                document.getElementById('itemCategory').value = appState.currentCategory;
-            }
-        }
-
-        function closeAddModal() {
-            document.getElementById('addModal').classList.add('hidden');
-            document.getElementById('addForm').reset();
-            document.getElementById('filePreviewPlaceholder').classList.remove('hidden');
-            document.getElementById('filePreviewImage').classList.add('hidden');
-            appState.compressedImageData = null;
-        }
-
-        function switchAddTab(tab) {
-            appState.addTab = tab;
-            const fileBtn = document.getElementById('tabFileUploadBtn');
-            const urlBtn = document.getElementById('tabUrlUploadBtn');
-            const fileCont = document.getElementById('fileUploadContainer');
-            const urlCont = document.getElementById('urlUploadContainer');
-
-            if (tab === 'file') {
-                fileBtn.className = 'flex-1 py-2 text-xs font-semibold border-b-2 border-gold-500 text-gold-400';
-                urlBtn.className = 'flex-1 py-2 text-xs font-semibold text-gray-400 border-b-2 border-transparent';
-                fileCont.classList.remove('hidden');
-                urlCont.classList.add('hidden');
-            } else {
-                urlBtn.className = 'flex-1 py-2 text-xs font-semibold border-b-2 border-gold-500 text-gold-400';
-                fileBtn.className = 'flex-1 py-2 text-xs font-semibold text-gray-400 border-b-2 border-transparent';
-                urlCont.classList.remove('hidden');
-                fileCont.classList.add('hidden');
-            }
-        }
-
-        // PROCESAR Y COMPRIMIR IMAGEN LOCAL DEL MÓVIL
-        function previewSelectedFile(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = function() {
-                    // Compresión mediante Canvas para que ocupe muy pocos KB y persista en localStorage
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 600;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    
-                    if (scaleSize < 1) {
-                        canvas.width = MAX_WIDTH;
-                        canvas.height = img.height * scaleSize;
-                    } else {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                    }
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    // Convertir a JPEG comprimido calidad 0.7
-                    appState.compressedImageData = canvas.toDataURL('image/jpeg', 0.7);
-
-                    // Vista previa visual
-                    const previewImg = document.getElementById('filePreviewImage');
-                    previewImg.src = appState.compressedImageData;
-                    previewImg.classList.remove('hidden');
-                    document.getElementById('filePreviewPlaceholder').classList.add('hidden');
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // GUARDAR FORMULARIO
-        function handleFormSubmit(e) {
-            e.preventDefault();
-
-            const title = document.getElementById('itemTitle').value.trim();
-            const category = document.getElementById('itemCategory').value;
-            let finalUrl = '';
-
-            if (appState.addTab === 'file') {
-                if (!appState.compressedImageData) {
-                    alert("Por favor selecciona una foto de tu galería.");
-                    return;
-                }
-                finalUrl = appState.compressedImageData;
-            } else {
-                const urlInput = document.getElementById('itemUrlInput').value.trim();
-                if (!urlInput) {
-                    alert("Por favor introduce una URL de imagen válida.");
-                    return;
-                }
-                finalUrl = urlInput;
-            }
-
-            const newItem = {
-                id: Date.now().toString(),
-                title: title,
-                category: category,
-                url: finalUrl,
-                date: Date.now()
-            };
-
-            appState.items.unshift(newItem);
-            saveStateToStorage();
-            closeAddModal();
-            renderGallery();
-        }
-
-        // VISOR DE IMAGEN TAMAÑO COMPLETO
-        function openImageViewer(url, title, category) {
-            document.getElementById('viewerImage').src = url;
-            document.getElementById('viewerTitle').innerText = title;
-            document.getElementById('viewerCategory').innerText = category;
-            document.getElementById('imageViewerModal').classList.remove('hidden');
-        }
-
-        function closeImageViewer() {
-            document.getElementById('imageViewerModal').classList.add('hidden');
-        }
-
-        // AUXILIAR
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-    </script>
-</body>
-</html>
+      let filtradas = db.carpetas;
+      if (categoriaActual !== 'Todas') {
+        filtradas = db.carpetas.filter(c => c
