@@ -8,93 +8,10 @@
   <style>
     body { background-color: #0b0f19; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
     .gold-accent { color: #f59e0b; }
+    .pestana-btn { cursor: pointer; touch-action: manipulation; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col p-4">
 
-  <!-- ENCABEZADO CON LOGO DFS Y BOTÓN DE REFRESCO -->
-  <header class="bg-slate-900 border border-slate-800 p-4 rounded-2xl mb-6 shadow-lg flex items-center justify-between">
-    <div onclick="irInicio()" class="flex items-center space-x-3 cursor-pointer">
-      <div class="w-10 h-10 rounded-full border-2 border-amber-500 bg-black flex items-center justify-center">
-        👑
-      </div>
-      <div>
-        <h1 class="text-lg font-bold text-amber-500 leading-none">DFS CATALOG</h1>
-        <span class="text-xs text-slate-400">Galería Oficial</span>
-      </div>
-    </div>
-    <div class="flex space-x-2">
-      <button onclick="mostrarCarpetas()" class="text-xs bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 border border-amber-500/30 px-3 py-1.5 rounded-xl transition">
-        🔄 Actualizar Portadas
-      </button>
-      <button onclick="resetearApp()" class="text-xs bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 px-3 py-1.5 rounded-xl transition">
-        🗑️ Reset
-      </button>
-    </div>
-  </header>
-
-  <main class="max-w-4xl mx-auto w-full space-y-6 flex-grow">
-
-    <!-- FORMULARIO PARA CREAR CARPETAS -->
-    <section class="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
-      <h2 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">➕ Crear Nueva Carpeta / Equipo</h2>
-      <div class="flex flex-col sm:flex-row gap-2">
-        <input id="nombreInput" type="text" placeholder="Ej: Real Madrid, Barcelona, Sevilla..." class="bg-slate-950 border border-slate-700 text-white text-sm rounded-xl px-4 py-2 flex-grow focus:outline-none focus:border-amber-500">
-        
-        <select id="categoriaSelect" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-xl px-3 py-2 focus:outline-none">
-          <option value="La Liga">La Liga</option>
-          <option value="Niños">Niños</option>
-          <option value="Retro">Retro</option>
-          <option value="Selecciones">Selecciones</option>
-          <option value="Ligas Europeas">Ligas Europeas</option>
-          <option value="Otras Ligas">Otras Ligas</option>
-        </select>
-
-        <button onclick="crearCarpetaBoton()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition">
-          Guardar Carpeta
-        </button>
-      </div>
-    </section>
-
-    <!-- PESTAÑAS DE CATEGORÍAS -->
-    <nav class="flex space-x-2 overflow-x-auto pb-2 border-b border-slate-800 text-sm">
-      <button onclick="cambiarPestana('Todas')" class="btn-pestana bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl whitespace-nowrap" data-cat="Todas">📷 Todas</button>
-      <button onclick="cambiarPestana('La Liga')" class="btn-pestana bg-slate-900 text-slate-300 px-4 py-2 rounded-xl whitespace-nowrap" data-cat="La Liga">⚽ La Liga</button>
-      <button onclick="cambiarPestana('Niños')" class="btn-pestana bg-slate-900 text-slate-300 px-4 py-2 rounded-xl whitespace-nowrap" data-cat="Niños">🧒 Niños</button>
-      <button onclick="cambiarPestana('Retro')" class="btn-pestana bg-slate-900 text-slate-300 px-4 py-2 rounded-xl whitespace-nowrap" data-cat="Retro">⏳ Retro</button>
-      <button onclick="cambiarPestana('Selecciones')" class="btn-pestana bg-slate-900 text-slate-300 px-4 py-2 rounded-xl whitespace-nowrap" data-cat="Selecciones">🌍 Selecciones</button>
-      <button onclick="cambiarPestana('Ligas Europeas')" class="btn-pestana bg-slate-900 text-slate-300 px-4 py-2 rounded-xl whitespace-nowrap" data-cat="Ligas Europeas">🏆 Ligas Europeas</button>
-      <button onclick="cambiarPestana('Otras Ligas')" class="btn-pestana bg-slate-900 text-slate-300 px-4 py-2 rounded-xl whitespace-nowrap" data-cat="Otras Ligas">🌐 Otras Ligas</button>
-    </nav>
-
-    <!-- VISTA CARPETAS (MUESTRA LA PRIMERA FOTO COMO PORTADA) -->
-    <section id="seccionCarpetas" class="space-y-4">
-      <h3 id="tituloVista" class="text-base font-bold text-slate-200">Carpetas disponibles</h3>
-      <div id="contenedorCarpetas" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
-    </section>
-
-    <!-- VISTA FOTOS DENTRO DE UNA CARPETA -->
-    <section id="seccionFotos" class="hidden space-y-4">
-      <div class="flex items-center justify-between bg-slate-900 p-4 rounded-2xl border border-slate-800">
-        <button onclick="irInicio()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl text-xs transition">
-          ← Volver
-        </button>
-        <h3 id="nombreCarpetaActiva" class="font-bold text-amber-500 text-base"></h3>
-        <label class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs cursor-pointer transition">
-          + Subir Foto
-          <input type="file" accept="image/*" class="hidden" onchange="subirImagen(event)">
-        </label>
-      </div>
-
-      <div id="contenedorFotos" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
-    </section>
-
-  </main>
-
-  <script>
-    let datos = JSON.parse(localStorage.getItem('dfs_db_v3')) || [
-      { id: '1', nombre: 'Real Madrid', categoria: 'La Liga', fotos: [] },
-      { id: '2', nombre: 'FC Barcelona', categoria: 'La Liga', fotos: [] }
-    ];
-    let catActiva = 'Todas';
-    let carpetaAct
+  <!-- CABECERA OFICIAL DFS -->
+  <header class="bg-slate-900 border border-slate-800 p-4 rounded-2xl mb-6 shadow-lg flex items-center justify-between
