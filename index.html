@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DFS Catalog & Visual Gallery</title>
+    <title>DFS Catalog / Gallery</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -12,1069 +12,619 @@
             theme: {
                 extend: {
                     colors: {
-                        dfs: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0284c7',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                            accent: '#00f0ff'
+                        gold: {
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207'
                         }
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome CDN -->
+    <!-- FontAwesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .folder-card { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        .folder-card:hover { transform: translateY(-3px); }
-        .img-zoom-container { overflow: hidden; position: relative; }
-        .img-zoom-container img { transition: transform 0.3s ease; }
-        .img-zoom-container:hover img { transform: scale(1.12); }
+        body {
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(234, 179, 8, 0.4);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(234, 179, 8, 0.7);
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-full flex flex-col transition-colors duration-200">
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col transition-colors duration-300 dark:bg-gray-950 dark:text-gray-100 selection:bg-gold-500 selection:text-black">
 
-    <!-- Toast Notifications -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
-
-    <!-- Header / Branding Bar -->
-    <header class="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 shadow-xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 gap-4">
-                
-                <!-- DFS Logo & Brand -->
-                <div class="flex items-center gap-3 cursor-pointer" onclick="navigateToHome()">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-sky-600 to-blue-700 flex items-center justify-center text-white font-black text-xl tracking-tighter shadow-lg shadow-cyan-500/20 border border-cyan-400/30">
-                        DFS
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-black tracking-tight text-white flex items-center gap-2">
-                            DFS <span class="text-cyan-400 font-bold text-xs uppercase tracking-widest px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800">CATALOG</span>
-                        </h1>
-                    </div>
+    <!-- BARRA NAVEGACIÓN SUPERIOR -->
+    <header class="sticky top-0 z-40 bg-gray-900/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-gold-500/20 px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            
+            <!-- Logo DFS Oficial Generado en SVG -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="navigateToHome()">
+                <div class="w-12 h-12 rounded-full overflow-hidden bg-black flex-shrink-0 border-2 border-gold-500/50 shadow-md shadow-gold-500/10 flex items-center justify-center p-0.5">
+                    <!-- SVG Ilustrado Fiel al Logo DFS Oficial de la imagen -->
+                    <svg viewBox="0 0 300 300" class="w-full h-full text-white">
+                        <defs>
+                            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#fef08a" />
+                                <stop offset="50%" stop-color="#eab308" />
+                                <stop offset="100%" stop-color="#854d0e" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Fondo negro -->
+                        <rect width="300" height="300" fill="#000" />
+                        <!-- Anillos con salpicaduras urbanas -->
+                        <circle cx="150" cy="150" r="125" fill="none" stroke="#ffffff" stroke-width="6" stroke-dasharray="200 10 80 5" opacity="0.9" />
+                        <circle cx="150" cy="150" r="118" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="100 15 50 10" opacity="0.7" />
+                        
+                        <!-- Corona Dorada Superior -->
+                        <path d="M110 65 L125 35 L150 55 L175 35 L190 65 Z" fill="url(#goldGrad)" />
+                        <circle cx="125" cy="32" r="5" fill="url(#goldGrad)" />
+                        <circle cx="150" cy="50" r="5" fill="url(#goldGrad)" />
+                        <circle cx="175" cy="32" r="5" fill="url(#goldGrad)" />
+                        
+                        <!-- Texto 'DFS' Estilo Graffiti Brush -->
+                        <!-- D blanca -->
+                        <path d="M60 110 C 60 100, 110 95, 120 130 C 130 160, 100 210, 60 210 C 50 210, 65 150, 60 110 Z" fill="#ffffff" />
+                        <!-- F dorada -->
+                        <path d="M130 100 L200 90 L185 115 L150 120 L145 140 L175 135 L165 155 L140 160 L125 210 L105 210 Z" fill="url(#goldGrad)" />
+                        <!-- S blanca -->
+                        <path d="M240 120 C 210 95, 175 130, 200 155 C 230 180, 210 220, 160 205 C 190 200, 215 180, 195 160 C 175 140, 205 110, 240 120 Z" fill="#ffffff" />
+                        
+                        <!-- Balón de Fútbol Inferior con chorreras -->
+                        <g transform="translate(150, 235)">
+                            <circle cx="0" cy="0" r="32" fill="#ffffff" stroke="#000" stroke-width="2" />
+                            <polygon points="0,-18 15,-6 9,14 -9,14 -15,-6" fill="#000" />
+                            <line x1="0" y1="-18" x2="0" y2="-32" stroke="#000" stroke-width="3" />
+                            <line x1="15" y1="-6" x2="28" y2="-12" stroke="#000" stroke-width="3" />
+                            <line x1="9" y1="14" x2="22" y2="24" stroke="#000" stroke-width="3" />
+                            <line x1="-9" y1="14" x2="-22" y2="24" stroke="#000" stroke-width="3" />
+                            <line x1="-15" y1="-6" x2="-28" y2="-12" stroke="#000" stroke-width="3" />
+                        </g>
+                    </svg>
                 </div>
-
-                <!-- Global Folder Search Bar -->
-                <div class="hidden sm:flex flex-1 max-w-md">
-                    <div class="relative w-full">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                        <input type="text" id="folder-search" oninput="handleSearch(this.value)" placeholder="Buscar carpeta o colección..." class="w-full pl-10 pr-4 py-2 bg-slate-800/80 border border-slate-700 focus:border-cyan-500 rounded-xl text-xs sm:text-sm focus:outline-none text-white placeholder-slate-400 transition">
-                    </div>
-                </div>
-
-                <!-- Top Right Actions -->
-                <div class="flex items-center gap-2">
-                    <button onclick="toggleDarkMode()" title="Cambiar tema" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                        <i id="theme-icon" class="fa-solid fa-sun text-amber-400 text-base"></i>
-                    </button>
-
-                    <button onclick="copyCurrentViewLink()" class="p-2 rounded-xl text-slate-400 hover:text-cyan-400 hover:bg-slate-800 transition" title="Copiar Enlace de Vista Actual">
-                        <i class="fa-solid fa-share-nodes text-base"></i>
-                    </button>
-
-                    <button onclick="openCreateFolderModal()" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-cyan-500/10 transition transform active:scale-95">
-                        <i class="fa-solid fa-folder-plus"></i> <span class="hidden sm:inline">Nueva Carpeta</span>
-                    </button>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-white via-gold-400 to-gold-600 bg-clip-text text-transparent">
+                        DFS CATALOG
+                    </h1>
+                    <p class="text-xs text-gray-400 font-medium">Galería Oficial & Colecciones</p>
                 </div>
             </div>
 
-            <!-- Mobile Search Bar -->
-            <div class="pb-3 sm:hidden">
-                <div class="relative w-full">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" oninput="handleSearch(this.value)" placeholder="Buscar carpeta..." class="w-full pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 focus:border-cyan-500 rounded-xl text-xs focus:outline-none text-white transition">
-                </div>
+            <!-- Botones de Acción Superiores -->
+            <div class="flex items-center gap-2">
+                <!-- Restablecer Demo -->
+                <button onclick="resetDemoData()" title="Restablecer Datos de Ejemplo" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition border border-gray-700 text-xs flex items-center gap-1.5 active:scale-95">
+                    <i class="fa-solid fa-rotate-right text-gold-500"></i>
+                    <span class="hidden sm:inline font-medium">Reset Demo</span>
+                </button>
+
+                <!-- Alternar Tema (Claro/Oscuro) -->
+                <button onclick="toggleTheme()" title="Cambiar Tema" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gold-400 transition border border-gray-700 text-xs flex items-center justify-center w-9 h-9 active:scale-95">
+                    <i id="themeIcon" class="fa-solid fa-sun"></i>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col">
-
-        <!-- Breadcrumb Bar -->
-        <nav class="flex items-center justify-between mb-6 pb-3 border-b border-slate-800">
-            <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-400">
-                <button onclick="navigateToHome()" class="hover:text-cyan-400 font-bold flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-house"></i> <span>Inicio</span>
-                </button>
-                <span id="bc-sep" class="hidden text-slate-600"><i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                <span id="bc-folder-name" class="hidden font-bold text-cyan-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-folder-open text-xs"></i> <span id="bc-folder-title"></span>
-                </span>
+    <!-- NAVEGACIÓN Y BREADCRUMB -->
+    <div class="bg-gray-900/50 border-b border-gray-800 px-4 py-2.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between text-xs sm:text-sm">
+            <div id="breadcrumb" class="flex items-center gap-2 text-gray-400 overflow-x-auto whitespace-nowrap py-1 custom-scrollbar">
+                <!-- Se inyecta dinámicamente con JavaScript -->
             </div>
-
-            <div class="flex items-center gap-3">
-                <span id="items-counter" class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">
-                    0 Carpetas
-                </span>
-                <button id="add-photo-btn" onclick="openUploadPhotoModal()" class="hidden inline-flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 border border-cyan-500/50 text-cyan-300 px-3 py-1.5 rounded-lg text-xs font-bold transition">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Añadir Foto a Carpeta
-                </button>
-            </div>
-        </nav>
-
-        <!-- VIEW 1: CARPETAS GRID (Principal / Root View) -->
-        <section id="folders-view" class="space-y-4">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-folder text-cyan-400"></i> Carpetas de Catálogo DFS
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Selecciona una carpeta para explorar sus imágenes y productos.</p>
-                </div>
-            </div>
-
-            <!-- Categories Filter Badges -->
-            <div id="category-filter-bar" class="flex items-center gap-2 overflow-x-auto pb-2 hide-scrollbar">
-                <!-- Dynamic Category Filter Buttons -->
-            </div>
-
-            <!-- Grid de Carpetas -->
-            <div id="folders-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <!-- Folder cards will be injected here -->
-            </div>
-
-            <!-- Empty Folders State -->
-            <div id="empty-folders-msg" class="hidden text-center py-16 bg-slate-950/50 rounded-2xl border border-dashed border-slate-800">
-                <i class="fa-solid fa-folder-open text-4xl text-slate-600 mb-3"></i>
-                <h3 class="text-sm font-bold text-slate-300">No hay carpetas en este catálogo</h3>
-                <p class="text-xs text-slate-500 mt-1">Crea tu primera carpeta para comenzar a subir fotos.</p>
-                <button onclick="openCreateFolderModal()" class="mt-4 bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition">
-                    + Crear Nueva Carpeta
-                </button>
-            </div>
-        </section>
-
-        <!-- VIEW 2: DENTRO DE UNA CARPETA (Folder Inner View) -->
-        <section id="folder-inner-view" class="hidden space-y-6">
-            <!-- Folder Header Info Card -->
-            <div class="bg-gradient-to-r from-slate-800/80 to-slate-900 border border-slate-700/80 rounded-2xl p-5 shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2">
-                        <span id="folder-inner-category" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800"></span>
-                        <span id="folder-inner-count" class="text-xs text-slate-400"></span>
-                    </div>
-                    <h2 id="folder-inner-title" class="text-xl font-extrabold text-white"></h2>
-                    <p id="folder-inner-desc" class="text-xs text-slate-300 max-w-2xl"></p>
-                </div>
-
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button onclick="copyFolderLink()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-semibold rounded-xl text-slate-200 transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-link text-cyan-400"></i> Copiar Enlace Carpeta
-                    </button>
-                    <button onclick="openUploadPhotoModal()" class="px-3 py-2 bg-cyan-600 hover:bg-cyan-500 text-xs font-bold rounded-xl text-white shadow transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Subir Foto
-                    </button>
-                    <button onclick="editCurrentFolder()" class="p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs rounded-xl text-slate-300" title="Editar Carpeta">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                    <button onclick="deleteCurrentFolder()" class="p-2 bg-slate-800 hover:bg-red-900/50 border border-slate-700 hover:border-red-800 text-xs rounded-xl text-red-400" title="Eliminar Carpeta">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Grid de Fotos de la Carpeta -->
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                        <i class="fa-solid fa-images text-cyan-400"></i> Fotos de la Carpeta
-                    </h3>
-
-                    <select id="photos-sort" onchange="renderFolderPhotos()" class="text-xs bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-cyan-500">
-                        <option value="newest">Más Recientes</option>
-                        <option value="oldest">Más Antiguas</option>
-                        <option value="price-asc">Precio: Menor a Mayor</option>
-                        <option value="price-desc">Precio: Mayor a Menor</option>
-                    </select>
-                </div>
-
-                <div id="folder-photos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5">
-                    <!-- Photo cards render here -->
-                </div>
-
-                <!-- Empty Photos Inside Folder State -->
-                <div id="empty-folder-photos-msg" class="hidden text-center py-16 bg-slate-950/40 rounded-2xl border border-dashed border-slate-800">
-                    <i class="fa-regular fa-image text-4xl text-slate-600 mb-2"></i>
-                    <h3 class="text-sm font-bold text-slate-300">Esta carpeta está vacía</h3>
-                    <p class="text-xs text-slate-500 mt-1">Añade fotos para compartir el catálogo con tus clientes.</p>
-                    <button onclick="openUploadPhotoModal()" class="mt-4 bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Subir primera foto
-                    </button>
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- MODAL: Crear / Editar Carpeta -->
-    <div id="folder-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-800 text-slate-100">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-800">
-                <h3 id="folder-modal-title" class="text-base font-bold text-white">Nueva Carpeta DFS</h3>
-                <button onclick="closeModal('folder-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="handleSaveFolder(event)" class="mt-4 space-y-4">
-                <input type="hidden" id="edit-folder-id" value="">
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nombre de la Carpeta</label>
-                    <input type="text" id="folder-title-input" required placeholder="Ej: Zapatillas Nike OG 2026" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Categoría</label>
-                    <input type="text" id="folder-cat-input" required placeholder="Ej: Calzado, Ropa, Relojes, Bolsos" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Descripción</label>
-                    <textarea id="folder-desc-input" rows="2" placeholder="Detalles o proveedor de la carpeta..." class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white"></textarea>
-                </div>
-                <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('folder-modal')" class="px-4 py-2 text-xs font-bold rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl shadow">Guardar Carpeta</button>
-                </div>
-            </form>
+            
+            <button id="addBtn" onclick="openAddModal()" class="ml-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-black font-bold px-3 py-1.5 rounded-lg shadow-md shadow-gold-500/20 flex items-center gap-1.5 transition active:scale-95 flex-shrink-0">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span id="addBtnText">Nueva Foto</span>
+            </button>
         </div>
     </div>
 
-    <!-- MODAL: Subir / Editar Foto en Carpeta -->
-    <div id="photo-modal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-800 text-slate-100 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-800">
-                <h3 id="photo-modal-title" class="text-base font-bold text-white">Subir Foto a Carpeta</h3>
-                <button onclick="closeModal('photo-modal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6">
+
+        <!-- BUSCADOR & FILTROS DE CATEGORÍA -->
+        <div class="mb-6 space-y-4">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Buscar prendas, equipos o fotos..." class="w-full pl-10 pr-4 py-2.5 bg-gray-900 border border-gray-800 rounded-xl text-sm focus:outline-none focus:border-gold-500 text-gray-200 placeholder-gray-500 transition shadow-inner">
             </div>
-            <form onsubmit="handleSavePhoto(event)" class="mt-4 space-y-4">
-                <input type="hidden" id="edit-photo-id" value="">
-                
-                <!-- Destination Folder Selector -->
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Carpeta Destino</label>
-                    <select id="photo-folder-select" required class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white">
-                        <!-- Dynamic folder options -->
-                    </select>
-                </div>
 
-                <!-- Input Type Toggle -->
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Origen de Imagen</label>
-                    <div class="flex rounded-xl bg-slate-800 p-1 gap-1">
-                        <button type="button" id="tab-file-btn" onclick="switchImageTab('file')" class="flex-1 py-1 text-xs font-bold rounded-lg bg-cyan-600 text-white shadow text-center">Archivo Local</button>
-                        <button type="button" id="tab-url-btn" onclick="switchImageTab('url')" class="flex-1 py-1 text-xs font-bold rounded-lg text-slate-400 text-center">URL Web</button>
-                    </div>
-                </div>
-
-                <!-- File Input Field -->
-                <div id="file-input-container">
-                    <div class="border-2 border-dashed border-slate-700 rounded-xl p-5 text-center hover:bg-slate-800/50 cursor-pointer relative" onclick="document.getElementById('photo-file-input').click()">
-                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-cyan-400 mb-1"></i>
-                        <p class="text-xs text-slate-300 font-semibold">Haz clic para seleccionar o arrastra una imagen</p>
-                        <p class="text-[10px] text-slate-500 mt-0.5">JPG, PNG, WEBP</p>
-                        <input type="file" id="photo-file-input" accept="image/*" class="hidden" onchange="previewFileImage(this)">
-                    </div>
-                </div>
-
-                <!-- URL Input Field -->
-                <div id="url-input-container" class="hidden">
-                    <input type="url" id="photo-url-input" placeholder="https://ejemplo.com/imagen.jpg" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white" onchange="previewUrlImage(this.value)">
-                </div>
-
-                <!-- Image Preview -->
-                <div id="image-preview-wrapper" class="hidden relative rounded-xl overflow-hidden border border-slate-700 max-h-44 bg-black/40 flex items-center justify-center">
-                    <img id="image-preview" src="" class="max-h-44 object-contain">
-                </div>
-
-                <!-- Title & Details -->
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Título del Producto / Foto</label>
-                    <input type="text" id="photo-title-input" required placeholder="Ej: DFS Special Edition Blue" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Precio (€)</label>
-                        <input type="number" step="0.01" id="photo-price-input" placeholder="Ej: 85.00" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Tags (Separar por coma)</label>
-                        <input type="text" id="photo-tags-input" placeholder="dfs, azul, premium" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Descripción / Tallas / Notas</label>
-                    <textarea id="photo-desc-input" rows="2" placeholder="Tallas disponibles, stock, detalles..." class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-xl focus:border-cyan-500 focus:outline-none text-xs sm:text-sm text-white"></textarea>
-                </div>
-
-                <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('photo-modal')" class="px-4 py-2 text-xs font-bold rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl shadow">Guardar Foto</button>
-                </div>
-            </form>
+            <!-- Chips de Categorías Rápidas -->
+            <div id="categoryChips" class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar text-xs">
+                <!-- Generado por JS -->
+            </div>
         </div>
-    </div>
 
-    <!-- MODAL: Visor Detallado de Foto (Modal Zoom) -->
-    <div id="detail-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4">
-        <div class="bg-slate-900 rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden shadow-2xl flex flex-col md:flex-row relative border border-slate-800">
-            <!-- Close Button -->
-            <button onclick="closeModal('detail-modal')" class="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center transition border border-slate-700">
-                <i class="fa-solid fa-xmark text-base"></i>
+        <!-- CONTENEDOR DE CARPETAS Y FOTOS -->
+        <div id="galleryContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            <!-- Renderizado dinámico -->
+        </div>
+
+        <!-- MENSAJE SIN RESULTADOS / VACÍO -->
+        <div id="emptyState" class="hidden text-center py-16 px-4">
+            <div class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-3 border border-gray-800 text-gold-500 text-2xl">
+                <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3 class="text-base font-semibold text-gray-300">No hay contenido en esta carpeta</h3>
+            <p class="text-xs text-gray-500 mt-1 max-w-xs mx-auto">Sube una nueva foto o cambia de categoría para ver más productos.</p>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-950 border-t border-gray-900 py-6 px-4 text-center text-xs text-gray-500 mt-auto">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+                <div class="w-5 h-5 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-500 text-[10px]">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <span class="font-semibold text-gray-400">DFS Catalog &copy; 2026</span>
+            </div>
+            <p class="text-gray-600">Almacenamiento Local Optimizado | Persistencia Auto-Compresiva</p>
+        </div>
+    </footer>
+
+    <!-- MODAL AÑADIR CONTENIDO (FOTO O CARPETA) -->
+    <div id="addModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-md w-full p-5 shadow-2xl relative transform transition-all">
+            <!-- Cerrar -->
+            <button onclick="closeAddModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
 
-            <!-- Image Zoom Area -->
-            <div class="md:w-3/5 bg-black flex items-center justify-center p-4 relative min-h-[280px] md:min-h-[480px] img-zoom-container">
-                <img id="detail-img" src="" alt="" class="max-h-[75vh] w-auto max-w-full object-contain">
+            <h3 class="text-lg font-bold text-gray-100 mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-gold-500"></i>
+                Añadir al Catálogo
+            </h3>
+            <p class="text-xs text-gray-400 mb-4">Sube fotos ligeras o pega enlaces directos para guardarlas para siempre.</p>
+
+            <!-- TABS MÓDULO (Subir Archivo Local / URL Externa) -->
+            <div class="flex border-b border-gray-800 mb-4">
+                <button type="button" id="tabFileUploadBtn" onclick="switchAddTab('file')" class="flex-1 py-2 text-xs font-semibold border-b-2 border-gold-500 text-gold-400">
+                    <i class="fa-solid fa-file-image mr-1"></i> Archivo Galería
+                </button>
+                <button type="button" id="tabUrlUploadBtn" onclick="switchAddTab('url')" class="flex-1 py-2 text-xs font-semibold text-gray-400 border-b-2 border-transparent">
+                    <i class="fa-solid fa-link mr-1"></i> URL Directa
+                </button>
             </div>
 
-            <!-- Meta & Info Area -->
-            <div class="md:w-2/5 p-6 flex flex-col justify-between overflow-y-auto bg-slate-900 border-t md:border-t-0 md:border-l border-slate-800">
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <span id="detail-folder-badge" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800"></span>
-                        <span id="detail-date" class="text-[11px] text-slate-400"></span>
-                    </div>
+            <form id="addForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <!-- Título del elemento -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Título o Descripción *</label>
+                    <input type="text" id="itemTitle" required placeholder="Ej: Camiseta Real Madrid 2025/26" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-gold-500">
+                </div>
 
-                    <h2 id="detail-title" class="text-xl font-extrabold text-white leading-snug"></h2>
-                    
-                    <div id="detail-price-wrapper" class="text-2xl font-black text-cyan-400">
-                        <span id="detail-price"></span>
-                    </div>
+                <!-- Selección de Categoría / Carpeta destino -->
+                <div>
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Categoría / Carpeta</label>
+                    <select id="itemCategory" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-gold-500">
+                        <option value="La Liga">La Liga</option>
+                        <option value="Niños">Niños</option>
+                        <option value="Retro">Retro</option>
+                        <option value="Selecciones">Selecciones</option>
+                        <option value="Ligas Europeas">Ligas Europeas</option>
+                        <option value="Otras Ligas">Otras Ligas</option>
+                    </select>
+                </div>
 
-                    <div class="border-t border-b border-slate-800 py-3">
-                        <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Descripción</h4>
-                        <p id="detail-desc" class="text-xs text-slate-300 leading-relaxed whitespace-pre-line"></p>
-                    </div>
-
-                    <div>
-                        <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Etiquetas</h4>
-                        <div id="detail-tags" class="flex flex-wrap gap-1"></div>
+                <!-- OPCIÓN A: Archivo Local con Compresión Automática -->
+                <div id="fileUploadContainer" class="block">
+                    <label class="block text-xs font-medium text-gray-300 mb-1">Seleccionar Foto desde el Móvil</label>
+                    <div class="border-2 border-dashed border-gray-800 hover:border-gold-500/50 rounded-xl p-4 text-center cursor-pointer bg-gray-950/50 relative">
+                        <input type="file" id="itemFileInput" accept="image/*" onchange="previewSelectedFile(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <div id="filePreviewPlaceholder" class="space-y-1">
+                            <i class="fa-solid fa-camera text-2xl text-gold-500/70"></i>
+                            <p class="text-xs text-gray-300 font-medium">Toca para abrir la Galería o Cámara</p>
+                            <p class="text-[10px] text-gray-500">Se comprimirá automáticamente para no borrarse al actualizar</p>
+                        </div>
+                        <img id="filePreviewImage" class="hidden max-h-36 mx-auto rounded-lg object-contain shadow-md">
                     </div>
                 </div>
 
-                <!-- Direct Sharing Link & Controls -->
-                <div class="mt-6 pt-4 border-t border-slate-800 space-y-2">
-                    <button onclick="copyPhotoDirectLink()" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-2.5 px-4 rounded-xl text-xs font-bold transition shadow">
-                        <i class="fa-solid fa-link"></i> Copiar Enlace Directo
+                <!-- OPCIÓN B: URL Directa de Imagen -->
+                <div id="urlUploadContainer" class="hidden">
+                    <label class="block text-xs font-medium text-gray-300 mb-1">URL Directa de Imagen (.jpg, .png)</label>
+                    <input type="url" id="itemUrlInput" placeholder="https://i.imgur.com/ejemplo.jpg" class="w-full bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-gold-500">
+                    <p class="text-[10px] text-gray-500 mt-1">Usa enlaces directos de Postimages, Imgur o servidores de imágenes.</p>
+                </div>
+
+                <!-- Botones del Modal -->
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeAddModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium py-2 rounded-lg text-xs transition">
+                        Cancelar
                     </button>
-                    
-                    <div class="flex gap-2">
-                        <button onclick="editCurrentPhoto()" class="flex-1 flex items-center justify-center gap-1.5 border border-slate-700 hover:bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold transition">
-                            <i class="fa-solid fa-pen"></i> Editar
-                        </button>
-                        <button onclick="deleteCurrentPhoto()" class="flex-1 flex items-center justify-center gap-1.5 text-red-400 hover:bg-red-950/40 border border-red-900/60 py-2 rounded-xl text-xs font-semibold transition">
-                            <i class="fa-solid fa-trash"></i> Eliminar
-                        </button>
-                    </div>
+                    <button type="submit" id="saveSubmitBtn" class="flex-1 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-black font-bold py-2 rounded-lg text-xs shadow-md shadow-gold-500/20 transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Guardar Foto</span>
+                    </button>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL VISOR DE IMAGEN A TAMAÑO COMPLETO -->
+    <div id="imageViewerModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4" onclick="closeImageViewer()">
+        <div class="relative max-w-4xl w-full max-h-full flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+            <!-- Cerrar -->
+            <button onclick="closeImageViewer()" class="absolute -top-10 right-0 sm:top-2 sm:right-2 text-gray-300 hover:text-white bg-black/60 p-2 rounded-full z-10 w-10 h-10 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <img id="viewerImage" src="" class="max-h-[80vh] w-auto max-w-full object-contain rounded-xl shadow-2xl border border-gray-800">
+            <div class="mt-3 text-center">
+                <h4 id="viewerTitle" class="text-sm sm:text-base font-bold text-gray-200"></h4>
+                <p id="viewerCategory" class="text-xs text-gold-500 font-medium mt-0.5"></p>
             </div>
         </div>
     </div>
 
-    <!-- JS LOGIC -->
+    <!-- LOGICA JAVASCRIPT INTEGRADA Y COMPLETA -->
     <script>
-        // INITIAL DEMO DATA FOR DFS CATALOG
-        const DFS_DEMO = {
-            folders: [
-                { id: 'fld-1', title: 'Camisetas Real Madrid & Barcelona 2026', category: 'La Liga', description: 'Equipaciones oficiales primera y segunda equipación La Liga.', createdAt: Date.now() - 86400000 * 5 },
-                { id: 'fld-2', title: 'Colección Retro Clásicos 90s', category: 'Retro', description: 'Camisetas históricas de selecciones y clubes legendarios.', createdAt: Date.now() - 86400000 * 4 },
-                { id: 'fld-3', title: 'Kits Equipaciones Niños', category: 'Niños', description: 'Conjuntos completos (Camiseta + Pantalón) en tallas infantiles.', createdAt: Date.now() - 86400000 * 3 },
-                { id: 'fld-4', title: 'Mundial & Euro Selecciones', category: 'Selecciones', description: 'Camisetas de selecciones nacionales de todo el mundo.', createdAt: Date.now() - 86400000 * 2 },
-                { id: 'fld-5', title: 'Premier League & Serie A', category: 'Ligas Europeas', description: 'Novedades de los principales clubes de ligas europeas.', createdAt: Date.now() - 86400000 * 1 }
-            ],
-            photos: [
-                { id: 'pic-1', folderId: 'fld-1', title: 'DFS Real Madrid 1ª Equipación 25/26', price: '45.00', description: 'Calidad versión jugador. Parches incluidos. Tallas S-XXL.', tags: ['dfs', 'laliga', 'madrid'], url: 'https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=800&q=80', createdAt: Date.now() - 86400000 * 5 },
-                { id: 'pic-2', folderId: 'fld-2', title: 'DFS Brasil Retro 1998 Ronaldo #9', price: '50.00', description: 'Edición especial retro Brasil 1998.', tags: ['dfs', 'retro', 'brasil'], url: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=800&q=80', createdAt: Date.now() - 86400000 * 4 },
-                { id: 'pic-3', folderId: 'fld-3', title: 'DFS Kit Infantil España 2026', price: '38.00', description: 'Camiseta + Pantalón para niños de 3 a 14 años.', tags: ['dfs', 'ninos', 'espana'], url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80', createdAt: Date.now() - 86400000 * 3 },
-                { id: 'pic-4', folderId: 'fld-4', title: 'DFS Argentina 3 Estrellas 2026', price: '45.00', description: 'Edición Selección Argentina con parches oficiales.', tags: ['dfs', 'selecciones', 'argentina'], url: 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=800&q=80', createdAt: Date.now() - 86400000 * 2 },
-                { id: 'pic-5', folderId: 'fld-5', title: 'DFS Arsenal London Black Edition', price: '45.00', description: 'Equipación alternativa Premier League.', tags: ['dfs', 'europeas', 'arsenal'], url: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80', createdAt: Date.now() - 86400000 * 1 }
-            ]
-        };
-
-        // CATEGORÍAS PREDEFINIDAS DFS FÚTBOL
-        const DFS_DEFAULT_CATEGORIES = [
-            'La Liga',
-            'Niños',
-            'Retro',
-            'Selecciones',
-            'Ligas Europeas',
-            'Otras Ligas'
+        // CONFIGURACIÓN DE CATEGORÍAS FIJAS PEDIDAS POR EL USUARIO
+        const CATEGORIES = [
+            { id: 'La Liga', name: 'La Liga', icon: 'fa-futbol', color: 'from-blue-600 to-indigo-800' },
+            { id: 'Niños', name: 'Niños', icon: 'fa-child', color: 'from-emerald-600 to-teal-800' },
+            { id: 'Retro', name: 'Retro', icon: 'fa-clock-rotate-left', color: 'from-amber-600 to-orange-800' },
+            { id: 'Selecciones', name: 'Selecciones', icon: 'fa-flag', color: 'from-red-600 to-rose-800' },
+            { id: 'Ligas Europeas', name: 'Ligas Europeas', icon: 'fa-trophy', color: 'from-purple-600 to-indigo-900' },
+            { id: 'Otras Ligas', name: 'Otras Ligas', icon: 'fa-globe', color: 'from-cyan-600 to-blue-800' }
         ];
 
-        // GLOBAL APP STATE
-        let state = {
-            folders: [],
-            photos: [],
-            activeFolderId: null,
-            activeCategory: 'ALL',
-            searchQuery: '',
-            currentPhotoDetailId: null,
-            activeTabInput: 'file',
-            currentUploadedDataUrl: ''
+        // DATOS INICIALES DE DEMO (Se usan si localStorage está vacío)
+        const INITIAL_DEMO_DATA = [
+            { id: '1', title: 'Real Madrid Local 24/25', category: 'La Liga', url: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&auto=format&fit=crop&q=60', date: Date.now() },
+            { id: '2', title: 'FC Barcelona Retro 1998', category: 'Retro', url: 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=500&auto=format&fit=crop&q=60', date: Date.now() - 10000 },
+            { id: '3', title: 'España Equipación Mundial', category: 'Selecciones', url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=500&auto=format&fit=crop&q=60', date: Date.now() - 20000 },
+            { id: '4', title: 'Conjunto Niño PSG', category: 'Niños', url: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=500&auto=format&fit=crop&q=60', date: Date.now() - 30000 }
+        ];
+
+        // ESTADO GLOBAL DE LA APLICACIÓN
+        let appState = {
+            currentCategory: 'ALL', // 'ALL' o id de categoría especifica
+            searchTerm: '',
+            items: [],
+            addTab: 'file', // 'file' o 'url'
+            compressedImageData: null
         };
 
-        // INITIALIZATION
+        // INICIALIZACIÓN
         window.onload = function() {
-            loadStorage();
-            setupTheme();
-            handleUrlHash();
-            renderApp();
-
-            window.addEventListener('hashchange', () => {
-                handleUrlHash();
-                renderApp();
-            });
+            loadStateFromStorage();
+            renderCategoryChips();
+            renderGallery();
+            updateBreadcrumb();
         };
 
-        function loadStorage() {
-            const savedFolders = localStorage.getItem('dfs_catalog_folders_v2');
-            const savedPhotos = localStorage.getItem('dfs_catalog_photos_v2');
-
-            if (savedFolders && savedPhotos) {
-                state.folders = JSON.parse(savedFolders);
-                state.photos = JSON.parse(savedPhotos);
+        // CARGAR DATOS DESDE LOCALSTORAGE
+        function loadStateFromStorage() {
+            const stored = localStorage.getItem('dfs_catalog_items');
+            if (stored) {
+                try {
+                    appState.items = JSON.parse(stored);
+                } catch(e) {
+                    appState.items = [...INITIAL_DEMO_DATA];
+                }
             } else {
-                state.folders = [...DFS_DEMO.folders];
-                state.photos = [...DFS_DEMO.photos];
-                saveStorage();
+                appState.items = [...INITIAL_DEMO_DATA];
+                saveStateToStorage();
             }
         }
 
-        function saveStorage() {
-            localStorage.setItem('dfs_catalog_folders_v2', JSON.stringify(state.folders));
-            localStorage.setItem('dfs_catalog_photos_v2', JSON.stringify(state.photos));
+        // GUARDAR DATOS EN LOCALSTORAGE
+        function saveStateToStorage() {
+            try {
+                localStorage.setItem('dfs_catalog_items', JSON.stringify(appState.items));
+            } catch(e) {
+                console.error("Error al guardar en localStorage:", e);
+                alert("El almacenamiento local está lleno. Intenta borrar fotos antiguas.");
+            }
         }
 
-        function saveStorage() {
-            localStorage.setItem('dfs_catalog_folders', JSON.stringify(state.folders));
-            localStorage.setItem('dfs_catalog_photos', JSON.stringify(state.photos));
-        }
-
-        // THEME TOGGLE
-        function setupTheme() {
-            if (localStorage.getItem('dfs_theme') === 'light') {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-icon').className = 'fa-solid fa-moon text-slate-400 text-base';
+        // CAMBIAR TEMA CLARO / OSCURO
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon';
             } else {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon').className = 'fa-solid fa-sun text-amber-400 text-base';
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun';
             }
         }
 
-        function toggleDarkMode() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('dfs_theme', 'light');
-                document.getElementById('theme-icon').className = 'fa-solid fa-moon text-slate-400 text-base';
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('dfs_theme', 'dark');
-                document.getElementById('theme-icon').className = 'fa-solid fa-sun text-amber-400 text-base';
+        // RESTABLECER DEMO
+        function resetDemoData() {
+            if (confirm("¿Quieres restablecer el catálogo con las fotos de muestra por defecto?")) {
+                appState.items = [...INITIAL_DEMO_DATA];
+                saveStateToStorage();
+                appState.currentCategory = 'ALL';
+                renderGallery();
+                updateBreadcrumb();
+                renderCategoryChips();
             }
         }
 
-        // HASH LINKING (#folder=FOLDER_ID&photo=PHOTO_ID)
-        function handleUrlHash() {
-            const hash = window.location.hash.substring(1);
-            if (!hash) {
-                state.activeFolderId = null;
-                return;
-            }
+        // RENDERIZAR CHIPS DE CATEGORÍAS
+        function renderCategoryChips() {
+            const container = document.getElementById('categoryChips');
+            let html = `
+                <button onclick="selectCategory('ALL')" class="px-3 py-1.5 rounded-xl font-medium transition flex items-center gap-1.5 flex-shrink-0 ${appState.currentCategory === 'ALL' ? 'bg-gold-500 text-black font-bold shadow-md shadow-gold-500/20' : 'bg-gray-900 border border-gray-800 text-gray-400 hover:text-white'}">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span>Todas</span>
+                </button>
+            `;
 
-            const params = new URLSearchParams(hash);
-            const folderId = params.get('folder');
-            const photoId = params.get('photo');
-
-            if (folderId && state.folders.some(f => f.id === folderId)) {
-                state.activeFolderId = folderId;
-            } else {
-                state.activeFolderId = null;
-            }
-
-            if (photoId && state.photos.some(p => p.id === photoId)) {
-                setTimeout(() => openPhotoDetail(photoId), 100);
-            }
-        }
-
-        function updateUrlHash() {
-            let hashParams = new URLSearchParams();
-            if (state.activeFolderId) hashParams.set('folder', state.activeFolderId);
-            if (state.currentPhotoDetailId) hashParams.set('photo', state.currentPhotoDetailId);
-            
-            const str = hashParams.toString();
-            history.replaceState(null, '', str ? `#${str}` : window.location.pathname);
-        }
-
-        // NAVIGATION
-        function navigateToHome() {
-            state.activeFolderId = null;
-            state.activeCategory = 'ALL';
-            state.searchQuery = '';
-            document.getElementById('folder-search').value = '';
-            updateUrlHash();
-            renderApp();
-        }
-
-        function openFolder(folderId) {
-            state.activeFolderId = folderId;
-            updateUrlHash();
-            renderApp();
-        }
-
-        function filterByCategory(cat) {
-            state.activeCategory = cat;
-            renderFoldersGrid();
-        }
-
-        function handleSearch(query) {
-            state.searchQuery = query.toLowerCase().trim();
-            if (state.activeFolderId) {
-                renderFolderPhotos();
-            } else {
-                renderFoldersGrid();
-            }
-        }
-
-        // MAIN RENDER CONTROL
-        function renderApp() {
-            renderBreadcrumb();
-
-            if (state.activeFolderId) {
-                // Show Folder Inner View, Hide Folders Grid
-                document.getElementById('folders-view').classList.add('hidden');
-                document.getElementById('folder-inner-view').classList.remove('hidden');
-                document.getElementById('add-photo-btn').classList.remove('hidden');
-                renderFolderInnerView();
-            } else {
-                // Show Folders Grid View
-                document.getElementById('folders-view').classList.remove('hidden');
-                document.getElementById('folder-inner-view').classList.add('hidden');
-                document.getElementById('add-photo-btn').classList.add('hidden');
-                renderCategoriesBar();
-                renderFoldersGrid();
-            }
-        }
-
-        function renderBreadcrumb() {
-            const sep = document.getElementById('bc-sep');
-            const nameEl = document.getElementById('bc-folder-name');
-            const titleEl = document.getElementById('bc-folder-title');
-            const counterEl = document.getElementById('items-counter');
-
-            if (state.activeFolderId) {
-                const folder = state.folders.find(f => f.id === state.activeFolderId);
-                sep.classList.remove('hidden');
-                nameEl.classList.remove('hidden');
-                titleEl.textContent = folder ? folder.title : 'Carpeta';
-
-                const photosInFolder = state.photos.filter(p => p.folderId === state.activeFolderId).length;
-                counterEl.textContent = `${photosInFolder} foto${photosInFolder !== 1 ? 's' : ''}`;
-            } else {
-                sep.classList.add('hidden');
-                nameEl.classList.add('hidden');
-                
-                const totalFolders = state.folders.length;
-                counterEl.textContent = `${totalFolders} carpeta${totalFolders !== 1 ? 's' : ''}`;
-            }
-        }
-
-        // RENDER CATEGORIES BAR
-        function renderCategoriesBar() {
-            const bar = document.getElementById('category-filter-bar');
-            
-            // Usar siempre la lista fija de categorías más las que existan en las carpetas
-            const currentCatSet = new Set([...DFS_DEFAULT_CATEGORIES, ...state.folders.map(f => f.category).filter(Boolean)]);
-            const categories = ['ALL', ...Array.from(currentCatSet)];
-
-            bar.innerHTML = categories.map(cat => {
-                const isActive = state.activeCategory === cat;
-                const label = cat === 'ALL' ? 'Todas las Categorías' : cat;
-
-                return `
-                    <button onclick="filterByCategory('${cat}')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                        isActive 
-                            ? 'bg-cyan-600 text-white shadow' 
-                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200 border border-slate-700'
-                    }">
-                        ${label}
+            CATEGORIES.forEach(cat => {
+                const isActive = appState.currentCategory === cat.id;
+                html += `
+                    <button onclick="selectCategory('${cat.id}')" class="px-3 py-1.5 rounded-xl font-medium transition flex items-center gap-1.5 flex-shrink-0 ${isActive ? 'bg-gold-500 text-black font-bold shadow-md shadow-gold-500/20' : 'bg-gray-900 border border-gray-800 text-gray-400 hover:text-white'}">
+                        <i class="fa-solid ${cat.icon}"></i>
+                        <span>${cat.name}</span>
                     </button>
                 `;
-            }).join('');
+            });
+
+            container.innerHTML = html;
         }
 
-        // RENDER FOLDERS GRID
-        function renderFoldersGrid() {
-            const container = document.getElementById('folders-grid');
-            const emptyMsg = document.getElementById('empty-folders-msg');
+        // SELECCIONAR CATEGORÍA
+        function selectCategory(catId) {
+            appState.currentCategory = catId;
+            renderCategoryChips();
+            renderGallery();
+            updateBreadcrumb();
+        }
 
-            let list = state.folders;
+        // ACTUALIZAR BREADCRUMB DE NAVEGACIÓN
+        function updateBreadcrumb() {
+            const container = document.getElementById('breadcrumb');
+            let html = `
+                <button onclick="navigateToHome()" class="hover:text-gold-400 flex items-center gap-1 transition">
+                    <i class="fa-solid fa-house text-xs"></i>
+                    <span>Inicio</span>
+                </button>
+            `;
 
-            if (state.activeCategory !== 'ALL') {
-                list = list.filter(f => f.category === state.activeCategory);
+            if (appState.currentCategory !== 'ALL') {
+                const cat = CATEGORIES.find(c => c.id === appState.currentCategory);
+                html += `
+                    <i class="fa-solid fa-chevron-right text-[10px] text-gray-600"></i>
+                    <span class="text-gold-400 font-semibold">${cat ? cat.name : appState.currentCategory}</span>
+                `;
             }
 
-            if (state.searchQuery) {
-                list = list.filter(f => 
-                    f.title.toLowerCase().includes(state.searchQuery) ||
-                    f.category.toLowerCase().includes(state.searchQuery) ||
-                    (f.description && f.description.toLowerCase().includes(state.searchQuery))
-                );
-            }
+            container.innerHTML = html;
+        }
 
-            if (list.length === 0) {
+        function navigateToHome() {
+            appState.currentCategory = 'ALL';
+            appState.searchTerm = '';
+            document.getElementById('searchInput').value = '';
+            renderCategoryChips();
+            renderGallery();
+            updateBreadcrumb();
+        }
+
+        // MANEJAR BÚSQUEDA
+        function handleSearch() {
+            appState.searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            renderGallery();
+        }
+
+        // RENDERIZAR GALERÍA DE FOTOS Y CARPETAS
+        function renderGallery() {
+            const container = document.getElementById('galleryContainer');
+            const emptyState = document.getElementById('emptyState');
+
+            // Filtrar elementos
+            let filtered = appState.items.filter(item => {
+                const matchesCategory = appState.currentCategory === 'ALL' || item.category === appState.currentCategory;
+                const matchesSearch = !appState.searchTerm || item.title.toLowerCase().includes(appState.searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
                 container.innerHTML = '';
-                emptyMsg.classList.remove('hidden');
+                emptyState.classList.remove('hidden');
                 return;
-            } else {
-                emptyMsg.classList.add('hidden');
             }
 
-            container.innerHTML = list.map(folder => {
-                const folderPhotos = state.photos.filter(p => p.folderId === folder.id);
-                const coverUrl = folderPhotos.length > 0 ? folderPhotos[0].url : 'https://placehold.co/500x350/0f172a/38bdf8?text=Carpeta+Vacia';
+            emptyState.classList.add('hidden');
 
-                return `
-                    <div onclick="openFolder('${folder.id}')" class="folder-card group bg-slate-800/80 rounded-2xl border border-slate-700/80 overflow-hidden shadow-lg hover:border-cyan-500/50 cursor-pointer flex flex-col">
-                        <div class="relative aspect-[4/3] bg-slate-900 overflow-hidden">
-                            <img src="${coverUrl}" alt="${folder.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/500x350/0f172a/38bdf8?text=Error'">
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80"></div>
-                            
-                            <span class="absolute top-2.5 left-2.5 bg-cyan-950/90 border border-cyan-800/80 text-cyan-400 font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-md backdrop-blur-md">
-                                ${folder.category}
-                            </span>
+            let html = '';
+            filtered.forEach(item => {
+                html += `
+                    <div class="group bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-md hover:border-gold-500/40 transition-all duration-300 flex flex-col relative">
+                        <!-- Botón Eliminar -->
+                        <button onclick="deleteItem('${item.id}')" title="Eliminar foto" class="absolute top-2 right-2 z-10 w-7 h-7 bg-black/70 hover:bg-red-600 text-gray-300 hover:text-white rounded-full flex items-center justify-center transition opacity-0 group-hover:opacity-100">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
 
-                            <span class="absolute bottom-2.5 right-2.5 bg-black/70 border border-slate-700 text-white font-bold text-[11px] px-2.5 py-1 rounded-lg backdrop-blur-md flex items-center gap-1.5">
-                                <i class="fa-solid fa-image text-cyan-400"></i> ${folderPhotos.length} fotos
-                            </span>
+                        <!-- Imagen -->
+                        <div class="aspect-square w-full bg-gray-950 overflow-hidden relative cursor-pointer" onclick="openImageViewer('${item.url}', '${escapeHtml(item.title)}', '${item.category}')">
+                            <img src="${item.url}" alt="${escapeHtml(item.title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/400x400/111827/eab308?text=DFS+Gallery';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2.5">
+                                <span class="text-[10px] text-gold-400 font-semibold bg-black/60 px-2 py-0.5 rounded-full border border-gold-500/30">
+                                    ${item.category}
+                                </span>
+                            </div>
                         </div>
 
-                        <div class="p-4 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-sm text-white group-hover:text-cyan-400 transition line-clamp-1">${folder.title}</h3>
-                                <p class="text-xs text-slate-400 line-clamp-2 mt-1">${folder.description || 'Sin descripción'}</p>
-                            </div>
-
-                            <div class="mt-3 pt-2.5 border-t border-slate-700/60 flex items-center justify-between text-[11px] text-slate-400">
-                                <span class="text-cyan-500 font-semibold flex items-center gap-1"><i class="fa-solid fa-folder-open"></i> Abrir carpeta</span>
-                                <div class="flex gap-2" onclick="event.stopPropagation()">
-                                    <button onclick="openEditFolderModal('${folder.id}')" class="hover:text-cyan-400 p-1" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                                    <button onclick="deleteFolder('${folder.id}')" class="hover:text-red-400 p-1" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
-                                </div>
+                        <!-- Info -->
+                        <div class="p-3 flex flex-col flex-grow justify-between">
+                            <h4 class="text-xs sm:text-sm font-semibold text-gray-200 line-clamp-2 group-hover:text-gold-400 transition-colors">
+                                ${escapeHtml(item.title)}
+                            </h4>
+                            <div class="mt-2 flex items-center justify-between text-[10px] text-gray-500 pt-2 border-t border-gray-800/60">
+                                <span class="text-gold-500/80 font-medium">${item.category}</span>
+                                <i class="fa-solid fa-expand text-gray-600 group-hover:text-gray-300"></i>
                             </div>
                         </div>
                     </div>
                 `;
-            }).join('');
+            });
+
+            container.innerHTML = html;
         }
 
-        // RENDER INNER FOLDER VIEW & PHOTOS
-        function renderFolderInnerView() {
-            const folder = state.folders.find(f => f.id === state.activeFolderId);
-            if (!folder) {
-                navigateToHome();
-                return;
+        // ELIMINAR ELEMENTO
+        function deleteItem(id) {
+            if (confirm("¿Estás seguro de que quieres borrar esta foto del catálogo?")) {
+                appState.items = appState.items.filter(i => i.id !== id);
+                saveStateToStorage();
+                renderGallery();
             }
-
-            document.getElementById('folder-inner-title').textContent = folder.title;
-            document.getElementById('folder-inner-category').textContent = folder.category;
-            document.getElementById('folder-inner-desc').textContent = folder.description || 'Sin descripción disponible.';
-
-            const photoCount = state.photos.filter(p => p.folderId === folder.id).length;
-            document.getElementById('folder-inner-count').textContent = `${photoCount} elemento${photoCount !== 1 ? 's' : ''}`;
-
-            renderFolderPhotos();
         }
 
-        function renderFolderPhotos() {
-            const container = document.getElementById('folder-photos-grid');
-            const emptyMsg = document.getElementById('empty-folder-photos-msg');
-            const sortVal = document.getElementById('photos-sort').value;
-
-            let list = state.photos.filter(p => p.folderId === state.activeFolderId);
-
-            if (state.searchQuery) {
-                list = list.filter(p => 
-                    p.title.toLowerCase().includes(state.searchQuery) ||
-                    (p.description && p.description.toLowerCase().includes(state.searchQuery)) ||
-                    (p.tags && p.tags.some(t => t.toLowerCase().includes(state.searchQuery)))
-                );
+        // MODAL Y PESTAÑAS PARA AÑADIR
+        function openAddModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+            if (appState.currentCategory !== 'ALL') {
+                document.getElementById('itemCategory').value = appState.currentCategory;
             }
-
-            // Sorting
-            if (sortVal === 'newest') list.sort((a,b) => b.createdAt - a.createdAt);
-            if (sortVal === 'oldest') list.sort((a,b) => a.createdAt - b.createdAt);
-            if (sortVal === 'price-asc') list.sort((a,b) => (parseFloat(a.price)||0) - (parseFloat(b.price)||0));
-            if (sortVal === 'price-desc') list.sort((a,b) => (parseFloat(b.price)||0) - (parseFloat(a.price)||0));
-
-            if (list.length === 0) {
-                container.innerHTML = '';
-                emptyMsg.classList.remove('hidden');
-                return;
-            } else {
-                emptyMsg.classList.add('hidden');
-            }
-
-            container.innerHTML = list.map(photo => {
-                return `
-                    <div onclick="openPhotoDetail('${photo.id}')" class="group bg-slate-800/90 rounded-2xl overflow-hidden border border-slate-700/80 hover:border-cyan-500/60 transition cursor-pointer flex flex-col shadow-md">
-                        <div class="relative aspect-square bg-slate-950 overflow-hidden">
-                            <img src="${photo.url}" alt="${photo.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/400x400/0f172a/38bdf8?text=Error'">
-                            ${photo.price ? `<span class="absolute bottom-2 left-2 bg-slate-950/90 border border-slate-700 text-cyan-400 font-black text-xs px-2 py-0.5 rounded-lg backdrop-blur-sm">€${parseFloat(photo.price).toFixed(2)}</span>` : ''}
-                        </div>
-                        <div class="p-3">
-                            <h4 class="font-bold text-xs text-white line-clamp-1 group-hover:text-cyan-400 transition">${photo.title}</h4>
-                            ${photo.tags && photo.tags.length > 0 ? `<p class="text-[10px] text-slate-400 mt-0.5 line-clamp-1">#${photo.tags.join(' #')}</p>` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
         }
 
-        // FOLDER MANIPULATION
-        function openCreateFolderModal() {
-            document.getElementById('edit-folder-id').value = '';
-            document.getElementById('folder-modal-title').textContent = 'Nueva Carpeta DFS';
-            document.getElementById('folder-title-input').value = '';
-            document.getElementById('folder-cat-input').value = 'La Liga';
-            document.getElementById('folder-desc-input').value = '';
-            openModal('folder-modal');
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+            document.getElementById('addForm').reset();
+            document.getElementById('filePreviewPlaceholder').classList.remove('hidden');
+            document.getElementById('filePreviewImage').classList.add('hidden');
+            appState.compressedImageData = null;
         }
 
-        function openEditFolderModal(folderId) {
-            const folder = state.folders.find(f => f.id === folderId);
-            if (!folder) return;
-
-            document.getElementById('edit-folder-id').value = folder.id;
-            document.getElementById('folder-modal-title').textContent = 'Editar Carpeta DFS';
-            document.getElementById('folder-title-input').value = folder.title;
-            document.getElementById('folder-cat-input').value = folder.category;
-            document.getElementById('folder-desc-input').value = folder.description || '';
-
-            openModal('folder-modal');
-        }
-
-        function editCurrentFolder() {
-            if (state.activeFolderId) openEditFolderModal(state.activeFolderId);
-        }
-
-        function handleSaveFolder(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-folder-id').value;
-            const title = document.getElementById('folder-title-input').value.trim();
-            const category = document.getElementById('folder-cat-input').value.trim() || 'General';
-            const description = document.getElementById('folder-desc-input').value.trim();
-
-            if (id) {
-                // Update
-                const folder = state.folders.find(f => f.id === id);
-                if (folder) {
-                    folder.title = title;
-                    folder.category = category;
-                    folder.description = description;
-                }
-                showToast('Carpeta actualizada', 'success');
-            } else {
-                // Create
-                const newFolder = {
-                    id: 'fld-' + Date.now(),
-                    title,
-                    category,
-                    description,
-                    createdAt: Date.now()
-                };
-                state.folders.unshift(newFolder);
-                showToast('Nueva carpeta creada', 'success');
-            }
-
-            saveStorage();
-            closeModal('folder-modal');
-            renderApp();
-        }
-
-        function deleteFolder(folderId) {
-            if (!confirm('¿Eliminar esta carpeta? Se eliminarán también todas las fotos que contiene.')) return;
-            state.folders = state.folders.filter(f => f.id !== folderId);
-            state.photos = state.photos.filter(p => p.folderId !== folderId);
-            saveStorage();
-
-            if (state.activeFolderId === folderId) {
-                navigateToHome();
-            } else {
-                renderApp();
-            }
-            showToast('Carpeta eliminada', 'info');
-        }
-
-        function deleteCurrentFolder() {
-            if (state.activeFolderId) deleteFolder(state.activeFolderId);
-        }
-
-        // PHOTO MANIPULATION
-        function openUploadPhotoModal() {
-            document.getElementById('edit-photo-id').value = '';
-            document.getElementById('photo-modal-title').textContent = 'Subir Foto a Carpeta DFS';
-            document.getElementById('photo-title-input').value = '';
-            document.getElementById('photo-price-input').value = '';
-            document.getElementById('photo-tags-input').value = '';
-            document.getElementById('photo-desc-input').value = '';
-            document.getElementById('photo-url-input').value = '';
-            document.getElementById('image-preview-wrapper').classList.add('hidden');
-            state.currentUploadedDataUrl = '';
-
-            populateFolderSelector();
-            openModal('photo-modal');
-        }
-
-        function populateFolderSelector(selectedFolderId = null) {
-            const select = document.getElementById('photo-folder-select');
-            select.innerHTML = state.folders.map(f => `<option value="${f.id}">${f.title} (${f.category})</option>`).join('');
-            select.value = selectedFolderId || state.activeFolderId || (state.folders[0] ? state.folders[0].id : '');
-        }
-
-        function switchImageTab(tab) {
-            state.activeTabInput = tab;
-            const fileBtn = document.getElementById('tab-file-btn');
-            const urlBtn = document.getElementById('tab-url-btn');
-            const fileCont = document.getElementById('file-input-container');
-            const urlCont = document.getElementById('url-input-container');
+        function switchAddTab(tab) {
+            appState.addTab = tab;
+            const fileBtn = document.getElementById('tabFileUploadBtn');
+            const urlBtn = document.getElementById('tabUrlUploadBtn');
+            const fileCont = document.getElementById('fileUploadContainer');
+            const urlCont = document.getElementById('urlUploadContainer');
 
             if (tab === 'file') {
-                fileBtn.className = "flex-1 py-1 text-xs font-bold rounded-lg bg-cyan-600 text-white shadow text-center";
-                urlBtn.className = "flex-1 py-1 text-xs font-bold rounded-lg text-slate-400 text-center";
+                fileBtn.className = 'flex-1 py-2 text-xs font-semibold border-b-2 border-gold-500 text-gold-400';
+                urlBtn.className = 'flex-1 py-2 text-xs font-semibold text-gray-400 border-b-2 border-transparent';
                 fileCont.classList.remove('hidden');
                 urlCont.classList.add('hidden');
             } else {
-                urlBtn.className = "flex-1 py-1 text-xs font-bold rounded-lg bg-cyan-600 text-white shadow text-center";
-                fileBtn.className = "flex-1 py-1 text-xs font-bold rounded-lg text-slate-400 text-center";
+                urlBtn.className = 'flex-1 py-2 text-xs font-semibold border-b-2 border-gold-500 text-gold-400';
+                fileBtn.className = 'flex-1 py-2 text-xs font-semibold text-gray-400 border-b-2 border-transparent';
                 urlCont.classList.remove('hidden');
                 fileCont.classList.add('hidden');
             }
         }
 
-        function previewFileImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    state.currentUploadedDataUrl = e.target.result;
-                    showPreview(e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+        // PROCESAR Y COMPRIMIR IMAGEN LOCAL DEL MÓVIL
+        function previewSelectedFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-        function previewUrlImage(url) {
-            if (url) {
-                state.currentUploadedDataUrl = url;
-                showPreview(url);
-            }
-        }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    // Compresión mediante Canvas para que ocupe muy pocos KB y persista en localStorage
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 600;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    
+                    if (scaleSize < 1) {
+                        canvas.width = MAX_WIDTH;
+                        canvas.height = img.height * scaleSize;
+                    } else {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                    }
 
-        function showPreview(src) {
-            const wrapper = document.getElementById('image-preview-wrapper');
-            const img = document.getElementById('image-preview');
-            img.src = src;
-            wrapper.classList.remove('hidden');
-        }
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // Convertir a JPEG comprimido calidad 0.7
+                    appState.compressedImageData = canvas.toDataURL('image/jpeg', 0.7);
 
-        function handleSavePhoto(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-photo-id').value;
-            const folderId = document.getElementById('photo-folder-select').value;
-            const title = document.getElementById('photo-title-input').value.trim();
-            const price = document.getElementById('photo-price-input').value.trim();
-            const desc = document.getElementById('photo-desc-input').value.trim();
-            const rawTags = document.getElementById('photo-tags-input').value.trim();
-            const tags = rawTags ? rawTags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean) : [];
-            const imageUrl = state.currentUploadedDataUrl || document.getElementById('photo-url-input').value.trim();
-
-            if (!id && !imageUrl) {
-                showToast('Sube una imagen o ingresa una URL válida', 'error');
-                return;
-            }
-
-            if (!folderId) {
-                showToast('Selecciona una carpeta para subir la foto', 'error');
-                return;
-            }
-
-            if (id) {
-                // Update
-                const photo = state.photos.find(p => p.id === id);
-                if (photo) {
-                    photo.folderId = folderId;
-                    photo.title = title;
-                    photo.price = price;
-                    photo.description = desc;
-                    photo.tags = tags;
-                    if (imageUrl) photo.url = imageUrl;
+                    // Vista previa visual
+                    const previewImg = document.getElementById('filePreviewImage');
+                    previewImg.src = appState.compressedImageData;
+                    previewImg.classList.remove('hidden');
+                    document.getElementById('filePreviewPlaceholder').classList.add('hidden');
                 }
-                showToast('Foto actualizada', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // GUARDAR FORMULARIO
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('itemTitle').value.trim();
+            const category = document.getElementById('itemCategory').value;
+            let finalUrl = '';
+
+            if (appState.addTab === 'file') {
+                if (!appState.compressedImageData) {
+                    alert("Por favor selecciona una foto de tu galería.");
+                    return;
+                }
+                finalUrl = appState.compressedImageData;
             } else {
-                // New
-                const newPhoto = {
-                    id: 'pic-' + Date.now(),
-                    folderId,
-                    title,
-                    price,
-                    description: desc,
-                    tags,
-                    url: imageUrl,
-                    createdAt: Date.now()
-                };
-                state.photos.unshift(newPhoto);
-                showToast('Foto añadida a la carpeta', 'success');
+                const urlInput = document.getElementById('itemUrlInput').value.trim();
+                if (!urlInput) {
+                    alert("Por favor introduce una URL de imagen válida.");
+                    return;
+                }
+                finalUrl = urlInput;
             }
 
-            saveStorage();
-            closeModal('photo-modal');
-            
-            // Navigate directly to that folder to show user
-            state.activeFolderId = folderId;
-            updateUrlHash();
-            renderApp();
+            const newItem = {
+                id: Date.now().toString(),
+                title: title,
+                category: category,
+                url: finalUrl,
+                date: Date.now()
+            };
+
+            appState.items.unshift(newItem);
+            saveStateToStorage();
+            closeAddModal();
+            renderGallery();
         }
 
-        function editCurrentPhoto() {
-            if (!state.currentPhotoDetailId) return;
-            const photo = state.photos.find(p => p.id === state.currentPhotoDetailId);
-            if (!photo) return;
-
-            closeModal('detail-modal');
-
-            document.getElementById('edit-photo-id').value = photo.id;
-            document.getElementById('photo-modal-title').textContent = 'Editar Foto';
-            document.getElementById('photo-title-input').value = photo.title;
-            document.getElementById('photo-price-input').value = photo.price || '';
-            document.getElementById('photo-tags-input').value = (photo.tags || []).join(', ');
-            document.getElementById('photo-desc-input').value = photo.description || '';
-            document.getElementById('photo-url-input').value = photo.url;
-            showPreview(photo.url);
-
-            populateFolderSelector(photo.folderId);
-            openModal('photo-modal');
+        // VISOR DE IMAGEN TAMAÑO COMPLETO
+        function openImageViewer(url, title, category) {
+            document.getElementById('viewerImage').src = url;
+            document.getElementById('viewerTitle').innerText = title;
+            document.getElementById('viewerCategory').innerText = category;
+            document.getElementById('imageViewerModal').classList.remove('hidden');
         }
 
-        function deleteCurrentPhoto() {
-            if (!state.currentPhotoDetailId) return;
-            if (!confirm('¿Eliminar esta foto de la carpeta?')) return;
-
-            state.photos = state.photos.filter(p => p.id !== state.currentPhotoDetailId);
-            saveStorage();
-            closeModal('detail-modal');
-            renderApp();
-            showToast('Foto eliminada', 'info');
+        function closeImageViewer() {
+            document.getElementById('imageViewerModal').classList.add('hidden');
         }
 
-        // PHOTO DETAIL MODAL
-        function openPhotoDetail(photoId) {
-            const photo = state.photos.find(p => p.id === photoId);
-            if (!photo) return;
-
-            state.currentPhotoDetailId = photoId;
-            updateUrlHash();
-
-            const folder = state.folders.find(f => f.id === photo.folderId);
-
-            document.getElementById('detail-img').src = photo.url;
-            document.getElementById('detail-title').textContent = photo.title;
-            document.getElementById('detail-folder-badge').textContent = folder ? folder.title : 'General';
-            document.getElementById('detail-date').textContent = new Date(photo.createdAt).toLocaleDateString();
-            document.getElementById('detail-desc').textContent = photo.description || 'Sin información detallada.';
-
-            const priceEl = document.getElementById('detail-price');
-            const priceWrap = document.getElementById('detail-price-wrapper');
-            if (photo.price) {
-                priceEl.textContent = `€${parseFloat(photo.price).toFixed(2)}`;
-                priceWrap.classList.remove('hidden');
-            } else {
-                priceWrap.classList.add('hidden');
-            }
-
-            const tagsCont = document.getElementById('detail-tags');
-            if (photo.tags && photo.tags.length > 0) {
-                tagsCont.innerHTML = photo.tags.map(t => `<span class="bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-semibold px-2.5 py-0.5 rounded-full">#${t}</span>`).join('');
-            } else {
-                tagsCont.innerHTML = `<span class="text-xs text-slate-500">Sin etiquetas</span>`;
-            }
-
-            openModal('detail-modal');
-        }
-
-        // SHARING LINKS
-        function copyFolderLink() {
-            if (!state.activeFolderId) return;
-            const url = `${window.location.origin}${window.location.pathname}#folder=${state.activeFolderId}`;
-            copyToClipboard(url);
-            showToast('¡Enlace de carpeta copiado!', 'success');
-        }
-
-        function copyPhotoDirectLink() {
-            if (!state.currentPhotoDetailId) return;
-            const photo = state.photos.find(p => p.id === state.currentPhotoDetailId);
-            if (!photo) return;
-
-            const url = `${window.location.origin}${window.location.pathname}#folder=${photo.folderId}&photo=${photo.id}`;
-            copyToClipboard(url);
-            showToast('¡Enlace directo a la foto copiado!', 'success');
-        }
-
-        function copyCurrentViewLink() {
-            copyToClipboard(window.location.href);
-            showToast('¡Enlace copiado al portapapeles!', 'success');
-        }
-
-        function copyToClipboard(text) {
-            const input = document.createElement('textarea');
-            input.value = text;
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand('copy');
-            document.body.removeChild(input);
-        }
-
-        // MODAL & TOAST HELPERS
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-            if (id === 'detail-modal') {
-                state.currentPhotoDetailId = null;
-                updateUrlHash();
-            }
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            let bgClass = 'bg-slate-800 text-white border border-slate-700';
-            if (type === 'success') bgClass = 'bg-cyan-600 text-white font-bold';
-            if (type === 'error') bgClass = 'bg-red-600 text-white font-bold';
-
-            toast.className = `px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center justify-between gap-3 transform transition duration-300 translate-y-2 ${bgClass}`;
-            toast.innerHTML = `
-                <span>${message}</span>
-                <button onclick="this.parentElement.remove()" class="opacity-70 hover:opacity-100"><i class="fa-solid fa-xmark"></i></button>
-            `;
-
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('opacity-0', '-translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+        // AUXILIAR
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
     </script>
 </body>
