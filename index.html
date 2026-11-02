@@ -3,197 +3,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DFS Gallery</title>
+<title>DFS Gallery | District Football Street</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{50:'#f0fdf4',100:'#dcfce7',500:'#22c55e',600:'#16a34a',700:'#15803d',900:'#14532d'}}}}};
-</script>
+<script>tailwind.config={darkMode:'class',theme:{extend:{colors:{brand:{500:'#22c55e',600:'#16a34a',700:'#15803d',900:'#14532d'}}}}}</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body{font-family:Inter,sans-serif}.hide-scrollbar::-webkit-scrollbar{display:none}.hide-scrollbar{scrollbar-width:none}.img-zoom-container{overflow:hidden}.img-zoom-container img{transition:transform .3s}.img-zoom-container:hover img{transform:scale(1.12)}
+body{font-family:Inter,sans-serif}.hide-scrollbar::-webkit-scrollbar{display:none}.hide-scrollbar{scrollbar-width:none}
+#fullscreen-viewer{touch-action:pan-y}#fullscreen-image{max-width:100vw;max-height:calc(100dvh - 110px);object-fit:contain}
 </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 min-h-full flex flex-col transition-colors">
-<div id="toast-container" class="fixed bottom-5 right-5 z-[70] flex flex-col gap-2 max-w-sm"></div>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 min-h-full flex flex-col">
+<div id="toast-container" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-2 max-w-sm"></div>
 <header class="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm">
  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
   <div class="flex items-center justify-between h-16 gap-3">
    <div class="flex items-center gap-3">
     <button onclick="toggleSidebarMobile()" class="lg:hidden p-2 rounded-lg"><i class="fa-solid fa-bars"></i></button>
     <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateToHome()">
-     <img src="https://res.cloudinary.com/pkegocbt/image/upload/v1792279672/Screenshot_2026-07-24-18-49-51-631_com.android.chrome.png" alt="DFS" class="w-10 h-10 rounded-full object-contain">
-     <span class="text-brand-600 dark:text-brand-400 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-900/40 border border-brand-200 dark:border-brand-700">Gallery</span>
+     <img src="https://res.cloudinary.com/pkegocbt/image/upload/v1792279672/Screenshot_2026-07-24-18-49-51-631_com.android.chrome.png" alt="DFS" class="w-10 h-10 rounded-full object-cover">
+     <h1 class="text-lg font-bold text-gray-900 dark:text-white"> <span class="text-brand-600">Gallery</span></h1>
     </div>
    </div>
-   <div class="hidden md:flex flex-1 max-w-md">
-    <div class="relative w-full"><i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="global-search" oninput="handleSearch(this.value)" placeholder="Buscar álbum o foto por nombre o descripción..." class="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-brand-500 rounded-full text-sm focus:outline-none"></div>
-   </div>
+   <div class="hidden md:block flex-1 max-w-md"><input id="global-search" oninput="handleSearch(this.value)" placeholder="Buscar álbumes y fotos..." class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-sm outline-none"></div>
    <div class="flex items-center gap-2">
-    <button onclick="toggleDarkMode()" title="Cambiar tema" class="p-2 rounded-full"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
-    <button onclick="shareCurrentView()" title="Compartir vista" class="p-2 rounded-full"><i class="fa-solid fa-share-nodes"></i></button>
-    <button onclick="openModal('create-album-modal')" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border text-xs font-semibold"><i class="fa-solid fa-folder-plus text-brand-600"></i> Nuevo Álbum</button>
-    <button onclick="openUploadPhotoModal()" class="inline-flex items-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white px-3.5 py-2 rounded-full text-xs font-semibold"><i class="fa-solid fa-cloud-arrow-up"></i> Subir Foto</button>
+    <button onclick="toggleDarkMode()" title="Cambiar tema" class="p-2"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
+    <button onclick="shareCurrentView()" title="Compartir" class="p-2"><i class="fa-solid fa-share-nodes"></i></button>
+    <button onclick="openModal('create-album-modal')" class="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-full border text-xs font-semibold"><i class="fa-solid fa-folder-plus text-brand-600"></i> Nuevo Álbum</button>
+    <button onclick="openUploadPhotoModal()" class="px-3 py-2 rounded-full bg-brand-600 text-white text-xs font-semibold"><i class="fa-solid fa-cloud-arrow-up"></i> Subir Foto</button>
    </div>
   </div>
-  <div class="pb-3 md:hidden"><input id="mobile-search" type="search" oninput="handleSearch(this.value)" placeholder="Buscar álbum o foto..." class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-xs outline-none"></div>
+  <div class="pb-3 md:hidden"><input oninput="handleSearch(this.value)" placeholder="Buscar álbumes..." class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-xs outline-none"></div>
  </div>
 </header>
 <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex gap-6">
  <div id="sidebar-overlay" onclick="closeSidebarMobile()" class="fixed inset-0 bg-black/50 z-40 lg:hidden hidden"></div>
- <aside id="app-sidebar" class="fixed lg:static top-0 left-0 bottom-0 z-50 w-64 bg-white dark:bg-gray-900 lg:bg-transparent lg:dark:bg-transparent border-r lg:border-0 border-gray-200 dark:border-gray-800 p-4 lg:p-0 -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col overflow-y-auto">
-  <div class="space-y-6">
-   <div class="flex items-center justify-between lg:hidden pb-3 border-b"><span class="font-bold text-sm">Menú</span><button onclick="closeSidebarMobile()"><i class="fa-solid fa-xmark"></i></button></div>
-   <div><h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Vista principal</h3><button onclick="navigateToHome();closeSidebarMobile()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300"><span><i class="fa-solid fa-grid-2 mr-2"></i>Todos los álbumes</span><span id="badge-total-photos" class="text-[10px]">0</span></button></div>
-   <div><h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">Categorías</h3><div id="sidebar-categories" class="space-y-1"></div></div>
-   <div><div class="flex items-center justify-between mb-2"><h3 class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Álbumes</h3><button onclick="openModal('create-album-modal')" class="text-xs text-brand-600">+ Nuevo</button></div><div id="sidebar-albums" class="space-y-1 max-h-60 overflow-y-auto hide-scrollbar"></div></div>
-  </div>
+ <aside id="app-sidebar" class="fixed lg:static top-0 left-0 bottom-0 z-40 w-64 bg-white dark:bg-gray-900 lg:bg-transparent border-r lg:border-0 p-4 lg:p-0 -translate-x-full lg:translate-x-0 transition-transform flex flex-col gap-6 overflow-y-auto">
+  <div class="flex justify-between lg:hidden"><b class="text-sm">Navegación</b><button onclick="closeSidebarMobile()"><i class="fa-solid fa-xmark"></i></button></div>
+  <div><h3 class="text-[11px] font-bold uppercase text-gray-400 mb-2">Vista principal</h3><button onclick="navigateToHome();closeSidebarMobile()" id="nav-all-btn" class="w-full text-left px-3 py-2 rounded-xl text-xs bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-300"><i class="fa-solid fa-house mr-2"></i>Todos los álbumes <span id="badge-total-photos" class="float-right">0</span></button></div>
+  <div><h3 class="text-[11px] font-bold uppercase text-gray-400 mb-2">Categorías</h3><div id="sidebar-categories" class="space-y-1"></div></div>
+  <div><div class="flex justify-between mb-2"><h3 class="text-[11px] font-bold uppercase text-gray-400">Álbumes</h3><button onclick="openModal('create-album-modal')" class="text-xs text-brand-600">+ Nuevo</button></div><div id="sidebar-albums" class="space-y-1 max-h-60 overflow-y-auto hide-scrollbar"></div></div>
  </aside>
  <main class="flex-1 min-w-0">
-  <nav class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-800"><div class="flex items-center gap-2 text-xs text-gray-500"><button onclick="navigateToHome()" class="font-semibold"><i class="fa-solid fa-house"></i> Inicio</button><span id="bc-sep-1" class="hidden">›</span><span id="bc-category" class="hidden"></span><span id="bc-sep-2" class="hidden">›</span><b id="bc-album" class="hidden text-gray-800 dark:text-gray-200"></b></div><span id="stats-counter" class="text-xs text-gray-400">0 álbumes</span></nav>
+  <nav class="flex justify-between items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-800 text-xs">
+   <div class="flex items-center gap-2 text-gray-500"><button onclick="navigateToHome()" class="font-semibold"><i class="fa-solid fa-house"></i> Inicio</button><span id="bc-sep" class="hidden">›</span><b id="bc-album" class="hidden text-gray-800 dark:text-gray-200"></b></div><span id="stats-counter" class="text-gray-400"></span>
+  </nav>
   <section id="albums-section" class="mb-8">
-   <div class="flex items-center justify-between mb-3"><h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300"><i class="fa-regular fa-folder-open text-brand-600 mr-2"></i>Álbumes</h2></div>
+   <div class="flex items-center justify-between mb-3"><h2 class="text-sm font-bold uppercase tracking-wider"><i class="fa-regular fa-folder-open text-brand-600 mr-2"></i>Álbumes</h2><button onclick="openModal('create-album-modal')" class="sm:hidden text-xs text-brand-600">+ Crear álbum</button></div>
    <div id="albums-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5"></div>
-   <div id="empty-albums-msg" class="hidden text-center py-10 bg-white dark:bg-gray-900 rounded-xl border border-dashed border-gray-300 dark:border-gray-800"><p class="text-xs text-gray-500">No hay álbumes en esta vista.</p><button onclick="openModal('create-album-modal')" class="mt-3 text-xs text-brand-600 font-semibold">Crear primer álbum</button></div>
+   <div id="empty-albums-msg" class="hidden text-center py-10 bg-white dark:bg-gray-900 rounded-xl border border-dashed border-gray-300 dark:border-gray-800 text-sm text-gray-500">Todavía no hay álbumes. Crea tu primer álbum.</div>
   </section>
   <section id="photos-section" class="hidden">
-   <div class="flex items-center justify-between mb-3 gap-2"><h2 id="photos-title" class="text-sm font-bold uppercase tracking-wider"><i class="fa-solid fa-images text-brand-600 mr-2"></i>Fotos del álbum</h2><select id="sort-select" onchange="renderPhotos()" class="text-xs bg-white dark:bg-gray-900 border rounded-lg px-2.5 py-1.5"><option value="newest">Más recientes</option><option value="oldest">Más antiguas</option></select></div>
+   <div class="flex items-center justify-between mb-3 gap-2"><h2 id="photos-title" class="text-sm font-bold uppercase tracking-wider">Fotografías</h2><select id="sort-select" onchange="renderPhotos()" class="text-xs bg-white dark:bg-gray-900 border rounded-lg px-2 py-1.5"><option value="newest">Más recientes</option><option value="oldest">Más antiguas</option></select></div>
    <div id="photos-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5"></div>
-   <div id="empty-photos-msg" class="hidden text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-dashed border-gray-300 dark:border-gray-800"><i class="fa-regular fa-image text-4xl text-gray-400 mb-2"></i><p class="text-sm text-gray-500">Este álbum todavía no tiene fotos.</p><button onclick="openUploadPhotoModal()" class="mt-4 bg-brand-600 text-white px-4 py-2 rounded-full text-xs font-semibold">Subir primera foto</button></div>
+   <div id="empty-photos-msg" class="hidden text-center py-14 bg-white dark:bg-gray-900 rounded-xl border border-dashed border-gray-300 dark:border-gray-800 text-sm text-gray-500">Este álbum todavía no tiene fotos.<br><button onclick="openUploadPhotoModal()" class="mt-3 text-brand-600 font-semibold">Subir primera foto</button></div>
   </section>
  </main>
 </div>
 
-<div id="create-album-modal" class="fixed inset-0 z-[60] hidden bg-black/60 flex items-center justify-center p-4">
- <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6 shadow-2xl">
-  <div class="flex justify-between items-center pb-3 border-b"><h3 id="album-modal-title" class="font-bold">Crear nuevo álbum</h3><button onclick="closeModal('create-album-modal')"><i class="fa-solid fa-xmark"></i></button></div>
-  <form onsubmit="handleSaveAlbum(event)" class="mt-4 space-y-3">
-   <input type="hidden" id="edit-album-id">
-   <div><label class="block text-xs mb-1">Nombre del álbum</label><input id="album-title-input" required class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></div>
-   <div><label class="block text-xs mb-1">Categoría</label><input id="album-cat-input" required placeholder="Ej.: Calzado, Ropa..." class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></div>
-   <div><label class="block text-xs mb-1">Descripción (opcional)</label><textarea id="album-desc-input" rows="2" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></textarea></div>
-   <div class="pt-2 flex justify-end gap-2"><button type="button" onclick="closeModal('create-album-modal')" class="px-4 py-2 text-xs border rounded-xl">Cancelar</button><button class="px-4 py-2 text-xs bg-brand-600 text-white rounded-xl">Guardar álbum</button></div>
-  </form>
- </div>
-</div>
+<div id="create-album-modal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4"><div class="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full p-6">
+ <div class="flex justify-between border-b pb-3"><h3 id="album-modal-title" class="font-bold">Crear álbum</h3><button onclick="closeModal('create-album-modal')"><i class="fa-solid fa-xmark"></i></button></div>
+ <form onsubmit="handleSaveAlbum(event)" class="mt-4 space-y-3"><input type="hidden" id="edit-album-id">
+  <label class="block text-xs font-semibold">Nombre del álbum<input id="album-title-input" required class="mt-1 w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm"></label>
+  <label class="block text-xs font-semibold">Categoría<input id="album-cat-input" required placeholder="Ej. Zapatillas, Ropa..." class="mt-1 w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm"></label>
+  <label class="block text-xs font-semibold">Descripción (opcional)<textarea id="album-desc-input" rows="3" class="mt-1 w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm"></textarea></label>
+  <div class="flex justify-end gap-2"><button type="button" onclick="closeModal('create-album-modal')" class="px-4 py-2 text-xs border rounded-xl">Cancelar</button><button class="px-4 py-2 text-xs bg-brand-600 text-white rounded-xl">Guardar álbum</button></div>
+ </form></div></div>
 
-<div id="upload-photo-modal" class="fixed inset-0 z-[60] hidden bg-black/60 flex items-center justify-center p-4">
- <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
-  <div class="flex justify-between items-center pb-3 border-b"><h3 id="photo-modal-title" class="font-bold">Subir foto</h3><button onclick="closeModal('upload-photo-modal')"><i class="fa-solid fa-xmark"></i></button></div>
-  <form onsubmit="handleSavePhoto(event)" class="mt-4 space-y-3">
-   <input type="hidden" id="edit-photo-id">
-   <div><label class="block text-xs mb-1">Asignar a álbum</label><select id="photo-album-select" required class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"><option value="">Selecciona un álbum</option></select></div>
-   <div><label class="block text-xs mb-1">Origen de la imagen</label><div class="flex rounded-xl bg-gray-100 dark:bg-gray-800 p-1 gap-1"><button type="button" id="tab-file-btn" onclick="switchImageTab('file')" class="flex-1 py-2 text-xs rounded-lg bg-white dark:bg-gray-700">Archivo del móvil</button><button type="button" id="tab-url-btn" onclick="switchImageTab('url')" class="flex-1 py-2 text-xs rounded-lg">URL web</button></div></div>
-   <div id="file-input-container"><label class="block border-2 border-dashed rounded-xl p-5 text-center cursor-pointer"><i class="fa-solid fa-cloud-arrow-up text-2xl text-brand-600"></i><p class="text-xs mt-1">Pulsa para seleccionar una imagen</p><p class="text-[10px] text-gray-400">JPG, PNG o WEBP</p><input type="file" id="photo-file-input" accept="image/*" class="hidden" onchange="previewFileImage(this)"></label></div>
-   <div id="url-input-container" class="hidden"><input type="url" id="photo-url-input" placeholder="https://ejemplo.com/imagen.jpg" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm" oninput="previewUrlImage(this.value)"></div>
-   <div id="image-preview-wrapper" class="hidden rounded-xl overflow-hidden border max-h-48 flex justify-center bg-black/5"><img id="image-preview" src="" class="max-h-48 object-contain"></div>
-   <div><label class="block text-xs mb-1">Título de la foto</label><input id="photo-title-input" required class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></div>
-   <div><label class="block text-xs mb-1">Descripción / detalles (opcional)</label><textarea id="photo-desc-input" rows="3" class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border rounded-xl text-sm"></textarea></div>
-   <div class="pt-2 flex justify-end gap-2"><button type="button" onclick="closeModal('upload-photo-modal')" class="px-4 py-2 text-xs border rounded-xl">Cancelar</button><button class="px-4 py-2 text-xs bg-brand-600 text-white rounded-xl">Guardar foto</button></div>
-  </form>
- </div>
-</div>
+<div id="upload-photo-modal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4"><div class="bg-white dark:bg-gray-900 rounded-2xl max-w-lg w-full p-6 max-h-[92dvh] overflow-y-auto">
+ <div class="flex justify-between border-b pb-3"><h3 id="photo-modal-title" class="font-bold">Subir foto</h3><button onclick="closeModal('upload-photo-modal')"><i class="fa-solid fa-xmark"></i></button></div>
+ <form onsubmit="handleSavePhoto(event)" class="mt-4 space-y-3"><input type="hidden" id="edit-photo-id">
+  <label class="block text-xs font-semibold">Álbum<select id="photo-album-select" class="mt-1 w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm"></select></label>
+  <div class="flex gap-2"><button type="button" id="tab-file-btn" onclick="switchImageTab('file')" class="flex-1 p-2 rounded-lg bg-brand-600 text-white text-xs">Galería del móvil</button><button type="button" id="tab-url-btn" onclick="switchImageTab('url')" class="flex-1 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-xs">URL web</button></div>
+  <div id="file-input-container"><input type="file" id="photo-file-input" accept="image/*" class="w-full text-xs" onchange="previewFileImage(this)"></div>
+  <div id="url-input-container" class="hidden"><input type="url" id="photo-url-input" placeholder="https://..." onchange="previewUrlImage(this.value)" class="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm"></div>
+  <div id="image-preview-wrapper" class="hidden bg-black rounded-xl p-2"><img id="image-preview" class="max-h-44 mx-auto object-contain"></div>
+  <label class="block text-xs font-semibold">Título<input id="photo-title-input" required class="mt-1 w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm"></label>
+  <label class="block text-xs font-semibold">Descripción / detalles<textarea id="photo-desc-input" rows="3" class="mt-1 w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-sm"></textarea></label>
+  <div class="flex justify-end gap-2"><button type="button" onclick="closeModal('upload-photo-modal')" class="px-4 py-2 text-xs border rounded-xl">Cancelar</button><button class="px-4 py-2 text-xs bg-brand-600 text-white rounded-xl">Guardar foto</button></div>
+ </form></div></div>
 
-<div id="detail-modal" class="fixed inset-0 z-[60] hidden bg-black/80 flex items-center justify-center p-2 sm:p-4">
- <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row relative">
-  <button onclick="closeModal('detail-modal')" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/60 text-white"><i class="fa-solid fa-xmark"></i></button>
-  <div class="md:w-3/5 bg-black flex items-center justify-center p-4 min-h-[300px] img-zoom-container"><img id="detail-img" src="" class="max-h-[75vh] max-w-full object-contain"></div>
-  <div class="md:w-2/5 p-5 flex flex-col justify-between overflow-y-auto">
-   <div class="space-y-3"><div class="flex justify-between gap-2"><span id="detail-album-badge" class="text-[10px] uppercase font-bold text-brand-600"></span><span id="detail-date" class="text-[11px] text-gray-400"></span></div><h2 id="detail-title" class="text-lg font-bold"></h2><div class="border-t border-b py-3"><h4 class="text-[10px] font-bold uppercase text-gray-400 mb-1">Descripción</h4><p id="detail-desc" class="text-xs leading-relaxed whitespace-pre-line"></p></div></div>
-   <div class="mt-6 pt-4 border-t space-y-2"><button onclick="copyDirectPhotoLink()" class="w-full bg-brand-600 text-white py-2 rounded-xl text-xs"><i class="fa-solid fa-link mr-1"></i>Copiar enlace directo</button><div class="flex gap-2"><button onclick="editCurrentPhoto()" class="flex-1 border py-2 rounded-xl text-xs">Editar</button><button onclick="deleteCurrentPhoto()" class="flex-1 border border-red-300 text-red-500 py-2 rounded-xl text-xs">Eliminar</button></div></div>
+<div id="detail-modal" class="fixed inset-0 z-[60] hidden bg-black/80 flex items-center justify-center p-3"><div class="bg-white dark:bg-gray-900 rounded-2xl max-w-3xl w-full max-h-[94dvh] overflow-y-auto relative p-5">
+ <button onclick="closeModal('detail-modal')" class="absolute top-3 right-3"><i class="fa-solid fa-xmark"></i></button><div class="grid md:grid-cols-2 gap-5 pt-5">
+  <div class="bg-black rounded-xl flex items-center justify-center min-h-64"><img id="detail-img" class="max-h-[65dvh] max-w-full object-contain"></div>
+  <div class="space-y-3"><span id="detail-album-badge" class="text-xs text-brand-600 font-bold"></span><p id="detail-date" class="text-xs text-gray-400"></p><h2 id="detail-title" class="text-xl font-bold"></h2><div><h4 class="text-xs font-bold text-gray-400 uppercase">Descripción</h4><p id="detail-desc" class="text-sm whitespace-pre-line mt-1"></p></div>
+   <button onclick="copyDirectPhotoLink()" class="w-full p-2 bg-brand-600 text-white rounded-xl text-xs"><i class="fa-solid fa-link mr-1"></i>Copiar enlace directo</button>
+   <div class="flex gap-2"><button onclick="editCurrentPhoto()" class="flex-1 p-2 border rounded-xl text-xs">Editar</button><button onclick="deleteCurrentPhoto()" class="flex-1 p-2 border border-red-300 text-red-500 rounded-xl text-xs">Eliminar</button></div>
   </div>
+ </div></div></div>
+
+<!-- Visor de imagen a pantalla completa -->
+<div id="fullscreen-viewer" class="fixed inset-0 z-[80] hidden bg-black flex flex-col items-center justify-center p-2">
+ <button onclick="closeFullscreen()" aria-label="Cerrar imagen" class="absolute top-4 right-4 z-10 w-11 h-11 rounded-full bg-white/15 text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+ <div class="absolute top-5 left-4 right-16 text-white text-sm font-semibold truncate" id="fullscreen-title"></div>
+ <img id="fullscreen-image" src="" alt="" class="w-full h-full">
+ <div class="absolute bottom-5 left-0 right-0 flex justify-center gap-3 px-4">
+  <button onclick="showFullscreenDetails()" class="px-4 py-2 rounded-full bg-white/15 text-white text-xs"><i class="fa-solid fa-circle-info mr-1"></i>Detalles</button>
+  <button onclick="editFullscreenPhoto()" class="px-4 py-2 rounded-full bg-white/15 text-white text-xs"><i class="fa-solid fa-pen mr-1"></i>Editar</button>
  </div>
 </div>
 
 <script>
 const ALBUMS_KEY='yupoo_pro_albums', PHOTOS_KEY='yupoo_pro_photos';
-let state={albums:[],photos:[],activeAlbumId:null,activeCategory:'ALL',searchQuery:'',currentDetailPhotoId:null,activeTabInput:'file',currentUploadedDataUrl:''};
-
-window.onload=()=>{
- loadFromStorage();setupTheme();handleUrlHash();renderAll();
- window.addEventListener('hashchange',()=>{handleUrlHash();renderAll()});
-};
+let state={albums:[],photos:[],activeAlbumId:null,activeCategory:'ALL',searchQuery:'',currentDetailPhotoId:null,activeTabInput:'file',currentUploadedDataUrl:'',currentFullscreenPhotoId:null};
+window.onload=()=>{loadFromStorage();setupTheme();handleUrlHash();renderAll();window.addEventListener('hashchange',()=>{handleUrlHash();renderAll()});};
 function loadFromStorage(){
  try{
   const a=localStorage.getItem(ALBUMS_KEY),p=localStorage.getItem(PHOTOS_KEY);
-  state.albums=a?JSON.parse(a):[];
-  state.photos=p?JSON.parse(p):[];
-  if(!Array.isArray(state.albums))state.albums=[];
-  if(!Array.isArray(state.photos))state.photos=[];
-  // Mantiene los datos existentes; no carga contenido de demostración.
-  if(!a)localStorage.setItem(ALBUMS_KEY,'[]');
-  if(!p)localStorage.setItem(PHOTOS_KEY,'[]');
- }catch(e){state.albums=[];state.photos=[];showToast('No se pudieron leer los datos guardados. No borres los datos del navegador.','error')}
+  state.albums=a?JSON.parse(a):[];state.photos=p?JSON.parse(p):[];
+  if(!Array.isArray(state.albums))state.albums=[];if(!Array.isArray(state.photos))state.photos=[];
+ }catch(e){state.albums=[];state.photos=[];showToast('No se pudieron leer los datos guardados. No se han borrado.','error');}
 }
-function saveToStorage(){localStorage.setItem(ALBUMS_KEY,JSON.stringify(state.albums));localStorage.setItem(PHOTOS_KEY,JSON.stringify(state.photos))}
-function persistOrRestore(oldAlbums,oldPhotos){
- try{saveToStorage();return true}catch(e){state.albums=oldAlbums;state.photos=oldPhotos;const quota=e&&(['QuotaExceededError','NS_ERROR_DOM_QUOTA_REACHED'].includes(e.name)||e.code===22);showToast(quota?'No se ha podido guardar: el almacenamiento del navegador puede estar lleno. La foto no se ha guardado.':'No se han podido guardar los cambios.','error');return false}
+function saveToStorage(){
+ try{localStorage.setItem(ALBUMS_KEY,JSON.stringify(state.albums));localStorage.setItem(PHOTOS_KEY,JSON.stringify(state.photos));return true;}
+ catch(e){showToast('No se pudo guardar: el almacenamiento del navegador puede estar lleno. No se han eliminado tus datos anteriores.','error');return false;}
 }
-function setupTheme(){const dark=localStorage.getItem('theme')==='dark'||(!('theme'in localStorage)&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',dark);document.getElementById('theme-icon').className=dark?'fa-solid fa-sun text-yellow-400':'fa-solid fa-moon'}
-function toggleDarkMode(){const dark=!document.documentElement.classList.contains('dark');document.documentElement.classList.toggle('dark',dark);localStorage.setItem('theme',dark?'dark':'light');document.getElementById('theme-icon').className=dark?'fa-solid fa-sun text-yellow-400':'fa-solid fa-moon'}
-function handleUrlHash(){const params=new URLSearchParams(location.hash.slice(1));const aid=params.get('album'),pid=params.get('photo');if(aid&&state.albums.some(a=>a.id===aid))state.activeAlbumId=aid;if(pid&&state.photos.some(p=>p.id===pid))setTimeout(()=>openPhotoDetail(pid),150)}
-function updateUrlHash(){const p=new URLSearchParams();if(state.activeAlbumId)p.set('album',state.activeAlbumId);if(state.currentDetailPhotoId)p.set('photo',state.currentDetailPhotoId);history.replaceState(null,'',p.toString()?'#'+p.toString():location.pathname)}
-function navigateToHome(){state.activeAlbumId=null;state.activeCategory='ALL';state.searchQuery='';document.getElementById('global-search').value='';document.getElementById('mobile-search').value='';updateUrlHash();renderAll()}
-function selectAlbum(id){state.activeAlbumId=id;const a=state.albums.find(x=>x.id===id);if(a)state.activeCategory=a.category;updateUrlHash();renderAll()}
-function selectCategory(cat){state.activeCategory=cat;state.activeAlbumId=null;updateUrlHash();renderAll()}
-function handleSearch(q){state.searchQuery=q.toLowerCase().trim();document.getElementById('global-search').value=q;document.getElementById('mobile-search').value=q;renderAlbums();renderPhotos()}
-function renderAll(){renderSidebar();renderBreadcrumb();renderAlbums();renderPhotos();updateStatsCounter()}
+function setupTheme(){let d=localStorage.getItem('theme')==='dark'||(!('theme'in localStorage)&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);document.getElementById('theme-icon').className=d?'fa-solid fa-sun text-yellow-400':'fa-solid fa-moon';}
+function toggleDarkMode(){let d=!document.documentElement.classList.contains('dark');document.documentElement.classList.toggle('dark',d);localStorage.setItem('theme',d?'dark':'light');setupTheme();}
+function handleUrlHash(){let q=new URLSearchParams(location.hash.slice(1)),a=q.get('album'),p=q.get('photo');if(a&&state.albums.some(x=>x.id===a))state.activeAlbumId=a;if(p&&state.photos.some(x=>x.id===p))setTimeout(()=>openFullscreen(p),100);}
+function updateUrlHash(){let q=new URLSearchParams();if(state.activeAlbumId)q.set('album',state.activeAlbumId);if(state.currentDetailPhotoId)q.set('photo',state.currentDetailPhotoId);if(state.currentFullscreenPhotoId)q.set('photo',state.currentFullscreenPhotoId);history.replaceState(null,'',q.toString()?'#'+q.toString():location.pathname);}
+function navigateToHome(){state.activeAlbumId=null;state.activeCategory='ALL';state.searchQuery='';document.querySelectorAll('#global-search').forEach(x=>x.value='');updateUrlHash();renderAll();}
+function selectAlbum(id){state.activeAlbumId=id;state.activeCategory='ALL';closeSidebarMobile();updateUrlHash();renderAll();}
+function selectCategory(cat){state.activeCategory=cat;state.activeAlbumId=null;closeSidebarMobile();renderAll();}
+function handleSearch(q){state.searchQuery=q.toLowerCase().trim();renderAll();}
+function renderAll(){renderSidebar();renderBreadcrumb();renderAlbums();renderPhotos();document.getElementById('stats-counter').textContent=state.activeAlbumId?state.photos.filter(p=>p.albumId===state.activeAlbumId).length+' fotos':state.albums.length+' álbumes';}
 function renderSidebar(){
  document.getElementById('badge-total-photos').textContent=state.photos.length;
- const cats=['ALL',...new Set(state.albums.map(a=>a.category).filter(Boolean))];
- document.getElementById('sidebar-categories').innerHTML=cats.map(c=>`<button onclick="selectCategory(${JSON.stringify(c)});closeSidebarMobile()" class="w-full text-left px-3 py-2 rounded-xl text-xs ${state.activeCategory===c&&!state.activeAlbumId?'bg-brand-50 text-brand-700 dark:bg-brand-900/40':'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}">${c==='ALL'?'Todas las categorías':escapeHtml(c)}</button>`).join('');
- document.getElementById('sidebar-albums').innerHTML=state.albums.map(a=>`<button onclick="selectAlbum(${JSON.stringify(a.id)});closeSidebarMobile()" class="w-full flex justify-between px-3 py-2 rounded-xl text-xs ${state.activeAlbumId===a.id?'bg-brand-600 text-white':'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}"><span class="truncate">${escapeHtml(a.title)}</span><span>${state.photos.filter(p=>p.albumId===a.id).length}</span></button>`).join('');
+ let cats=['ALL',...new Set(state.albums.map(a=>a.category).filter(Boolean))];
+ document.getElementById('sidebar-categories').innerHTML=cats.map(c=>`<button onclick="selectCategory(${JSON.stringify(c)})" class="w-full text-left px-3 py-2 rounded-lg text-xs ${state.activeCategory===c&&!state.activeAlbumId?'bg-brand-50 text-brand-700 dark:bg-brand-900/40':'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'}">${c==='ALL'?'Todas las categorías':esc(c)}</button>`).join('');
+ document.getElementById('sidebar-albums').innerHTML=state.albums.map(a=>`<button onclick="selectAlbum(${JSON.stringify(a.id)})" class="w-full text-left px-3 py-2 rounded-lg text-xs ${state.activeAlbumId===a.id?'bg-brand-600 text-white':'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'}">${esc(a.title)} <span class="float-right">${state.photos.filter(p=>p.albumId===a.id).length}</span></button>`).join('');
 }
-function renderBreadcrumb(){const a=state.albums.find(x=>x.id===state.activeAlbumId);const c=document.getElementById('bc-category'),b=document.getElementById('bc-album');document.getElementById('bc-sep-1').classList.toggle('hidden',!state.activeCategory||state.activeCategory==='ALL');c.classList.toggle('hidden',!state.activeCategory||state.activeCategory==='ALL');c.textContent=state.activeCategory==='ALL'?'':state.activeCategory;document.getElementById('bc-sep-2').classList.toggle('hidden',!a);b.classList.toggle('hidden',!a);b.textContent=a?a.title:''}
+function renderBreadcrumb(){let a=state.albums.find(x=>x.id===state.activeAlbumId);document.getElementById('bc-sep').classList.toggle('hidden',!a);document.getElementById('bc-album').classList.toggle('hidden',!a);document.getElementById('bc-album').textContent=a?a.title:'';}
 function renderAlbums(){
- const section=document.getElementById('albums-section'),grid=document.getElementById('albums-grid'),empty=document.getElementById('empty-albums-msg');
+ let section=document.getElementById('albums-section'),grid=document.getElementById('albums-grid'),empty=document.getElementById('empty-albums-msg');
  document.getElementById('photos-section').classList.toggle('hidden',!state.activeAlbumId);
  section.classList.toggle('hidden',!!state.activeAlbumId);
  if(state.activeAlbumId)return;
- let list=state.albums.filter(a=>(state.activeCategory==='ALL'||a.category===state.activeCategory)&&(!state.searchQuery||a.title.toLowerCase().includes(state.searchQuery)||(a.description||'').toLowerCase().includes(state.searchQuery)));
- empty.classList.toggle('hidden',list.length>0);grid.innerHTML=list.map(a=>{
-  const photos=state.photos.filter(p=>p.albumId===a.id),cover=photos.length?photos[0].url:'https://placehold.co/400x300/e2e8f0/94a3b8?text=Sin+Fotos';
-  return `<div onclick="selectAlbum(${JSON.stringify(a.id)})" class="group bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer flex flex-col"><div class="relative aspect-[4/3] bg-gray-100 dark:bg-gray-800 overflow-hidden"><img src="${escapeAttr(cover)}" alt="${escapeAttr(a.title)}" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://placehold.co/400x300?text=Sin+Fotos'"><span class="absolute top-2 right-2 bg-black/60 text-white text-[10px] px-2 py-1 rounded">${photos.length} fotos</span></div><div class="p-3"><h3 class="font-bold text-xs sm:text-sm">${escapeHtml(a.title)}</h3><p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${escapeHtml(a.description||'Sin descripción')}</p><div class="mt-3 pt-2 border-t flex justify-between text-[10px] text-gray-400"><span>${escapeHtml(a.category)}</span><span class="flex gap-3"><button onclick="event.stopPropagation();openEditAlbumModal(${JSON.stringify(a.id)})" title="Editar"><i class="fa-solid fa-pen"></i></button><button onclick="event.stopPropagation();deleteAlbum(${JSON.stringify(a.id)})" title="Eliminar" class="text-red-500"><i class="fa-solid fa-trash"></i></button></span></div></div></div>`
- }).join('');
+ let list=state.albums.filter(a=>(state.activeCategory==='ALL'||a.category===state.activeCategory)&&(!state.searchQuery||a.title.toLowerCase().includes(state.searchQuery)||String(a.description||'').toLowerCase().includes(state.searchQuery)));
+ grid.innerHTML=list.map(a=>{let pics=state.photos.filter(p=>p.albumId===a.id),cover=pics[0]?.url||'';return `<article class="bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm"><button onclick="selectAlbum(${JSON.stringify(a.id)})" class="w-full text-left"><div class="aspect-[4/3] bg-gray-100 dark:bg-gray-800">${cover?`<img src="${esc(cover)}" class="w-full h-full object-cover" onerror="this.style.display='none'">`:`<div class="h-full flex items-center justify-center text-gray-400"><i class="fa-regular fa-folder-open text-4xl"></i></div>`}</div><div class="p-3"><h3 class="font-bold text-sm truncate">${esc(a.title)}</h3><p class="text-[11px] text-gray-400 truncate mt-1">${esc(a.description||'Sin descripción')}</p><p class="text-[10px] text-brand-600 mt-2">${pics.length} fotos · ${esc(a.category)}</p></div></button><div class="px-3 pb-3 flex gap-3 text-xs"><button onclick="openEditAlbumModal(${JSON.stringify(a.id)})" class="text-gray-500"><i class="fa-solid fa-pen"></i> Editar</button><button onclick="deleteAlbum(${JSON.stringify(a.id)})" class="text-red-500"><i class="fa-solid fa-trash"></i> Eliminar</button></div></article>`}).join('');
+ empty.classList.toggle('hidden',list.length!==0);
 }
 function renderPhotos(){
- const section=document.getElementById('photos-section'),grid=document.getElementById('photos-grid'),empty=document.getElementById('empty-photos-msg');
- if(!state.activeAlbumId){section.classList.add('hidden');grid.innerHTML='';empty.classList.add('hidden');return}
- section.classList.remove('hidden');const album=state.albums.find(a=>a.id===state.activeAlbumId);
- document.getElementById('photos-title').innerHTML=`<i class="fa-solid fa-images text-brand-600 mr-2"></i>${escapeHtml(album?album.title:'Fotos del álbum')}`;
- let list=state.photos.filter(p=>p.albumId===state.activeAlbumId);
- if(state.searchQuery)list=list.filter(p=>(p.title||'').toLowerCase().includes(state.searchQuery)||(p.description||'').toLowerCase().includes(state.searchQuery));
- list.sort((a,b)=>document.getElementById('sort-select').value==='oldest'?(a.createdAt||0)-(b.createdAt||0):(b.createdAt||0)-(a.createdAt||0));
- empty.classList.toggle('hidden',list.length>0);
- grid.innerHTML=list.map(p=>`<div onclick="openPhotoDetail(${JSON.stringify(p.id)})" class="group bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm cursor-pointer"><div class="aspect-square bg-gray-100 dark:bg-gray-800 overflow-hidden"><img src="${escapeAttr(p.url)}" alt="${escapeAttr(p.title)}" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src='https://placehold.co/400x400?text=Error'"></div><div class="p-3"><h4 class="font-semibold text-xs">${escapeHtml(p.title)}</h4><p class="text-[10px] text-gray-400 mt-1 line-clamp-2">${escapeHtml(p.description||'')}</p></div></div>`).join('');
+ if(!state.activeAlbumId)return;
+ let grid=document.getElementById('photos-grid'),empty=document.getElementById('empty-photos-msg'),album=state.albums.find(a=>a.id===state.activeAlbumId);
+ document.getElementById('photos-title').textContent=album?album.title:'Fotografías';
+ let list=state.photos.filter(p=>p.albumId===state.activeAlbumId&&(!state.searchQuery||String(p.title||'').toLowerCase().includes(state.searchQuery)||String(p.description||'').toLowerCase().includes(state.searchQuery)));
+ let sort=document.getElementById('sort-select').value;list.sort((a,b)=>sort==='oldest'?(a.createdAt||0)-(b.createdAt||0):(b.createdAt||0)-(a.createdAt||0));
+ grid.innerHTML=list.map(p=>`<button onclick="openFullscreen(${JSON.stringify(p.id)})" class="text-left bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm"><div class="aspect-square bg-gray-100 dark:bg-gray-800"><img src="${esc(p.url)}" alt="${esc(p.title)}" class="w-full h-full object-cover" onerror="this.alt='No se pudo cargar la imagen'"></div><div class="p-3"><h3 class="font-semibold text-xs truncate">${esc(p.title||'Sin título')}</h3></div></button>`).join('');
+ empty.classList.toggle('hidden',list.length!==0);
 }
-function updateStatsCounter(){const n=state.activeAlbumId?state.photos.filter(p=>p.albumId===state.activeAlbumId).length:state.albums.length;document.getElementById('stats-counter').textContent=state.activeAlbumId?`${n} fotos`:`${n} álbumes`}
-function handleSaveAlbum(e){e.preventDefault();const id=document.getElementById('edit-album-id').value,title=document.getElementById('album-title-input').value.trim(),category=document.getElementById('album-cat-input').value.trim(),description=document.getElementById('album-desc-input').value.trim();if(!title||!category)return;const oldA=JSON.parse(JSON.stringify(state.albums)),oldP=JSON.parse(JSON.stringify(state.photos));if(id){const a=state.albums.find(x=>x.id===id);if(a)Object.assign(a,{title,category,description})}else state.albums.unshift({id:'alb-'+Date.now(),title,category,description,createdAt:Date.now()});if(!persistOrRestore(oldA,oldP))return;closeModal('create-album-modal');renderAll();showToast(id?'Álbum actualizado':'Álbum creado','success')}
-function openEditAlbumModal(id){const a=state.albums.find(x=>x.id===id);if(!a)return;document.getElementById('edit-album-id').value=a.id;document.getElementById('album-title-input').value=a.title;document.getElementById('album-cat-input').value=a.category;document.getElementById('album-desc-input').value=a.description||'';document.getElementById('album-modal-title').textContent='Editar álbum';openModal('create-album-modal')}
-function deleteAlbum(id){if(!confirm('¿Eliminar este álbum? Las fotos se conservarán, pero quedarán sin álbum.'))return;const oldA=JSON.parse(JSON.stringify(state.albums)),oldP=JSON.parse(JSON.stringify(state.photos));state.albums=state.albums.filter(a=>a.id!==id);state.photos.forEach(p=>{if(p.albumId===id)p.albumId=null});if(!persistOrRestore(oldA,oldP))return;if(state.activeAlbumId===id)state.activeAlbumId=null;renderAll();showToast('Álbum eliminado','info')}
-function populateAlbumSelect(selected=null){const s=document.getElementById('photo-album-select');s.innerHTML='<option value="">Selecciona un álbum</option>'+state.albums.map(a=>`<option value="${escapeAttr(a.id)}">${escapeHtml(a.title)}</option>`).join('');s.value=selected||state.activeAlbumId||''}
-function openUploadPhotoModal(){if(!state.albums.length){showToast('Primero crea un álbum para guardar la foto.','error');openModal('create-album-modal');return}document.getElementById('edit-photo-id').value='';document.getElementById('photo-modal-title').textContent='Subir foto';document.getElementById('photo-title-input').value='';document.getElementById('photo-desc-input').value='';document.getElementById('photo-url-input').value='';document.getElementById('photo-file-input').value='';document.getElementById('image-preview-wrapper').classList.add('hidden');document.getElementById('image-preview').src='';state.currentUploadedDataUrl='';populateAlbumSelect();switchImageTab('file');openModal('upload-photo-modal')}
-function switchImageTab(tab){state.activeTabInput=tab;document.getElementById('file-input-container').classList.toggle('hidden',tab!=='file');document.getElementById('url-input-container').classList.toggle('hidden',tab!=='url');document.getElementById('tab-file-btn').className='flex-1 py-2 text-xs rounded-lg '+(tab==='file'?'bg-white dark:bg-gray-700':'');document.getElementById('tab-url-btn').className='flex-1 py-2 text-xs rounded-lg '+(tab==='url'?'bg-white dark:bg-gray-700':'')}
-function previewFileImage(input){if(!input.files||!input.files[0])return;const file=input.files[0];if(!file.type.startsWith('image/')){showToast('Selecciona un archivo de imagen.','error');return}const reader=new FileReader();reader.onload=e=>{state.currentUploadedDataUrl=e.target.result;showPreview(e.target.result)};reader.onerror=()=>showToast('No se pudo leer la imagen.','error');reader.readAsDataURL(file)}
-function previewUrlImage(url){if(!url)return;state.currentUploadedDataUrl=url;showPreview(url)}
-function showPreview(src){document.getElementById('image-preview').src=src;document.getElementById('image-preview-wrapper').classList.remove('hidden')}
-function handleSavePhoto(e){e.preventDefault();const id=document.getElementById('edit-photo-id').value,title=document.getElementById('photo-title-input').value.trim(),desc=document.getElementById('photo-desc-input').value.trim(),albumId=document.getElementById('photo-album-select').value,image=state.currentUploadedDataUrl||document.getElementById('photo-url-input').value.trim();if(!albumId){showToast('Selecciona un álbum.','error');return}if(!id&&!image){showToast('Selecciona una imagen o introduce una URL.','error');return}const oldA=JSON.parse(JSON.stringify(state.albums)),oldP=JSON.parse(JSON.stringify(state.photos));if(id){const p=state.photos.find(x=>x.id===id);if(!p)return;Object.assign(p,{title,description:desc,albumId});if(image)p.url=image}else state.photos.unshift({id:'pic-'+Date.now(),albumId,title,description:desc,url:image,createdAt:Date.now()});if(!persistOrRestore(oldA,oldP))return;closeModal('upload-photo-modal');renderAll();showToast(id?'Foto actualizada':'Foto guardada','success')}
-function editCurrentPhoto(){const p=state.photos.find(x=>x.id===state.currentDetailPhotoId);if(!p)return;closeModal('detail-modal');document.getElementById('edit-photo-id').value=p.id;document.getElementById('photo-modal-title').textContent='Editar foto';document.getElementById('photo-title-input').value=p.title;document.getElementById('photo-desc-input').value=p.description||'';document.getElementById('photo-url-input').value=p.url;document.getElementById('photo-file-input').value='';state.currentUploadedDataUrl=p.url;populateAlbumSelect(p.albumId);switchImageTab('url');showPreview(p.url);openModal('upload-photo-modal')}
-function deleteCurrentPhoto(){const id=state.currentDetailPhotoId;if(!id||!confirm('¿Eliminar esta foto?'))return;const oldA=JSON.parse(JSON.stringify(state.albums)),oldP=JSON.parse(JSON.stringify(state.photos));state.photos=state.photos.filter(p=>p.id!==id);if(!persistOrRestore(oldA,oldP))return;closeModal('detail-modal');renderAll();showToast('Foto eliminada','info')}
-function openPhotoDetail(id){const p=state.photos.find(x=>x.id===id);if(!p)return;state.currentDetailPhotoId=id;updateUrlHash();const a=state.albums.find(x=>x.id===p.albumId);document.getElementById('detail-img').src=p.url;document.getElementById('detail-title').textContent=p.title;document.getElementById('detail-album-badge').textContent=a?a.title:'Sin álbum';document.getElementById('detail-date').textContent=p.createdAt?new Date(p.createdAt).toLocaleDateString('es-ES'):'';document.getElementById('detail-desc').textContent=p.description||'Sin descripción';openModal('detail-modal')}
-function copyDirectPhotoLink(){copyToClipboard(location.href);showToast('Enlace copiado','success')}
-function shareCurrentView(){copyToClipboard(location.href);showToast('Enlace copiado','success')}
-function copyToClipboard(t){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(()=>fallbackCopy(t));else fallbackCopy(t)}
-function fallbackCopy(t){const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();document.execCommand('copy');x.remove()}
-function toggleSidebarMobile(){document.getElementById('app-sidebar').classList.toggle('-translate-x-full');document.getElementById('sidebar-overlay').classList.toggle('hidden')}
-function closeSidebarMobile(){document.getElementById('app-sidebar').classList.add('-translate-x-full');document.getElementById('sidebar-overlay').classList.add('hidden')}
-function openModal(id){document.getElementById(id).classList.remove('hidden')}
-function closeModal(id){document.getElementById(id).classList.add('hidden');if(id==='detail-modal'){state.currentDetailPhotoId=null;updateUrlHash()}}
-function showToast(message,type='info'){const c=document.getElementById('toast-container'),t=document.createElement('div');const color=type==='success'?'bg-brand-600':type==='error'?'bg-red-600':'bg-gray-900';t.className=`${color} text-white px-4 py-3 rounded-xl shadow-xl text-xs font-semibold`;t.textContent=message;c.appendChild(t);setTimeout(()=>t.remove(),3500)}
-function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function escapeAttr(s){return escapeHtml(s)}
+function handleSaveAlbum(e){e.preventDefault();let id=document.getElementById('edit-album-id').value,title=document.getElementById('album-title-input').value.trim(),category=document.getElementById('album-cat-input').value.trim(),description=document.getElementById('album-desc-input').value.trim();if(id){let a=state.albums.find(x=>x.id===id);if(a)Object.assign(a,{title,category,description});}else state.albums.unshift({id:'alb-'+Date.now(),title,category,description,createdAt:Date.now()});if(!saveToStorage())return;closeModal('create-album-modal');renderAll();showToast(id?'Álbum actualizado':'Álbum creado','success');}
+function openEditAlbumModal(id){let a=state.albums.find(x=>x.id===id);if(!a)return;document.getElementById('edit-album-id').value=id;document.getElementById('album-title-input').value=a.title;document.getElementById('album-cat-input').value=a.category;document.getElementById('album-desc-input').value=a.description||'';document.getElementById('album-modal-title').textContent='Editar álbum';openModal('create-album-modal');}
+function deleteAlbum(id){if(!confirm('¿Eliminar este álbum? Las fotos se conservarán y quedarán sin álbum.'))return;let old=state.albums;state.albums=old.filter(a=>a.id!==id);state.photos.forEach(p=>{if(p.albumId===id)p.albumId=null});if(!saveToStorage()){state.albums=old;return;}if(state.activeAlbumId===id)state.activeAlbumId=null;renderAll();showToast('Álbum eliminado','info');}
+function openUploadPhotoModal(){document.getElementById('edit-photo-id').value='';document.getElementById('photo-modal-title').textContent='Subir foto';document.getElementById('photo-title-input').value='';document.getElementById('photo-desc-input').value='';document.getElementById('photo-url-input').value='';document.getElementById('photo-file-input').value='';document.getElementById('image-preview-wrapper').classList.add('hidden');state.currentUploadedDataUrl='';populateAlbumSelectModal();switchImageTab('file');openModal('upload-photo-modal');}
+function populateAlbumSelectModal(id=null){document.getElementById('photo-album-select').innerHTML='<option value="">Sin álbum</option>'+state.albums.map(a=>`<option value="${esc(a.id)}">${esc(a.title)}</option>`).join('');document.getElementById('photo-album-select').value=id||state.activeAlbumId||'';}
+function switchImageTab(t){state.activeTabInput=t;document.getElementById('file-input-container').classList.toggle('hidden',t!=='file');document.getElementById('url-input-container').classList.toggle('hidden',t!=='url');document.getElementById('tab-file-btn').className='flex-1 p-2 rounded-lg text-xs '+(t==='file'?'bg-brand-600 text-white':'bg-gray-100 dark:bg-gray-800');document.getElementById('tab-url-btn').className='flex-1 p-2 rounded-lg text-xs '+(t==='url'?'bg-brand-600 text-white':'bg-gray-100 dark:bg-gray-800');}
+function previewFileImage(input){let f=input.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){showToast('Selecciona un archivo de imagen','error');return;}let r=new FileReader();r.onload=e=>{state.currentUploadedDataUrl=e.target.result;showPreview(e.target.result)};r.onerror=()=>showToast('No se pudo leer la imagen','error');r.readAsDataURL(f);}
+function previewUrlImage(url){state.currentUploadedDataUrl=url;showPreview(url);}
+function showPreview(src){document.getElementById('image-preview').src=src;document.getElementById('image-preview-wrapper').classList.remove('hidden');}
+function handleSavePhoto(e){
+ e.preventDefault();let id=document.getElementById('edit-photo-id').value,title=document.getElementById('photo-title-input').value.trim(),desc=document.getElementById('photo-desc-input').value.trim(),albumId=document.getElementById('photo-album-select').value||null,url=state.currentUploadedDataUrl||document.getElementById('photo-url-input').value.trim();
+ if(!id&&!url){showToast('Selecciona una imagen o introduce una URL','error');return;}
+ let old=JSON.stringify(state.photos);
+ if(id){let p=state.photos.find(x=>x.id===id);if(p){p.title=title;p.description=desc;p.albumId=albumId;if(url)p.url=url;}}
+ else state.photos.unshift({id:'pic-'+Date.now(),albumId,title,description:desc,url,createdAt:Date.now()});
+ if(!saveToStorage()){state.photos=JSON.parse(old);return;}closeModal('upload-photo-modal');renderAll();showToast(id?'Foto actualizada':'Foto guardada','success');
+}
+function openFullscreen(id){let p=state.photos.find(x=>x.id===id);if(!p)return;state.currentFullscreenPhotoId=id;document.getElementById('fullscreen-image').src=p.url;document.getElementById('fullscreen-image').alt=p.title||'';document.getElementById('fullscreen-title').textContent=p.title||'';document.getElementById('fullscreen-viewer').classList.remove('hidden');document.body.style.overflow='hidden';updateUrlHash();}
+function closeFullscreen(){document.getElementById('fullscreen-viewer').classList.add('hidden');document.getElementById('fullscreen-image').src='';document.body.style.overflow='';state.currentFullscreenPhotoId=null;updateUrlHash();}
+function showFullscreenDetails(){let id=state.currentFullscreenPhotoId;if(!id)return;closeFullscreen();openPhotoDetail(id);}
+function editFullscreenPhoto(){let id=state.currentFullscreenPhotoId;if(!id)return;closeFullscreen();editPhoto(id);}
+function openPhotoDetail(id){let p=state.photos.find(x=>x.id===id);if(!p)return;state.currentDetailPhotoId=id;updateUrlHash();let a=state.albums.find(x=>x.id===p.albumId);document.getElementById('detail-img').src=p.url;document.getElementById('detail-title').textContent=p.title||'';document.getElementById('detail-album-badge').textContent=a?a.title:'Sin álbum';document.getElementById('detail-date').textContent=p.createdAt?new Date(p.createdAt).toLocaleDateString('es-ES'):'';document.getElementById('detail-desc').textContent=p.description||'Sin descripción';openModal('detail-modal');}
+function editCurrentPhoto(){if(state.currentDetailPhotoId)editPhoto(state.currentDetailPhotoId);}
+function editPhoto(id){let p=state.photos.find(x=>x.id===id);if(!p)return;document.getElementById('edit-photo-id').value=p.id;document.getElementById('photo-modal-title').textContent='Editar foto';document.getElementById('photo-title-input').value=p.title||'';document.getElementById('photo-desc-input').value=p.description||'';document.getElementById('photo-url-input').value=p.url||'';state.currentUploadedDataUrl=p.url||'';if(p.url)showPreview(p.url);populateAlbumSelectModal(p.albumId);switchImageTab('url');closeModal('detail-modal');openModal('upload-photo-modal');}
+function deleteCurrentPhoto(){let id=state.currentDetailPhotoId;if(!id||!confirm('¿Eliminar esta foto?'))return;let old=state.photos;state.photos=old.filter(p=>p.id!==id);if(!saveToStorage()){state.photos=old;return;}state.currentDetailPhotoId=null;closeModal('detail-modal');renderAll();showToast('Foto eliminada','info');}
+function copyDirectPhotoLink(){copyToClipboard(location.href);showToast('Enlace copiado','success');}
+function shareCurrentView(){copyToClipboard(location.href);showToast('Enlace copiado','success');}
+function copyToClipboard(t){if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).catch(()=>fallbackCopy(t));else fallbackCopy(t);}
+function fallbackCopy(t){let x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();document.execCommand('copy');x.remove();}
+function toggleSidebarMobile(){let s=document.getElementById('app-sidebar');if(s.classList.contains('-translate-x-full')){s.classList.remove('-translate-x-full');document.getElementById('sidebar-overlay').classList.remove('hidden')}else closeSidebarMobile();}
+function closeSidebarMobile(){document.getElementById('app-sidebar').classList.add('-translate-x-full');document.getElementById('sidebar-overlay').classList.add('hidden');}
+function openModal(id){document.getElementById(id).classList.remove('hidden');}
+function closeModal(id){document.getElementById(id).classList.add('hidden');if(id==='detail-modal'){state.currentDetailPhotoId=null;updateUrlHash();}}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function showToast(msg,type='info'){let el=document.createElement('div');el.className='px-4 py-3 rounded-xl shadow-xl text-xs font-semibold text-white '+(type==='error'?'bg-red-600':type==='success'?'bg-brand-600':'bg-gray-900');el.textContent=msg;document.getElementById('toast-container').appendChild(el);setTimeout(()=>el.remove(),3500);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('fullscreen-viewer').classList.contains('hidden'))closeFullscreen();});
 </script>
 </body>
 </html>
