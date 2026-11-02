@@ -32,9 +32,9 @@
     
     /* GRIDS */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-    .card { background: #151d30; border: 1px solid #2a364f; padding: 10px; border-radius: 12px; cursor: pointer; }
+    .card { background: #151d30; border: 1px solid #2a364f; padding: 10px; border-radius: 12px; }
     .card:hover { border-color: #f59e0b; }
-    .cover-box { width: 100%; height: 130px; background: #0b0f19; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; border: 1px solid #1e293b; }
+    .cover-box { width: 100%; height: 130px; background: #0b0f19; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; border: 1px solid #1e293b; cursor: pointer; }
     .cover-box img { width: 100%; height: 100%; object-fit: cover; }
     .card-title { font-weight: bold; font-size: 13px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-sub { font-size: 11px; color: #94a3b8; margin-top: 4px; display: flex; justify-content: space-between; }
@@ -48,6 +48,11 @@
     .btn-edit { flex: 1; background: #334155; color: #fff; border: none; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     .btn-del { background: rgba(239, 68, 68, 0.2); color: #f87171; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     
+    /* VENTANA MODAL PARA AMPLIAR FOTO */
+    #modalZoom { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    #modalZoom img { max-width: 100%; max-height: 85vh; border-radius: 12px; border: 2px solid #f59e0b; object-fit: contain; }
+    #modalZoom .cerrar-modal { position: absolute; top: 20px; right: 20px; background: #f59e0b; color: #000; font-weight: bold; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+
     .hidden { display: none !important; }
   </style>
 </head>
@@ -114,6 +119,12 @@
       </label>
     </div>
     <div class="grid" id="gridFotos"></div>
+  </div>
+
+  <!-- VENTANA ZOOM FOTO GRANDE -->
+  <div id="modalZoom" class="hidden" onclick="cerrarZoom()">
+    <button class="cerrar-modal" onclick="cerrarZoom()">✕ Cerrar</button>
+    <img id="imgZoomUrl" src="">
   </div>
 
   <script>
@@ -270,7 +281,7 @@
         var div = document.createElement('div');
         div.className = 'card';
         div.innerHTML = 
-          '<div class="cover-box">' +
+          '<div class="cover-box" onclick="verZoom(\'' + f.url + '\')">' +
             '<img src="' + f.url + '">' +
           '</div>' +
           '<div class="card-title">' + f.nombre + '</div>' +
@@ -280,6 +291,15 @@
           '</div>';
         grid.appendChild(div);
       });
+    }
+
+    function verZoom(url) {
+      document.getElementById('imgZoomUrl').src = url;
+      document.getElementById('modalZoom').classList.remove('hidden');
+    }
+
+    function cerrarZoom() {
+      document.getElementById('modalZoom').classList.add('hidden');
     }
 
     function editarFoto(fotoId) {
