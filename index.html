@@ -8,14 +8,13 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background-color: #0b0f19; color: #f3f4f6; padding: 15px; min-height: 100vh; }
     
-    /* ENCABEZADO Y BRANDING */
     header { background: #151d30; border: 1px solid #2a364f; padding: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
     .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; }
     .logo-circle { width: 46px; height: 46px; border-radius: 50%; border: 2px solid #f59e0b; background: #000; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
     .title { color: #f59e0b; font-weight: bold; font-size: 18px; letter-spacing: 1px; }
     .subtitle { color: #94a3b8; font-size: 11px; display: block; }
     
-    /* FORMULARIO DE CARPETAS */
     .box { background: #151d30; border: 1px solid #2a364f; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
     .box-title { color: #94a3b8; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
     .form-row { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -23,21 +22,17 @@
     input[type="text"]:focus, select:focus { border-color: #f59e0b; }
     .btn-gold { background: #f59e0b; color: #000; font-weight: bold; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; }
     
-    /* PESTAÑAS */
     .nav-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid #2a364f; }
     .tab { background: #151d30; color: #94a3b8; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; white-space: nowrap; }
     .tab.active { background: #f59e0b; color: #000; font-weight: bold; }
     
-    /* GRIDS */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
     .card { background: #151d30; border: 1px solid #2a364f; padding: 10px; border-radius: 12px; }
-    .card:hover { border-color: #f59e0b; }
     .cover-box { width: 100%; height: 130px; background: #0b0f19; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; border: 1px solid #1e293b; cursor: pointer; }
     .cover-box img { width: 100%; height: 100%; object-fit: cover; }
     .card-title { font-weight: bold; font-size: 13px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-sub { font-size: 11px; color: #94a3b8; margin-top: 4px; display: flex; justify-content: space-between; }
     
-    /* VISTA FOTOS DENTRO DE CARPETA */
     .header-folder { display: flex; align-items: center; justify-content: space-between; background: #151d30; border: 1px solid #2a364f; padding: 12px; border-radius: 12px; margin-bottom: 15px; }
     .btn-back { background: #334155; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .btn-upload { background: #f59e0b; color: #000; font-weight: bold; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
@@ -46,7 +41,6 @@
     .btn-edit { flex: 1; background: #334155; color: #fff; border: none; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     .btn-del { background: rgba(239, 68, 68, 0.2); color: #f87171; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; }
     
-    /* VENTANA ZOOM FOTO GRANDE */
     #modalZoom { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
     #modalZoom img { max-width: 100%; max-height: 85vh; border-radius: 12px; border: 2px solid #f59e0b; object-fit: contain; }
     #modalZoom .cerrar-modal { position: absolute; top: 20px; right: 20px; background: #f59e0b; color: #000; font-weight: bold; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; }
@@ -56,14 +50,12 @@
 </head>
 <body>
 
-  <!-- CABECERA CON CORONA Y BALÓN VECTORIAL ESTILIZADO -->
   <header>
     <div class="brand" onclick="irInicio()">
       <div class="logo-circle">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="#f59e0b">
-          <!-- Corona superior -->
-          <path d="M3 17L5 7L9.5 11L12 5L14.5 11L19 7L21 17H3M5 19H19V20H5V19Z" transform="scale(0.8) translate(2, 1)"/>
-        </svg>
+        <!-- Input oculto para que puedas cargar tu logo exacto desde tu móvil/PC una sola vez -->
+        <input type="file" id="subirLogoInput" accept="image/*" style="display:none" onchange="guardarLogo(event)">
+        <img id="logoMostrado" src="" alt="Logo" onclick="document.getElementById('subirLogoInput').click()" style="cursor:pointer;" title="Pulsa aquí para cambiar tu logo">
       </div>
       <div>
         <span class="title">DFS CATALOG</span>
@@ -72,7 +64,6 @@
     </div>
   </header>
 
-  <!-- FORMULARIO CREAR CARPETAS -->
   <div class="box">
     <div class="box-title">📁 Crear Carpeta de Equipo</div>
     <div class="form-row">
@@ -89,7 +80,6 @@
     </div>
   </div>
 
-  <!-- PESTAÑAS -->
   <div class="nav-tabs" id="tabs">
     <button class="tab active" onclick="filtrar('Todas')">📷 Todas</button>
     <button class="tab" onclick="filtrar('La Liga')">⚽ La Liga</button>
@@ -100,13 +90,11 @@
     <button class="tab" onclick="filtrar('Otras Ligas')">🌐 Otras Ligas</button>
   </div>
 
-  <!-- VISTA 1: LISTADO DE CARPETAS CON FOTO DE PORTADA -->
   <div id="vistaCarpetas">
     <h3 style="margin-bottom: 12px; font-size: 15px; color: #cbd5e1;" id="txtTituloCat">Carpetas (Todas)</h3>
     <div class="grid" id="gridCarpetas"></div>
   </div>
 
-  <!-- VISTA 2: DENTRO DE UNA CARPETA -->
   <div id="vistaFotos" class="hidden">
     <div class="header-folder">
       <button class="btn-back" onclick="irInicio()">← Volver</button>
@@ -119,14 +107,36 @@
     <div class="grid" id="gridFotos"></div>
   </div>
 
-  <!-- VENTANA ZOOM FOTO GRANDE -->
   <div id="modalZoom" class="hidden" onclick="cerrarZoom()">
     <button class="cerrar-modal" onclick="cerrarZoom()">✕ Cerrar</button>
     <img id="imgZoomUrl" src="">
   </div>
 
   <script>
-    var db = JSON.parse(localStorage.getItem('dfs_catalog_db_v6')) || [
+    // CARGAR LOGO GUARDADO O PONER UNO POR DEFECTO
+    window.onload = function() {
+      var logoGuardado = localStorage.getItem('dfs_mi_logo');
+      if (logoGuardado) {
+        document.getElementById('logoMostrado').src = logoGuardado;
+      } else {
+        // Icono temporal por defecto hasta que pulses el círculo para subir tu imagen real
+        document.getElementById('logoMostrado').src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f59e0b'><path d='M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z'/></svg>";
+      }
+      renderCarpetas();
+    };
+
+    function guardarLogo(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        localStorage.setItem('dfs_mi_logo', evt.target.result);
+        document.getElementById('logoMostrado').src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    var db = JSON.parse(localStorage.getItem('dfs_catalog_db_v7')) || [
       { id: '1', nombre: 'Real Madrid', categoria: 'La Liga', fotos: [] },
       { id: '2', nombre: 'FC Barcelona', categoria: 'La Liga', fotos: [] }
     ];
@@ -135,19 +145,14 @@
     var carpetaIdActual = null;
 
     function guardar() {
-      try {
-        localStorage.setItem('dfs_catalog_db_v6', JSON.stringify(db));
-      } catch (e) {
-        alert("Atención: El almacenamiento local está lleno.");
-      }
+      localStorage.setItem('dfs_catalog_db_v7', JSON.stringify(db));
     }
 
     function crearCarpeta() {
       var input = document.getElementById('nombreCarpeta');
       var select = document.getElementById('catCarpeta');
       var val = input.value.trim();
-
-      if (!val) { alert("Escribe un nombre para la carpeta."); return; }
+      if (!val) { alert("Escribe un nombre."); return; }
 
       db.push({ id: Date.now().toString(), nombre: val, categoria: select.value, fotos: [] });
       guardar();
@@ -157,13 +162,9 @@
 
     function filtrar(cat) {
       categoriaActual = cat;
-      var btns = document.querySelectorAll('.tab');
-      btns.forEach(function(b) {
-        if (b.innerText.indexOf(cat) !== -1) {
-          b.classList.add('active');
-        } else {
-          b.classList.remove('active');
-        }
+      document.querySelectorAll('.tab').forEach(function(b) {
+        if (b.innerText.indexOf(cat) !== -1) b.classList.add('active');
+        else b.classList.remove('active');
       });
       irInicio();
     }
@@ -179,7 +180,7 @@
       document.getElementById('txtTituloCat').innerText = 'Carpetas (' + categoriaActual + ') - Total: ' + lista.length;
 
       if (lista.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; font-size: 13px; text-align: center; padding: 20px;">No hay carpetas en esta categoría.</p>';
+        grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; font-size: 13px; text-align: center; padding: 20px;">No hay carpetas.</p>';
         return;
       }
 
@@ -231,14 +232,12 @@
           var canvas = document.createElement('canvas');
           var ctx = canvas.getContext('2d');
           var maxDim = 600;
-          var w = img.width;
-          var h = img.height;
+          var w = img.width, h = img.height;
 
           if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
           else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
 
-          canvas.width = w;
-          canvas.height = h;
+          canvas.width = w; canvas.height = h;
           ctx.drawImage(img, 0, 0, w, h);
 
           var c = db.find(function(item) { return item.id === carpetaIdActual; });
@@ -264,7 +263,7 @@
       if (!c) return;
 
       if (c.fotos.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; font-size: 13px; text-align: center; padding: 20px;">Esta carpeta está vacía. Pulsa "+ Subir Foto".</p>';
+        grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; font-size: 13px; text-align: center; padding: 20px;">Carpeta vacía.</p>';
         return;
       }
 
@@ -296,7 +295,7 @@
     function editarFoto(fotoId) {
       var c = db.find(function(item) { return item.id === carpetaIdActual; });
       var f = c.fotos.find(function(item) { return item.id === fotoId; });
-      var nuevo = prompt("Corrige el nombre de la foto:", f.nombre);
+      var nuevo = prompt("Nuevo nombre:", f.nombre);
       if (nuevo && nuevo.trim() !== '') {
         f.nombre = nuevo.trim();
         guardar();
@@ -310,8 +309,6 @@
       guardar();
       renderFotos();
     }
-
-    renderCarpetas();
   </script>
 </body>
 </html>
