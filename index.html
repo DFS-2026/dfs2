@@ -46,8 +46,78 @@
 
     .hidden { display: none !important; }
   </style>
+</head>
+<body>
 
-  <!-- FIREBASE SDKs y LÓGICA -->
+  <header>
+    <div class="brand" id="btnBrand">
+      <div class="logo-circle">
+        <svg viewBox="0 0 100 100" width="100%" height="100%" style="background:#000;">
+          <circle cx="50" cy="50" r="48" fill="none" stroke="#f59e0b" stroke-width="4"/>
+          <path d="M25 35 L35 18 L50 30 L65 18 L75 35 Z" fill="#f59e0b"/>
+          <text x="50" y="62" font-family="sans-serif" font-weight="bold" font-style="italic" font-size="32" fill="#fff" text-anchor="middle">DFS</text>
+          <circle cx="50" cy="80" r="12" fill="#fff" stroke="#000" stroke-width="2"/>
+        </svg>
+      </div>
+      <div>
+        <span class="title">DFS CATALOG</span>
+        <span class="subtitle">Galería Oficial & Colecciones</span>
+      </div>
+    </div>
+    <button id="btnAdminAcceso" class="btn-admin">🔒 Soy Creador</button>
+  </header>
+
+  <div id="boxCrearCarpeta" class="box hidden">
+    <div class="box-title">📁 Crear Carpeta de Equipo (Modo Creador)</div>
+    <div class="form-row">
+      <input type="text" id="nombreCarpeta" placeholder="Ej: Real Madrid, Barcelona...">
+      <select id="catCarpeta">
+        <option value="La Liga">La Liga</option>
+        <option value="Niños">Niños</option>
+        <option value="Retro">Retro</option>
+        <option value="Selecciones">Selecciones</option>
+        <option value="Ligas Europeas">Ligas Europeas</option>
+        <option value="Otras Ligas">Otras Ligas</option>
+      </select>
+      <button class="btn-gold" id="btnCrearCarpeta">📅 + Crear Carpeta</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs" id="tabs">
+    <button class="tab active" data-cat="Todas">📷 Todas</button>
+    <button class="tab" data-cat="La Liga">⚽ La Liga</button>
+    <button class="tab" data-cat="Niños">🧒 Niños</button>
+    <button class="tab" data-cat="Retro">⏳ Retro</button>
+    <button class="tab" data-cat="Selecciones">🌍 Selecciones</button>
+    <button class="tab" data-cat="Ligas Europeas">🏆 Ligas Europeas</button>
+    <button class="tab" data-cat="Otras Ligas">🌐 Otras Ligas</button>
+  </div>
+
+  <div id="vistaCarpetas">
+    <h3 style="margin-bottom: 12px; font-size: 15px; color: #cbd5e1;" id="txtTituloCat">Carpetas (Todas)</h3>
+    <div class="grid" id="gridCarpetas"></div>
+  </div>
+
+  <div id="vistaFotos" class="hidden">
+    <div class="header-folder">
+      <button class="btn-back" id="btnVolver">← Volver</button>
+      <h3 id="txtCarpetaNombre" style="color: #f59e0b;"></h3>
+      <div id="contenedorSubirFoto" class="hidden">
+        <label class="btn-upload">
+          + Subir Foto a la Nube
+          <input type="file" id="inputSubirFoto" accept="image/*" style="display: none;">
+        </label>
+      </div>
+    </div>
+    <div class="grid" id="gridFotos"></div>
+  </div>
+
+  <div id="modalZoom" class="hidden">
+    <button class="cerrar-modal" id="btnCerrarZoom">✕ Cerrar</button>
+    <img id="imgZoomUrl" src="">
+  </div>
+
+  <!-- SCRIPT DE FIREBASE Y EVENTOS SEGUROS -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -86,9 +156,9 @@
       if(carpetaObjActual) refrescarCarpetaActual();
     });
 
-    window.toggleAdminModal = function() {
+    document.getElementById('btnAdminAcceso').addEventListener('click', () => {
       if (esAdmin) {
-        signOut(auth).then(() => alert("Sesión cerrada. Ahora la web está en modo solo lectura."));
+        signOut(auth).then(() => alert("Sesión cerrada. Web en modo solo lectura."));
       } else {
         const email = prompt("Introduce tu email de creador:");
         const pass = prompt("Introduce tu contraseña:");
@@ -98,23 +168,38 @@
             .catch((err) => alert("Error de acceso: " + err.message));
         }
       }
-    };
+    });
 
-    window.filtrar = function(cat) {
-      categoriaActual = cat;
-      document.querySelectorAll('.tab').forEach(b => {
-        if (b.innerText.indexOf(cat) !== -1) b.classList.add('active');
-        else b.classList.remove('active');
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const cat = e.target.getAttribute('data-cat');
+        categoriaActual = cat;
+        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        irInicio();
       });
-      irInicio();
-    };
+    });
 
-    window.cargarCatalogo = async function() {
+    document.getElementById('btnBrand').addEventListener('click', irInicio);
+    document.getElementById('btnVolver').addEventListener('click', irInicio);
+    document.getElementById('btnCreارCarpeta`'.replace('`','')).addEventListener('click', crearCarpetaCloud);
+    document.getElementById('inputSubirFoto').addEventListener('change', subirFotoCloud);
+    document.getElementById('btnCerrarZoom').addEventListener('click', cerrarZoom);
+    document.getElementById('modalZoom').addEventListener('click', (e) => {
+      if(e.target.id === 'modalZoom') cerrarZoom();
+    });
+
+    function irInicio() {
+      carpetaObjActual = null;
+      cargarCatalogo();
+    }
+
+    async function cargarCatalogo() {
       document.getElementById('vistaCarpetas').classList.remove('hidden');
       document.getElementById('vistaFotos').classList.add('hidden');
       
       const grid = document.getElementById('gridCarpetas');
-      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #94a3b8;">Cargando catálogo en tiempo real...</p>';
+      grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #94a3b8;">Cargando catálogo...</p>';
       
       try {
         const querySnapshot = await getDocs(collection(db, "carpetas"));
@@ -139,7 +224,7 @@
         lista.forEach(c => {
           const div = document.createElement('div');
           div.className = 'card';
-          div.onclick = () => abrirCarpeta(c);
+          div.addEventListener('click', () => abrirCarpeta(c));
 
           const tieneFotos = c.fotos && c.fotos.length > 0;
           div.innerHTML = `
@@ -151,4 +236,186 @@
               <span>${c.categoria}</span>
               <span>${c.fotos ? c.fotos.length : 0} fotos</span>
             </div>
-            ${esAdmin ? `<button class="btn-del" style="margin-top:8px; width:100%;" onclick="event.stopPropagation(); borrarCarpeta('${c.firebaseId}')">🗑️
+            ${esAdmin ? `<button class="btn-del btn-borrar-Carpeta" style="margin-top:8px; width:100%;" data-id="${c.firebaseId}">🗑️ Borrar Carpeta</button>` : ''}
+          `;
+          
+          if(esAdmin) {
+            div.querySelector('.btn-borrar-Carpeta').addEventListener('click', (ev) => {
+              ev.stopPropagation();
+              borrarCarpeta(c.firebaseId);
+            });
+          }
+
+          grid.appendChild(div);
+        });
+      } catch (e) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; color: #f87171; text-align: center;">Error al conectar con Firebase.</p>';
+      }
+    }
+
+    async function crearCarpetaCloud() {
+      if (!esAdmin) return;
+      const nombre = document.getElementById('nombreCarpeta').value.trim();
+      const categoria = document.getElementById('catCarpeta').value;
+      if (!nombre) { alert("Escribe un nombre para la carpeta."); return; }
+
+      try {
+        await addDoc(collection(db, "carpetas"), {
+          nombre: nombre,
+          categoria: categoria,
+          fotos: []
+        });
+        document.getElementById('nombreCarpeta').value = '';
+        cargarCatalogo();
+      } catch (e) {
+        alert("Error al crear carpeta: " + e.message);
+      }
+    }
+
+    async function borrarCarpeta(firebaseId) {
+      if (!esAdmin) return;
+      if (confirm("¿Estás seguro de borrar esta carpeta?")) {
+        try {
+          await deleteDoc(doc(db, "carpetas", firebaseId));
+          cargarCatalogo();
+        } catch (e) {
+          alert("Error al borrar.");
+        }
+      }
+    }
+
+    function abrirCarpeta(c) {
+      carpetaObjActual = c;
+      document.getElementById('txtCarpetaNombre').innerText = c.nombre;
+      document.getElementById('vistaCarpetas').classList.add('hidden');
+      document.getElementById('vistaFotos').classList.remove('hidden');
+      
+      const contenedorSubir = document.getElementById('contenedorSubirFoto');
+      if (esAdmin) contenedorSubir.classList.remove('hidden');
+      else contenedorSubir.classList.add('hidden');
+
+      renderFotos();
+    }
+
+    async function refrescarCarpetaActual() {
+      if (!carpetaObjActual) return;
+      try {
+        const refDoc = doc(db, "carpetas", carpetaObjActual.firebaseId);
+        const snap = await getDoc(refDoc);
+        if (snap.exists()) {
+          carpetaObjActual = snap.data();
+          carpetaObjActual.firebaseId = snap.id;
+          renderFotos();
+        }
+      } catch (e) {}
+    }
+
+    function subirFotoCloud(e) {
+      if (!esAdmin) return;
+      const file = e.target.files[0];
+      if (!file || !carpetaObjActual) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = async function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const maxDim = 800;
+          let w = img.width;
+          let h = img.height;
+
+          if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
+          else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
+
+          canvas.width = w;
+          canvas.height = h;
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const fotoComprimida = {
+            id: Date.now().toString(),
+            nombre: file.name.replace(/\.[^/.]+$/, ""),
+            url: canvas.toDataURL('image/jpeg', 0.7)
+          };
+
+          if (!carpetaObjActual.fotos) carpetaObjActual.fotos = [];
+          carpetaObjActual.fotos.push(fotoComprimida);
+
+          try {
+            const refDoc = doc(db, "carpetas", carpetaObjActual.firebaseId);
+            await setDoc(refDoc, {
+              nombre: carpetaObjActual.nombre,
+              categoria: carpetaObjActual.categoria,
+              fotos: carpetaObjActual.fotos
+            });
+            renderFotos();
+            alert("¡Foto subida correctamente!");
+          } catch (err) {
+            alert("Error al subir la foto.");
+          }
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function borrarFotoCloud(index) {
+      if (!esAdmin) return;
+      if (confirm("¿Seguro que deseas eliminar esta foto?")) {
+        carpetaObjActual.fotos.splice(index, 1);
+        try {
+          const refDoc = doc(db, "carpetas", carpetaObjActual.firebaseId);
+          await setDoc(refDoc, {
+            nombre: carpetaObjActual.nombre,
+            categoria: carpetaObjActual.categoria,
+            fotos: carpetaObjActual.fotos
+          });
+          renderFotos();
+        } catch (err) {
+          alert("Error al eliminar.");
+        }
+      }
+    }
+
+    function verZoom(url) {
+      document.getElementById('imgZoomUrl').src = url;
+      document.getElementById('modalZoom').classList.remove('hidden');
+    }
+
+    function cerrarZoom() {
+      document.getElementById('modalZoom').classList.add('hidden');
+    }
+
+    function renderFotos() {
+      const grid = document.getElementById('gridFotos');
+      grid.innerHTML = '';
+      const fotos = carpetaObjActual.fotos || [];
+
+      if (fotos.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; font-size: 13px; text-align: center; padding: 20px;">Esta carpeta no tiene fotos todavía.</p>';
+        return;
+      }
+
+      fotos.forEach((f, index) => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <div class="cover-box">
+            <img src="${f.url}" alt="${f.nombre}">
+          </div>
+          <div class="card-title">${f.nombre}</div>
+          ${esAdmin ? `<div class="photo-actions"><button class="btn-del btn-borrar-foto" data-index="${index}">🗑️ Borrar Foto</button></div>` : ''}
+        `;
+
+        div.querySelector('.cover-box').addEventListener('click', () => verZoom(f.url));
+
+        if (esAdmin) {
+          div.querySelector('.btn-borrar-foto').addEventListener('click', () => borrarFotoCloud(index));
+        }
+
+        grid.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
