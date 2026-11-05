@@ -449,4 +449,34 @@
     <img id="imgZoomUrl" src="">
   </div>
 </body>
+  <script>
+    window.mostrarTablaTallas = function() {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('vistaFotos').classList.add('hidden');
+      document.getElementById('vistaCarpetas').classList.remove('hidden');
+      
+      document.getElementById('txtTituloCat').innerText = 'Guía de Tallas';
+      const grid = document.getElementById('gridCarpetas');
+      
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; background: #151d30; border: 1px solid #2a364f; padding: 20px; border-radius: 12px; text-align: center;">
+          <h3 style="color: #f59e0b; margin-bottom: 15px;">Tabla de Medidas Orientativa</h3>
+          <p style="color: #94a3b8; font-size: 13px; margin-bottom: 15px;">Puedes modificar estos valores o añadir tus medidas oficiales.</p>
+          <div style="overflow-x: auto;">
+            <table style="width:100%; color:#fff; border-collapse: collapse; font-size: 13px;">
+              <tr style="border-bottom: 1px solid #334155; color: #f59e0b;">
+                <th style="padding: 8px;">Talla</th><th style="padding: 8px;">Ancho (Sisa)</th><th style="padding: 8px;">Largo</th>
+              </tr>
+              <tr style="border-bottom: 1px solid #1e293b;"><td style="padding: 8px;">S</td><td style="padding: 8px;">50 cm</td><td style="padding: 8px;">70 cm</td></tr>
+              <tr style="border-bottom: 1px solid #1e293b;"><td style="padding: 8px;">M</td><td style="padding: 8px;">52 cm</td><td style="padding: 8px;">72 cm</td></tr>
+              <tr style="border-bottom: 1px solid #1e293b;"><td style="padding: 8px;">L</td><td style="padding: 8px;">54 cm</td><td style="padding: 8px;">74 cm</td></tr>
+              <tr><td style="padding: 8px;">XL</td><td style="padding: 8px;">56 cm</td><td style="padding: 76 cm;">76 cm</td></tr>
+            </table>
+          </div>
+        </div>
+      `;
+    };
+  </script>
 </html>
