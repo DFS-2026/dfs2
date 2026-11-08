@@ -131,7 +131,13 @@
           }
         });
 
-        document.getElementById('txtTituloCat').innerText = 'Carpetas (' + categoriaActual + ') - Total: ' + lista.length;
+               querySnapshot.forEach((docSnap) => {
+          let c = docSnap.data();
+          c.firebaseId = docSnap.id;
+          if (categoriaActual === 'Todas' || c.categoria === categoriaActual) {
+            lista.push(c);
+          }
+        }); document.getElementById('txtTituloCat').innerText = 'Carpetas (' + categoriaActual + ') - Total: ' + lista.length;
 
         if (lista.length === 0) {
           grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; font-size: 13px; text-align: center; padding: 20px;">No hay carpetas creadas todavía.</p>';
