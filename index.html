@@ -111,7 +111,7 @@
       irInicio();
     };
 
-    window.cargarCatalogo = async function() {
+      window.cargarCatalogo = async function() {
       document.getElementById('vistaCarpetas').classList.remove('hidden');
       document.getElementById('vistaFotos').classList.add('hidden');
       
@@ -131,13 +131,10 @@
           }
         });
 
-               querySnapshot.forEach((docSnap) => {
-          let c = docSnap.data();
-          c.firebaseId = docSnap.id;
-          if (categoriaActual === 'Todas' || c.categoria === categoriaActual) {
-            lista.push(c);
-          }
-        }); document.getElementById('txtTituloCat').innerText = 'Carpetas (' + categoriaActual + ') - Total: ' + lista.length;
+        // Ordenamos la lista alfabéticamente de la A a la Z
+        lista.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
+
+        document.getElementById('txtTituloCat').innerText = 'Carpetas (' + categoriaActual + ') - Total: ' + lista.length;
 
         if (lista.length === 0) {
           grid.innerHTML = '<p style="grid-column: 1/-1; color: #64748b; font-size: 13px; text-align: center; padding: 20px;">No hay carpetas creadas todavía.</p>';
